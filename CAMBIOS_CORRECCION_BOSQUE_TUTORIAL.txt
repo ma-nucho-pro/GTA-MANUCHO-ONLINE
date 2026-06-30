@@ -1,0 +1,6 @@
+CORRECCIONES
+- Tutorial: orientación visual del Soldier invertida para que mire hacia donde avanza.
+- Bosque: se sustituyó el arranque WebGPU pesado por una escena WebGL ligera.
+- Bosque grande 1400 x 840 con terreno físico, 620 árboles instanciados, rocas, camino y agua.
+- Soldier local, caminar, correr, salto y primera/tercera persona.
+- Salida por puerta o Escape.

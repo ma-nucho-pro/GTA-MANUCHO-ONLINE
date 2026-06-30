@@ -1,0 +1,12 @@
+BANDA NARANJA - V65
+
+G cerca de un miembro naranja: reclutar aliado.
+Máximo: 4 aliados reclutados.
+
+Los aliados reclutados:
+- Siguen al jugador.
+- Atacan a las bandas enemigas.
+- Defienden al jugador cuando la policía lo persigue.
+- Conservan una altura equivalente a la del personaje principal.
+
+Al derrotar a todos los enemigos de un territorio, la zona y sus vehículos pasan a ser naranjas.

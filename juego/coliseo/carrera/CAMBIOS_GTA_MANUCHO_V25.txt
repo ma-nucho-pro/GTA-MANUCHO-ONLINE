@@ -1,0 +1,11 @@
+GTA MANUCHO Offline V25
+
+- Minimapa movido a la esquina superior izquierda en los tres niveles.
+- Marcador del jugador más grande, luminoso y con rastro en tiempo real.
+- Vuelta Rápida: cuatro coches rivales NPC.
+- Carrera Internacional: siete coches rivales NPC.
+- Carrera Internacional reconstruida como circuito cerrado gigante con asfalto, marcas viales blancas, barreras, rampas, edificios, carteles y meta.
+- El coche de Carrera Internacional inicia mirando hacia la pista.
+- Sandbox Mega Saltos aligerado y reparado para abrir sin bloquearse.
+- Las colisiones iniciales de Sandbox se cargan primero y las restantes progresivamente.
+- Puerto local cambiado a 3025 para evitar caché de versiones anteriores.

@@ -1,0 +1,11 @@
+GTA MANUCHO V77
+
+- ESC abre el menú de pausa incluso cuando el navegador libera primero el bloqueo del cursor.
+- Los ajustes de calidad, proporción, tamaño, brillo, sombras y volumen se aplican al juego real.
+- Añadido apartado de radio con URL directa de audio y controles reproducir/pausar/detener.
+- Integradas siete animaciones WebP locales en la introducción, carga y lateral de los ajustes.
+- Eliminados del inicio los textos Tutorial · Éxodo.
+- La introducción animada inicia directamente la secuencia del juego.
+- Vehículos y NPC pesados se preparan detrás de la pantalla de carga para evitar congelamientos al entrar.
+- Los sistemas secundarios se cargan de forma escalonada.
+- Tráfico Ferrari reducido a 8 y población civil optimizada para mejorar la fluidez.

@@ -1,0 +1,26 @@
+VERSIÓN V69
+
+CORRECCIONES EN GTA MANUCHO
+- Ambulancia girada en el sentido correcto.
+- Tres patrullas VCPD estacionadas visiblemente frente a la comisaría.
+- Se conservan el robo y la conducción de vehículos con E.
+
+GAME OF CREW
+- En tercera persona se usa el personaje Soldier del juego principal/ejemplo de Three.js.
+- Primera y tercera persona siguen disponibles con V.
+- Se redujo el coste gráfico: antialias desactivado, resolución interna limitada y menos NPC simultáneos.
+- La IA se actualiza a intervalos controlados y el inventario deja de reconstruirse en cada fotograma.
+- Disparo, recogida de armas y puntuación se mantienen.
+
+NUEVOS LUGARES EN EL MAPA
+- BARBERÍA: marcada con B. Acércate a la puerta y pulsa E.
+  Permite elegir corte corto, clásico, cresta, afro o rapado. El corte queda guardado.
+- GIMNASIO: marcado con G. Acércate a la puerta y pulsa E.
+  Incluye el modelo Boxing Gym adjunto, movimiento WASD, cámara con V y entrenamiento con E.
+- C = Game of Crew, H = hospital, P = comisaría.
+- Los nuevos lugares aparecen tanto en el radar como en el mapa de TAB.
+
+CONTROLES
+- E: entrar a edificios, recoger objetos o entrenar según el contexto.
+- TAB: mapa; clic para marcar destino.
+- V: cambiar cámara en Game of Crew y gimnasio.

@@ -1,0 +1,12 @@
+<!doctype html><meta charset='utf-8'><body>loading<script type='module'>
+import * as THREE from './assets/tutorial/libs/three.module.js';
+import {loadCarbonBike} from './assets/tutorial/load-carbon-bike.js';
+const renderer=new THREE.WebGLRenderer({antialias:false});
+try{
+ const gltf=await loadCarbonBike(renderer);
+ const scene=gltf.scene; scene.updateMatrixWorld(true);
+ const box=new THREE.Box3().setFromObject(scene); const size=box.getSize(new THREE.Vector3()); const center=box.getCenter(new THREE.Vector3());
+ document.body.textContent=JSON.stringify({size:size.toArray(),min:box.min.toArray(),max:box.max.toArray(),center:center.toArray(),animations:gltf.animations.map(a=>a.name)});
+}catch(e){document.body.textContent='ERR '+e.stack}
+document.body.dataset.done='1';
+</script></body>

@@ -1,0 +1,5 @@
+CAMBIO DE CÁMARA
+- La tercera persona ahora muestra el cuerpo del personaje desde atrás.
+- El personaje gira junto con la cámara y permanece entre la cámara y la zona de juego.
+- Al pulsar V se pasa a primera persona y el cuerpo se oculta.
+- Al pulsar V nuevamente se regresa detrás del personaje.

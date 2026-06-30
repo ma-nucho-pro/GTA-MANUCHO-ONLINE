@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>GTA MANUCHO — Casa inicial</title>
+  <meta name="theme-color" content="#101419">
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101419;font-family:Arial,sans-serif;color:#fff}
+    canvas{display:block;width:100%;height:100%}
+    #boot{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:#101419;transition:opacity .28s ease;pointer-events:none}
+    #boot.hide{opacity:0}
+    #boot .card{padding:20px 28px;border:1px solid #63e6ff;border-radius:16px;background:#0b1118;text-align:center;box-shadow:0 20px 70px #0008}
+    #boot b{display:block;font-size:25px;letter-spacing:.18em;color:#70ecff;margin-bottom:8px}
+    #boot span{font-size:13px;color:#cbd5e1}
+    #hud{position:fixed;left:18px;top:18px;z-index:12;padding:12px 16px;border:1px solid #67e8f9;border-radius:14px;background:#071018d9;backdrop-filter:blur(8px);box-shadow:0 12px 35px #0007;pointer-events:none}
+    #hud strong{display:block;letter-spacing:.18em;color:#67e8f9;font-size:17px}
+    #hud .mode{font-weight:900;color:#fde047;margin:5px 0 3px}
+    #hud small{color:#dbeafe;line-height:1.45}
+    #status{position:fixed;right:16px;bottom:16px;z-index:12;padding:9px 12px;border-radius:10px;background:#071018d9;border:1px solid #ffffff33;font-size:12px;color:#dbeafe;pointer-events:none}
+    #crosshair{position:fixed;left:50%;top:50%;width:8px;height:8px;margin:-4px;z-index:11;display:none;pointer-events:none}
+    #crosshair:before,#crosshair:after{content:"";position:absolute;background:#fff;box-shadow:0 0 5px #000}
+    #crosshair:before{left:3px;top:-5px;width:2px;height:18px}#crosshair:after{left:-5px;top:3px;width:18px;height:2px}
+  </style>
+  <script type="importmap">
+  {"imports":{"three":"./libs/three/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <div id="boot"><div class="card"><b>CASA INICIAL</b><span>Cargando interior…</span></div></div>
+  <div id="hud"><strong>CASA INICIAL</strong><div class="mode" id="mode">TERCERA PERSONA</div><small>WASD: caminar · Shift: correr · Espacio: saltar<br>V: cambiar cámara · E: interactuar · C: usar cámara</small></div>
+  <div id="status">Cargando casa y objetos…</div>
+  <div id="crosshair"></div>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>

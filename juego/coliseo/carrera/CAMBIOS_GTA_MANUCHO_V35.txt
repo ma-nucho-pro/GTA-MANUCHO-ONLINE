@@ -1,0 +1,5 @@
+V35
+- Sandbox Mega Saltos: se añadieron muchas más rampas conectadas.
+- Ahora existe un camino continuo de subidas y bajadas en todo el recorrido.
+- Se agregaron más accesos graduales para que no haya zonas altas sin forma de subir.
+- Se mantiene la optimización del Sandbox para evitar congelamientos.

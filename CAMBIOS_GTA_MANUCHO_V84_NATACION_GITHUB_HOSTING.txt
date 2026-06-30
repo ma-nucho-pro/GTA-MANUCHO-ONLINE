@@ -1,0 +1,16 @@
+GTA MANUCHO V84 — NATACIÓN, MAR, NUBES Y PUBLICACIÓN WEB
+Autor e integración: Roberto Manuel Jara Peche
+GitHub: ma-nucho-pro
+Marca: ARKEA AI / Manucho
+
+CAMBIOS PRINCIPALES
+1. El agua visual ya no participa en los raycasts del suelo: el personaje no camina encima del mar.
+2. Se fuerza el estado de natación en mar abierto y se aplica una animación visible de brazos, piernas y cuerpo.
+3. Los NPC, policías, coches, patrullas y tanques son devueltos a su última posición firme si intentan entrar al agua.
+4. Los barcos, peces, tiburones, islas, helicópteros, aeronaves y demás sistemas se conservan.
+5. Los reflejos del agua se actualizan de forma adaptativa para evitar tirones en fotogramas pesados.
+6. Las nubes geométricas fueron reemplazadas por nubes texturizadas ligeras inspiradas en el ejemplo oficial de nubes de Three.js.
+7. Se añadió presentación aleatoria con las imágenes y clips WebP entregados.
+8. Se eliminó la dependencia de lanzadores CMD/BAT para publicación.
+9. Se añadieron README, LICENSE, NOTICE y un flujo automático de GitHub Pages.
+10. Se incorporaron los créditos de Roberto Manuel Jara Peche, ma-nucho-pro y ARKEA AI.

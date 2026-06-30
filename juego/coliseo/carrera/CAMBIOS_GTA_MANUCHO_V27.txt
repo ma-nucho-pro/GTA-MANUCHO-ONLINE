@@ -1,0 +1,13 @@
+GTA MANUCHO OFFLINE V27
+
+- Personaje colocado directamente en el suelo al bajar del coche.
+- El botón cambia inmediatamente entre SUBIR AL COCHE y BAJAR DEL COCHE.
+- Botón trasladado debajo del velocímetro.
+- Carrera Internacional reconstruida con asfalto, marcas viales, pianos, barreras, rampas, edificios, carteles, graderías, luces y parrilla.
+- 7 Porsche rivales en Carrera Internacional y 4 en Vuelta Rápida.
+- Los rivales esperan en la parrilla y empiezan al entrar al coche.
+- Sandbox con suelo físico alineado a la superficie visual.
+- Rampas más gruesas y solapadas para evitar atravesarlas.
+- Piso de seguridad y recuperación si el coche cae bajo el mapa.
+- Líneas blancas sobre suelo y rampas.
+- Puerto local 3027.

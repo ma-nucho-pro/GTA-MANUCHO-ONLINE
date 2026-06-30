@@ -1,0 +1,20 @@
+GTA MANUCHO V72 — CASA INICIAL, CÁMARA Y ROPA
+
+1. Se eliminaron los rótulos flotantes de acompañantes y ladrones, además del aviso técnico de activación.
+2. Una partida nueva comienza con $200 y el personaje aparece afuera de la casa inicial, lejos del Parque del Retiro.
+3. La casa inicial aparece en el radar y en el mapa de TAB con el símbolo S. Se puede marcar como destino haciendo clic en el mapa.
+4. Entra a la casa acercándote a la puerta y pulsando E. Al salir vuelves al mismo punto de entrada.
+5. Dentro de la casa hay un disquete para descargar una partida .vcsave.
+6. Dentro de la casa hay una cámara recogible. Pulsa E para guardarla, C para equiparla y clic para tomar una foto PNG.
+7. La cámara permanece en el inventario al volver a GTA MANUCHO.
+8. Dentro de la casa hay ropa naranja, azul y oscura. Pulsa E junto al perchero para cambiar de estilo.
+9. El cambio de ropa se conserva al volver a GTA MANUCHO y también se incluye en la partida guardada.
+
+CONTROLES DE LA CASA
+WASD: caminar
+Shift: correr
+Espacio: saltar
+V: cambiar primera/tercera persona
+E: interactuar
+C: equipar/guardar cámara
+Clic: tomar foto cuando la cámara está equipada

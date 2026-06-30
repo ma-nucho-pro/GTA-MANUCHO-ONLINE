@@ -1,0 +1,14 @@
+CORRECCIÓN FINAL
+
+1. Tutorial
+- El modelo Soldier del tutorial ya no está rotado 180 grados respecto al movimiento.
+- Shift + I + L completa el tutorial y abre el juego principal.
+
+2. Bosque 6
+- Se mantiene como modo principal el mundo exacto de bosque(6).
+- El dispositivo WebGPU ya no solicita todas las funciones opcionales como obligatorias.
+- El preset bajo conserva el algoritmo del mundo original, con una malla y erosión más ligeras.
+- Si WebGPU queda detenido al crear el renderizador, después de 14 segundos se abre automáticamente un modo compatible jugable en vez de congelar la pantalla.
+
+INICIO
+Extraer todo y ejecutar INICIAR_TUTORIAL_Y_JUEGO.cmd

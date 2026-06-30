@@ -1,0 +1,17 @@
+V64 - Territorios, combate, hospital, comisaria y vehiculos destructibles
+
+- Las estrellas doradas reducen exactamente un nivel de busqueda y desaparecen al recogerlas.
+- Bandas azul, verde, morada, roja y naranja con zonas coloreadas.
+- Territorios visibles sobre el minimapa y en el mapa completo con TAB.
+- Al derrotar a todos los miembros de una banda, el territorio pasa a ser naranja y se guarda.
+- Policias caminando por las calles y siempre pegados al suelo.
+- A 3 y 4 estrellas intentan arrestar; a 5 estrellas atacan con dano moderado.
+- Civiles pueden huir o defenderse con dano bajo.
+- Personas, coches, tanques y aeronaves tienen vida y pueden desaparecer o explotar.
+- Los disparos desde armas, tanques y aeronaves aumentan el nivel de busqueda.
+- Coches pueden atropellar y chocar; las aeronaves explotan en impactos fuertes.
+- Hospital y comisaria accesibles con E, con ambulancia y patrullas visibles.
+- Al morir se reaparece en el hospital con descuento de dinero.
+- Al ser arrestado se aparece en la comisaria y se paga una multa.
+- Se reutilizan texturas locales inspiradas en los ejemplos oficiales Collada Skinning y MD2 de Three.js.
+- Todos los sistemas nuevos se actualizan a frecuencia limitada, sin sombras y con geometria compartida.

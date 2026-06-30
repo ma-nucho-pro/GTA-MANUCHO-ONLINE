@@ -1,0 +1,11 @@
+GTA MANUCHO V78
+
+- TAB abre/cierra únicamente el mapa y ya no abre el menú de ajustes.
+- ESC abre el menú de pausa.
+- CONTINUAR cierra el menú y devuelve el control al juego.
+- Menú principal: Reanudar, Nueva partida, Mapa, Estadísticas, Información, Opciones y Salir.
+- Opciones: Controles, Sonido, Pantalla, Idioma y Cargar partida.
+- Pantalla: brillo, leyenda, modo radar, modo visor, subtítulos, guardar fotos, avanzadas y restablecer.
+- Avanzadas: calidad, formato, tamaño, sombras, FPS, tráfico, peatones y pantalla completa.
+- Las tres imágenes proporcionadas aparecen solo en los apartados de ajustes.
+- Se corrigió el bloqueo de clics que impedía usar botones, selectores y controles deslizantes.

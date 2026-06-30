@@ -1,0 +1,12 @@
+V45 - Mas trafico, mas NPC, coche rapido y camaras corregidas
+
+- Trafico aumentado de 16 a 28 coches pregenerados.
+- Poblacion aumentada a 24 civiles GLB y 3 integrantes de banda.
+- Los NPC adicionales se distribuyen en distintos puntos de sus circuitos para evitar que nazcan amontonados.
+- Velocidad maxima del coche aumentada de 240 a 720 unidades por segundo.
+- Aceleracion, frenado y resistencia adaptados a la escala grande del mapa.
+- Camara cercana colocada aproximadamente tres veces mas cerca del coche.
+- Camara dron acercada.
+- Primera persona movida delante del parabrisas para evitar la ventana/interior negro.
+- Plano cercano de la camara ajustado para recortar piezas demasiado proximas.
+- Coches y NPC siguen creados durante la pantalla de carga, nunca por proximidad.

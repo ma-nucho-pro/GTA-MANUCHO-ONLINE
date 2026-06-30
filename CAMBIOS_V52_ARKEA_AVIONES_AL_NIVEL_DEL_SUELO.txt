@@ -1,0 +1,8 @@
+V52 - ARKEA al nivel del suelo
+
+- Eliminada la exhibición Boeing 747 antigua del juego base.
+- Eliminados su avión, letrero, plataforma elevada y escaleras antiguas.
+- Eliminado el cartel flotante de la exhibición nueva.
+- Las cuatro aeronaves actuales quedan sobre una plataforma fina, al nivel real del terreno.
+- Las escaleras nuevas empiezan desde el piso de la plataforma.
+- Los aviones ya no aparecen suspendidos sobre una estructura alta.

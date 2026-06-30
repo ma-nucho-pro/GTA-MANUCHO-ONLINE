@@ -1,0 +1,12 @@
+GTA MANUCHO OFFLINE V29
+
+- Vuelta Rápida: se desactivó el ruido artificial del suelo y se estabilizó la suspensión para eliminar el temblor.
+- Vuelta Rápida: los cuatro rivales usan la altura real de la pista y ya no aparecen flotando.
+- Carrera Internacional: reemplazado el recorrido cuadrado por un circuito cerrado, curvo y completo con inicio/meta visible.
+- Carrera Internacional: los siete rivales siguen exactamente el centro del circuito y toman las curvas sin atravesar los muros.
+- Carrera Internacional: carretera más ancha, barreras continuas, pianos, líneas, iluminación, gradas y arco de salida/meta.
+- Sandbox Mega Saltos: nueva autopista acrobática continua con nueve zonas de subida y bajada conectadas.
+- Sandbox Mega Saltos: la primera rampa comienza junto al punto de aparición.
+- Sandbox Mega Saltos: plataformas anchas, pendientes progresivas, curvas de enlace, soportes y secciones de colores tipo pista acrobática.
+- Sandbox Mega Saltos: todas las piezas del recorrido tienen colisión y se registran progresivamente para evitar bloqueos.
+- Se mantienen las líneas blancas de tránsito en el suelo y sobre toda la ruta elevada.

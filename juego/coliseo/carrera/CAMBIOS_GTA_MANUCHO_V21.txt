@@ -1,0 +1,17 @@
+GTA MANUCHO OFFLINE V21 — INICIO DE SANDBOX CORREGIDO
+
+CORRECCIONES
+- El personaje controla WASD y flechas desde el primer segundo al entrar a Sandbox.
+- El controlador directo del coche ya no captura las teclas mientras el personaje está a pie.
+- El suelo principal se registra inmediatamente como colisión, sin esperar a que terminen de montarse todas las rampas.
+- Se eliminó el raycast del personaje contra miles de adornos y líneas visuales.
+- El personaje detecta el suelo únicamente contra el piso y las rampas sólidas del Sandbox.
+- El botón SUBIR AL COCHE ya no cancela su propio clic.
+- Al subir o bajar se limpian las teclas anteriores para evitar aceleración, freno o movimiento bloqueados.
+- El control del coche se habilita inmediatamente después de entrar.
+- Se conservan el mapa gigante, las rampas sólidas y las líneas blancas de la V20.
+
+CONTROLES
+- WASD/flechas: mover personaje o conducir, según el estado.
+- Shift: correr cuando el personaje está a pie.
+- X o botón: subir/bajar del coche.

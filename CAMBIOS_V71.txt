@@ -1,0 +1,43 @@
+GTA MANUCHO V71 — CORRECCIONES Y NOVEDADES
+
+CORRECCIONES
+- Game of Crew reconstruido como arena local ligera: controles normales, primera/tercera persona, enemigos visibles y menos carga gráfica.
+- Radar orientado a la marcha y sincronizado al caminar o conducir.
+- Policía terrestre erguida, orientada hacia la dirección de movimiento y limitada a cuatro agentes base activos.
+- Persecuciones policiales actualizadas a menor frecuencia para evitar congelamientos.
+- Ambulancia alineada con la dirección real de conducción.
+- El aviso ATROPELLADO desaparece rápidamente y se suprime al entrar en un vehículo.
+- Vida inicial aumentada a 150 y capacidad máxima a 200. Disparos, choques y atropellos hacen menos daño.
+- Los vehículos robados quedan como propiedad del jugador y no recuperan su conductor automático.
+- Vehículos terrestres corregidos gradualmente al nivel del suelo; aeronaves no son afectadas.
+- Barbería con cámara más cercana.
+- Hospital y comisaría devuelven al jugador al punto exacto desde donde entró. Los demás interiores conservan su retorno previo.
+
+NUEVOS NPC
+- Cuatro acompañantes con la skin de damacompañia.zip. Caminan por la ciudad y pueden subir a un coche detenido por $100.
+- Ladrón 1 con la skin MD2 de ladron.zip.
+- Ladrón 2 con el modelo GLB de ladron2.zip.
+- Los ladrones persiguen, atacan e intentan robar el vehículo si permanecen cerca de él.
+
+COMBATE
+- Clic izquierdo: golpe cuerpo a cuerpo con el puño o disparo con el arma seleccionada.
+- Clic derecho dentro de un coche: disparo hacia el lado derecho del vehículo.
+- Los golpes y disparos dañan NPC, ladrones, bandas, policías y vehículos.
+
+MISIONES DE VEHÍCULOS — TECLA Y
+- Ambulancia: recoger un herido y llevarlo al hospital.
+- Patrulla: perseguir y arrestar a un ladrón.
+- Taxi amarillo: recoger un pasajero y llevarlo al destino señalado.
+- Volver a pulsar Y cancela la misión activa.
+
+SALUD
+- Corazones: recuperan 50 puntos de vida.
+- Aspirinas: recuperan 25 puntos de vida.
+- Ambos aparecen en el radar y reaparecen después de utilizarse.
+
+GAME OF CREW
+- W/S avanzan y retroceden según la cámara; A/D se desplazan lateralmente.
+- Ratón para mirar; clic izquierdo, F o Ctrl para disparar.
+- V cambia entre primera y tercera persona.
+- R recarga; 1, 2 y 3 cambian de arma; E recoge armas.
+- Equipo naranja contra bandas roja, azul, verde y morada.

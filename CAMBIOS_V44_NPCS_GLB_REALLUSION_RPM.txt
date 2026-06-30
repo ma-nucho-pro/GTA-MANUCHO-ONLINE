@@ -1,0 +1,13 @@
+V44 - NPCs GLB integrados
+
+- La población civil aumenta a 14 NPCs GLB, más 2 miembros de la banda naranja.
+- Se integran variantes GLB de Ready Player Me para el grupo RPM-Lipsync.
+- Se integran variantes GLB de Michelle para Reallusion-web y Character Creator.
+- Se mantienen variantes GLB Soldier para los NPC de Three.js.
+- Todos los NPC se cargan y precalientan antes de mostrar la ciudad.
+- No se crean NPC por cercanía al jugador.
+- Los modelos nuevos usan animación de caminar retargeteada.
+- No se añadieron sistemas de labios, voz ni herramientas de Blender: solo NPCs GLB, tal como se solicitó.
+
+Nota sobre actorcore.reallusion.com.zip:
+La captura adjunta no contiene un archivo .glb real. Solo incluye una página guardada con una URL firmada sin el contenido binario del modelo, por eso no se agregó como NPC independiente.

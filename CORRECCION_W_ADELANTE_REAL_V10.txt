@@ -1,0 +1,8 @@
+CORRECCIÓN REAL DEL SENTIDO DE AVANCE DEL TUTORIAL
+
+- El modelo Soldier.glb mira hacia el eje local -Z.
+- W ahora desplaza al personaje y a la bicicleta por -Z, que es el frente visual.
+- S desplaza en sentido contrario.
+- A y D fueron ajustadas para conservar izquierda y derecha respecto al nuevo frente.
+- El giro de las ruedas y la inclinación del ciclista coinciden con ese sentido.
+- Se desactivó la caché para que el navegador no reutilice una versión anterior.

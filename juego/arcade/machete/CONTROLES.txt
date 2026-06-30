@@ -1,0 +1,9 @@
+GTA MANUCHO
+
+- W, A, S y D o flechas: mover al personaje.
+- Shift: correr.
+- Arrastra el mouse: gira la cámara alrededor del personaje.
+- Clic: corta la madera.
+- V: alterna entre tercera persona detrás del personaje y primera persona.
+
+La primera vez, INICIAR_GTA_MANUCHO.cmd descarga el Soldier oficial de Three.js y lo guarda localmente.

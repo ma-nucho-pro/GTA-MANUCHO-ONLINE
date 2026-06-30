@@ -1,0 +1,10 @@
+BOSQUE(7) EXACTO INTEGRADO
+
+1. Extrae todo el ZIP.
+2. Ejecuta INICIAR_TUTORIAL_Y_JUEGO.cmd.
+3. Completa el tutorial o usa Shift + I + L.
+4. Entra al portal exterior para abrir el mundo exacto de bosque(7).
+5. Pulsa Esc o atraviesa la puerta SALIDA A GTA MANUCHO para regresar.
+
+El lanzador intenta abrir Microsoft Edge o Google Chrome con WebGPU habilitado.
+No cierres la ventana negra del servidor mientras juegas.

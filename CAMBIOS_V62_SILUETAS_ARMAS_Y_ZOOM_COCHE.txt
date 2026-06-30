@@ -1,0 +1,9 @@
+V62 - Siluetas distintas y camara de coche x4
+
+- Pistola, AK-47 y escopeta tienen siluetas diferentes en el inventario original.
+- GUN y PISTOL agregan la pistola.
+- AK47 y METRA agregan el AK-47.
+- ARM agrega la escopeta.
+- Las armas se recorren con Q dentro del inventario original.
+- Las dos vistas exteriores del coche usan zoom optico x4.
+- La primera persona conserva el campo de vision normal.

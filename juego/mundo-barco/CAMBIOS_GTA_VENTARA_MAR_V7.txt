@@ -1,0 +1,7 @@
+GTA MANUCHO Mar V7
+
+- Se fuerza WebGL para evitar el bloqueo de WebGPU.
+- La compilación de shaders ya no detiene la pantalla inicial.
+- El personaje se carga únicamente desde archivos locales.
+- Se desactivó la caché para que Edge no reutilice la V6 dañada.
+- Se conserva el océano, la isla, el barco y todos los modelos originales.

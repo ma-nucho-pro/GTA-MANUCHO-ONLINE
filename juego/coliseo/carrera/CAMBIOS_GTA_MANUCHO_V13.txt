@@ -1,0 +1,10 @@
+GTA MANUCHO OFFLINE V13
+
+CAMBIOS EN SANDBOX MEGA SALTOS:
+- Más de 540 rampas y plataformas conectadas en un único circuito serpenteante.
+- Línea central luminosa en todos los tramos.
+- Bandas de velocidad de varios colores sobre rampas y plataformas.
+- Flechas dobles que indican la dirección correcta.
+- Señalización adicional sobre el suelo y la zona de salida.
+- Se conserva el suelo sólido y la carga progresiva de colisiones.
+- No se modificaron Vuelta Rápida ni Carrera Internacional.

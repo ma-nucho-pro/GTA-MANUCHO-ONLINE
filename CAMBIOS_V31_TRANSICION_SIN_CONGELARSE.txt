@@ -1,0 +1,10 @@
+V31 - TRANSICIÓN DEL TUTORIAL A GTA MANUCHO
+
+- GTA MANUCHO y el personaje principal se muestran antes de cargar sistemas secundarios.
+- Peatones, zonas y Ferrari se cargan de forma escalonada en turnos libres.
+- Se eliminó el precalentamiento simultáneo de copias invisibles de NPC y coches.
+- Los tres modelos de peatones se decodifican uno por uno, no con Promise.all.
+- Los diez NPC se crean uno por fotograma.
+- Los cuatro Ferrari se crean uno por fotograma.
+- El paquete principal de GTA MANUCHO se precarga durante el tutorial para acelerar la transición.
+- No se reduce la resolución ni la calidad gráfica.

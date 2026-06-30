@@ -1,0 +1,7 @@
+V40
+- Solo Sandbox Mega Saltos.
+- Se añadieron marcas negras transversales sobre todas las rampas para visualizar el avance.
+- También se añadieron marcas negras en los conectores planos del recorrido.
+- Se eliminaron las líneas superpuestas que provocaban parpadeo en el suelo.
+- El piso usa ahora un material opaco y estático, sin transparencia ni conflicto de profundidad.
+- Se conservan las rampas triangulares reales, el camino conectado y las optimizaciones de rendimiento.

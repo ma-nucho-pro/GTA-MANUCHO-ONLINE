@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Barbería · GTA MANUCHO</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06090d;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{display:block;width:100%;height:100%}
+#top{position:fixed;left:16px;top:16px;z-index:10;padding:13px 16px;border:1px solid #ff69b4;border-radius:12px;background:#081019df;box-shadow:0 12px 34px #0009}.title{font-size:20px;font-weight:1000;letter-spacing:.08em}.sub{font-size:11px;color:#d7e0e8;margin-top:4px}
+#menu{position:fixed;right:16px;top:16px;z-index:10;width:min(290px,42vw);padding:14px;border:1px solid #ffffff38;border-radius:14px;background:#081019e8;box-shadow:0 12px 34px #0009}#menu h2{margin:0 0 9px;font-size:17px}button{width:100%;padding:11px 12px;margin-top:8px;border:1px solid #ffffff35;border-radius:9px;background:#16222d;color:#fff;font-weight:900;cursor:pointer}button:hover,button.active{border-color:#ff69b4;background:#3a1830}.return{background:#ff69b4;color:#210015;border:0;margin-top:14px}.status{margin-top:10px;min-height:34px;padding:8px;border-radius:8px;background:#ffffff0b;color:#ffd2e8;font-size:12px;line-height:1.35}
+#loading{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:#04070bf2;font-weight:900;letter-spacing:.05em}#help{position:fixed;left:16px;bottom:16px;z-index:10;padding:9px 12px;border-radius:9px;background:#06101bd9;border:1px solid #ffffff25;font-size:11px;color:#d6e0e9}
+@media(max-width:680px){#menu{top:auto;bottom:12px;right:12px;left:12px;width:auto;display:grid;grid-template-columns:1fr 1fr;gap:7px}#menu h2,#menu .status,#menu .return{grid-column:1/-1}button{margin:0}#help{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"../bosque/libs/three.module.js"}}</script>
+</head>
+<body>
+<div id="loading">ABRIENDO LA BARBERÍA…</div>
+<div id="top"><div class="title">GTA MANUCHO BARBER</div><div class="sub">El corte queda guardado al volver a la ciudad.</div></div>
+<div id="menu"><h2>ELIGE TU CORTE</h2><button data-style="corto">CORTO</button><button data-style="clasico">CLÁSICO</button><button data-style="cresta">CRESTA</button><button data-style="afro">AFRO</button><button data-style="rapado">RAPADO</button><div id="status" class="status">Selecciona un estilo.</div><button id="return" class="return">SALIR A GTA MANUCHO</button></div>
+<div id="help">Arrastra el ratón para girar la vista · Rueda para acercar</div>
+<script type="module" src="./game.js?v=71"></script>
+</body>
+</html>

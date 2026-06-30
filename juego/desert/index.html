@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>DESERT · Soldier Skate y Aeronaves</title>
+  <style>
+    *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#111;font-family:Arial,Helvetica,sans-serif}canvas{display:block;width:100%;height:100%}
+    #ui{position:fixed;inset:0;pointer-events:none;color:#fff;text-shadow:0 2px 4px #000;z-index:10}
+    #hud{position:absolute;top:14px;left:14px;padding:10px 13px;border-radius:10px;background:rgba(10,10,10,.62);backdrop-filter:blur(5px);font-size:14px;line-height:1.45;max-width:390px}
+    #status{font-weight:700;color:#ffe0a8}#prompt{position:absolute;left:50%;bottom:56px;transform:translateX(-50%);padding:10px 16px;border-radius:10px;background:rgba(20,12,7,.82);font-size:15px;font-weight:700;display:none;text-align:center}
+    #cross{position:absolute;left:50%;top:50%;width:10px;height:10px;transform:translate(-50%,-50%);opacity:.75}#cross:before,#cross:after{content:"";position:absolute;background:#fff;border-radius:2px}#cross:before{width:10px;height:2px;top:4px}#cross:after{width:2px;height:10px;left:4px}
+    #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:auto;background:radial-gradient(circle at 50% 38%,#67472b,#17110c 72%)}
+    .panel{width:min(560px,90vw);padding:28px;border-radius:18px;background:rgba(12,8,5,.87);border:1px solid rgba(255,218,166,.25);box-shadow:0 20px 70px #000;text-align:center}.panel h1{margin:0 0 10px;font-size:29px}.panel p{margin:8px 0;color:#e9dccd;line-height:1.5}.panel button,#resume{border:0;border-radius:10px;background:#d5893c;color:#fff;padding:12px 20px;font-size:16px;font-weight:800;cursor:pointer}.panel button:disabled{opacity:.45;cursor:wait}
+    #bar{height:7px;border-radius:99px;background:#30251d;margin:18px 0 12px;overflow:hidden}#fill{height:100%;width:4%;background:linear-gradient(90deg,#bb6b2c,#ffd080);transition:width .25s}
+    #resume{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;display:none}#returnVice{position:absolute;right:18px;bottom:18px;pointer-events:auto;border:1px solid #ffd68c;border-radius:10px;background:rgba(55,31,10,.88);color:#fff0c2;padding:10px 15px;font-weight:800;cursor:pointer;display:none}
+    #speed{color:#9de7ff}
+  </style>
+  <script type="importmap">{"imports":{"three":"./build/three.module.js","three/addons/":"./examples/jsm/"}}</script>
+</head>
+<body>
+  <div id="game"></div>
+  <div id="ui">
+    <div id="hud"><div id="status">Preparando rampa y doble terreno exterior…</div><div>WASD: caminar / skate · Shift: correr / turbo · Espacio: saltar / ollie · V: cámara · Enter: skate · Clic: marcar terreno</div><div id="speed"></div></div>
+    <div id="prompt"></div><div id="cross"></div><button id="resume">CONTINUAR</button><button id="returnVice">VOLVER AL IGLÚ DESERT</button>
+    <div id="loading"><div class="panel"><h1>DESERT · Soldier Skate y Aeronaves</h1><p>La rampa marrón queda en el centro. A su alrededor están el terreno rojizo anterior y una segunda zona de montañas basada en el ejemplo Terrain Raycasting de Three.js. Todo es transitable a pie o con skate.</p><div id="bar"><div id="fill"></div></div><p id="loadText">Preparando suelo físico en la rampa y en las dos zonas exteriores…</p><button id="play" disabled>ENTRAR AL MAPA</button></div></div>
+  </div>
+  <script>
+    (function(){
+      const button=document.getElementById('returnVice');
+      const params=new URLSearchParams(location.search);
+      if(params.get('from')==='vice') button.style.display='block';
+      button.addEventListener('click',()=>location.assign('../index.html?return=desert&noprogressive=1'));
+    })();
+  </script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

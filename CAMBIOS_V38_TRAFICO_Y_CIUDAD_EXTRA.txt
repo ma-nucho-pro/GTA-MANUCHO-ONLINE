@@ -1,0 +1,9 @@
+V38 - Trafico corregido y ciudad extra cercana
+
+- Los coches ya no usan rutas que puedan quedar sobre el mar.
+- El trafico ahora circula solo por carreteras y puentes definidos.
+- Se añadieron mas zonas de carretera para repartir mejor los coches.
+- El Parque del Retiro sigue bloqueado para el trafico.
+- Se agrego una ciudad extra cercana al norte.
+- Se agrego un edificio principal alto en esa ciudad nueva.
+- Se mantiene la precarga completa para que los coches no aparezcan por distancia.

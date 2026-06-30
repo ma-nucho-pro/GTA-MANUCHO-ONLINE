@@ -1,0 +1,14 @@
+V60 - Zoom del coche, más población, cajas de armas e inventario
+
+- Cámara dron y cámara trasera acercadas aproximadamente cuatro veces.
+- 24 Ferrari Three.js distribuidos por rutas firmes, creados gradualmente.
+- 30 NPC Michelle (26 civiles y 4 de banda), con materiales compartidos y animación limitada para reducir consumo.
+- 14 cajas con la textura crate.gif exacta del paquete Three.js adjuntado.
+- Las cajas se rompen con puños o disparos y vuelven a aparecer después de un tiempo.
+- Las cajas sueltan pistola, AKM o escopeta.
+- El AKM usa el modelo FpsRig.glb del paquete FPS adjuntado; las otras armas usan modelos ligeros.
+- E recoge el arma y la guarda.
+- I abre o cierra el inventario.
+- Al iniciar solo está disponible el puño.
+- Enter ya no equipa ni activa el jetpack.
+- Las armas recogidas permanecen guardadas mediante almacenamiento local.

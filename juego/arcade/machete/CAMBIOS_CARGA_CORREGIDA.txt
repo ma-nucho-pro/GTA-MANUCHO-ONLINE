@@ -1,0 +1,8 @@
+GTA MANUCHO — CARGA CORREGIDA
+
+- Reparado basis_transcoder.js, que impedía descomprimir recursos 3D.
+- Eliminada la espera bloqueante de las sombras de video.
+- Sustituido el tocón comprimido por uno local y ligero para iniciar rápido.
+- Eliminado el calentamiento gráfico que congelaba la pantalla al comenzar.
+- Verificado: la carga llega a 44/44, desaparece la pantalla de carga y aparece el canvas 3D.
+- Verificado: la tecla V cambia entre tercera y primera persona.

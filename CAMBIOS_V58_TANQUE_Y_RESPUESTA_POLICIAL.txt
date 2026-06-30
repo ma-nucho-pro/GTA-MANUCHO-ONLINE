@@ -1,0 +1,11 @@
+V58 - Tanque, truco TANK y respuesta policial avanzada
+
+- Se integró el tanque exacto del archivo adjuntado (M3A1 Stuart, scene.gltf + scene.bin).
+- Al alcanzar 4 estrellas aparece un tanque VCPD que persigue y dispara al jugador.
+- Al alcanzar 5 estrellas aparecen dos aviones policiales que sobrevuelan la zona y disparan.
+- Los vehículos policiales se retiran cuando baja el nivel de búsqueda correspondiente.
+- Escribiendo TANK durante el juego aparece un tanque delante del personaje.
+- El tanque del truco se puede conducir, girar, apuntar con el ratón, disparar, cambiar cámara y abandonar.
+- Controles del tanque: W/S, A/D, ratón, F o clic, V y E.
+- El tanque se empieza a preparar desde 2 estrellas y el avión desde 4 estrellas para reducir tirones en el momento de aparición.
+- Se conservó el nivel de búsqueda si la policía se prepara después de haber cometido delitos.

@@ -1,0 +1,14 @@
+CAMBIOS DE ESTA VERSIÓN
+
+1. Carga más rápida del bosque:
+   - El bosque permite entrar después de cargar la vegetación cercana.
+   - Los árboles lejanos terminan de colocarse en segundo plano mediante tiempos muertos del navegador.
+   - Las texturas procedimentales de vegetación se generan a menor resolución sin cambiar el tamaño visible de la pantalla.
+   - Se mantiene el mundo, terreno, agua y vegetación de bosque(8).
+
+2. Escalones y camino marrón físicos:
+   - Los escalones ya forman parte de la consulta de altura del personaje.
+   - El Soldier puede caminar y permanecer encima de cada tramo.
+   - Ya no atraviesa las piezas marrones ni cae por debajo de ellas.
+
+3. Se conservan el tutorial, GTA MANUCHO, museo, bosque y Shift + I + L.

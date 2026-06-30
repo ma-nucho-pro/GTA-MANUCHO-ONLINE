@@ -1,0 +1,11 @@
+GTA MANUCHO OFFLINE V16
+
+CORRECCION DEL PERSONAJE EN SANDBOX MEGA SALTOS
+
+- El personaje vuelve a aparecer desde el primer fotograma.
+- Se coloca directamente junto al coche y con los pies sobre la plataforma inicial.
+- Ya no aparece varios metros por encima del mapa mientras se calcula el suelo.
+- Se fuerza la visibilidad del personaje cuando está fuera del coche.
+- Se oculta únicamente después de subir correctamente al vehículo.
+- Se añadió recuperación automática si su posición es inválida, queda bajo el mapa o demasiado lejos del coche.
+- Se mantienen las correcciones de entrada y salida de la versión V15.

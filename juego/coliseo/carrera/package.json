@@ -1,0 +1,9 @@
+{
+  "name": "gta-ventara-offline",
+  "private": true,
+  "version": "39.0.0",
+  "description": "GTA MANUCHO Offline V39 con rampas triangulares reales apoyadas en el suelo en Sandbox Mega Saltos",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

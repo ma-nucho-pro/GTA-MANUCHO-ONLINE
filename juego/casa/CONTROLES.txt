@@ -1,0 +1,9 @@
+GTA MANUCHO - Lumen Interior
+
+WASD / flechas: caminar
+Shift: correr
+Espacio: saltar
+V: alternar tercera y primera persona
+Arrastrar el raton: girar la camara
+
+La pantalla inicial desaparece rapidamente. La habitacion original y el Soldier animado se cargan sin bloquear el juego.

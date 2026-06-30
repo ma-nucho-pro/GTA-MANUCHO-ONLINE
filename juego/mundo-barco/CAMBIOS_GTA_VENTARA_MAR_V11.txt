@@ -1,0 +1,7 @@
+GTA MANUCHO Mar V11
+
+- Se reemplazó el robot por el personaje Soldier usado en los ejemplos oficiales webgl_animation_walk y webgl_animation_multiple de Three.js.
+- Soldier usa animaciones Idle, Walk y Run.
+- El modelo se descarga una sola vez al ejecutar INICIAR_GTA_VENTARA.cmd y después funciona localmente.
+- Se conservan el océano, todas las islas, el barco, las boyas, las rocas, la vegetación y los peces.
+- Se mantienen W/A/S/D, Shift y F para subir o bajar del barco.

@@ -1,0 +1,10 @@
+VERSIÓN V36
+
+- Policía creada y precalentada durante la pantalla de carga.
+- Eliminada la descarga tardía del modelo policial que congelaba la pantalla.
+- Los policías permanecen ocultos y listos; al activarse no se crean de nuevo.
+- NPC sustituidos por un modelo local con animación Walk real.
+- NPC más rápidos y con movimiento sincronizado, sin deslizamiento extraño.
+- Coches limitados a rutas del núcleo de GTA MANUCHO y a los puentes.
+- Zona del Parque del Retiro marcada como área sin tráfico.
+- Si un coche entra por error al parque, vuelve inmediatamente a su ruta vial.

@@ -1,0 +1,1 @@
+V15: Enter y Enter numérico permiten bajarse de la bicicleta en el tutorial y en el bosque. E conserva su función original. No se modificaron movimiento, postura ni animación.

@@ -1,0 +1,6 @@
+V41
+- Solo Sandbox Mega Saltos.
+- La pista amarilla y los demás tramos permanecen visibles al moverse.
+- Se eliminó el ocultamiento visual por distancia que hacía aparecer el suelo oscuro.
+- Las plataformas planas se elevaron ligeramente para evitar superposición y parpadeo con el piso.
+- Se mantienen las colisiones cercanas optimizadas y las marcas negras.

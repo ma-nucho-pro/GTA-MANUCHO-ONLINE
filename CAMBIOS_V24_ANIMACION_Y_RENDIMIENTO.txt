@@ -1,0 +1,9 @@
+VERSIÓN V24
+
+- Diez personajes totales en la ciudad: 7 civiles y 3 integrantes de la banda naranja.
+- Las animaciones de caminar de los modelos esqueléticos usan solo rotaciones, evitando deformaciones y reduciendo el coste de CPU.
+- Caminata visible a velocidad urbana lenta.
+- Actualización de animaciones escalonada según distancia.
+- Consultas de suelo y separación mucho menos frecuentes.
+- Resolución interna adaptativa: 75% normalmente y 50% si se detectan caídas sostenidas de FPS.
+- Se mantienen reclutamiento con F, defensa, bicicletas, tutorial y bosque.

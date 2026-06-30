@@ -1,0 +1,33 @@
+- Proyecto independiente basado en Lumen Decor Studio.
+- Nombre cambiado a GTA MANUCHO.
+- Personaje controlable en tercera persona.
+- Tecla V para primera persona.
+- Animaciones Idle, Walk y Run del Soldier de Three.js cuando el modelo esta disponible.
+- Carga inicial corta con personaje y habitacion provisional visibles inmediatamente.
+- Habitacion original bedroom4-transformed.glb cargada progresivamente.
+
+V2 COLISIONES INTERIORES
+- Cama sólida y transitable por encima.
+- Cojín grande sólido y transitable por encima.
+- Dos mesitas/cajas del fondo sólidas y transitables por encima.
+- Alturas calculadas según los límites reales del GLB.
+
+V2 HABITACIÓN AMPLIADA
+- Espacio interior ampliado a 3 veces su ancho, profundidad y altura.
+- Techo elevado de 3.05 m a 9.15 m.
+- Personaje, cama, cojín, cajas y demás muebles conservan su tamaño original.
+- Límites de movimiento ampliados para recorrer toda la habitación.
+- Se mantienen las superficies físicas de cama, cojín y mesitas.
+
+- Corregido el estante/ropero del fondo con muebles visibles.
+- Añadida una puerta funcional en la pared derecha junto a la ventana.
+- Las paredes exteriores ahora son sólidas; solo se puede salir y entrar por la puerta.
+- Añadidos más muebles y decoración en la zona exterior.
+
+- Añadida puerta exterior visible y transitable.
+- Corregido el paso por la puerta entre interior y exterior.
+- Movido el ropero/estante negro al interior.
+- Añadidos más muebles visibles en la zona exterior.
+
+- Añadidas varias plantas, palmeras, macetas, lámparas, jarrones, cuadros y esculturas en el exterior del primer departamento.
+- Los adornos se colocaron sin bloquear la puerta principal.

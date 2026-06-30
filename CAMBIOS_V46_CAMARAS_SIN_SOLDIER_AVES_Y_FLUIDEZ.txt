@@ -1,0 +1,12 @@
+V46 - Camaras traseras cercanas, NPC sin Soldier y aves ligeras
+
+- Las dos camaras traseras tienen aproximadamente 4x mas zoom que en V45.
+- La vista cercana queda pegada detras del coche.
+- La vista dron sigue elevada, pero mucho mas cerca del vehiculo.
+- Se eliminaron todas las variantes visuales Soldier de los NPC de GTA MANUCHO.
+- Los NPC usan Ready Player Me, Reallusion/Michelle y respaldo male02.
+- Se mantienen 24 civiles y 3 miembros de banda, creados durante la carga.
+- Se mantienen 28 coches pregenerados y repartidos por las superficies firmes.
+- Se redujo el precalentamiento repetido de coches para acelerar el inicio.
+- Se agregaron 24 aves ligeras en el cielo mediante InstancedMesh.
+- Las aves no proyectan sombras y se actualizan a 12 FPS para evitar lag.

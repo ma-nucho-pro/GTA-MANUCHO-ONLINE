@@ -1,0 +1,10 @@
+GTA MANUCHO V82
+
+- Mar visible con la textura waternormals adjuntada y ondas de mayor contraste.
+- Se retiraron los coches cúbicos y peatones procedurales de V81.
+- Tráfico compuesto por los Ferrari adjuntados; NPC compuestos por Michelle y male02.
+- Cámara de coche exterior colocada claramente detrás y cerca.
+- Skin de la ambulancia girada 180° sin invertir los controles.
+- Destino del mapa reforzado: clic/pointer, marcador SVG visible y radar actualizado.
+- Nuevo terminal MUNDO BARCO en la ciudad y mundo marítimo adjuntado con barco.
+- Carga escalonada, culling por distancia y actualizaciones limitadas para reducir tirones.

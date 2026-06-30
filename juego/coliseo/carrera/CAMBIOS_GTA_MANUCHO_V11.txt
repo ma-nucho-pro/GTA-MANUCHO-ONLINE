@@ -1,0 +1,10 @@
+GTA MANUCHO OFFLINE V11
+
+- Se corrigió el fallo al bajar del coche en Sandbox.
+- Solo se puede bajar cuando el coche está detenido y apoyado en el suelo.
+- El personaje aparece a una distancia segura y sus pies se ajustan al terreno.
+- Se reforzó el suelo físico con una losa de 20 unidades de espesor.
+- Se añadió protección contra atravesar el suelo tras caer desde rampas altas.
+- Sandbox fue reconstruido como un único circuito continuo de rampas.
+- Cada rampa conecta con la siguiente mediante plataformas y puentes.
+- El recorrido serpentea por todo el mapa 10X.

@@ -1,0 +1,13 @@
+GTA MANUCHO OFFLINE V28
+
+- Los 4 Porsche de Vuelta Rápida aparecen junto a la salida y avanzan al comenzar la carrera.
+- Los 7 Porsche de Carrera Internacional se mueven con velocidades competitivas y ajuste suave respecto al jugador.
+- La IA usa avance por frame limitado para evitar saltos cuando baja el rendimiento.
+- Carrera Internacional optimizada: menos objetos repetidos y menos sombras pesadas para evitar congelamientos al avanzar.
+- Sandbox Mega Saltos con suelo superior exactamente en Y=0, sin diferencia entre la superficie visual y la física.
+- Rampas más anchas, de pendiente progresiva y con colisión únicamente donde es necesaria.
+- Suspensión del Sandbox amortiguada; ruido de superficie desactivado y contacto de ruedas estabilizado.
+- Líneas blancas continuas cubren todo el suelo del Sandbox con muchas menos piezas para mejorar el rendimiento.
+- El personaje usa únicamente las superficies transitables para calcular el suelo y mantiene los pies a la altura correcta en todos los niveles.
+- Movimiento y cámara del personaje protegidos contra saltos después de una caída momentánea de FPS.
+- Puerto local conservado en 3027.

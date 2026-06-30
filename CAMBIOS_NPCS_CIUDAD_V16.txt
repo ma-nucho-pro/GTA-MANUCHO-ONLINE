@@ -1,0 +1,11 @@
+VERSIÓN V16 — NPCS LOCALES EN LA CIUDAD
+
+- Se integraron los tres personajes adjuntos: Michelle.glb, readyplayer.me.glb y male02.obj.
+- Aparecen al iniciar el juego principal en GTA MANUCHO.
+- Se generan dos NPC de cada modelo (6 peatones locales en total).
+- Caminan por rutas urbanas distintas y cambian de dirección al llegar a cada punto.
+- Michelle y Ready Player Me usan animación procedural de piernas, rodillas, brazos, cadera y torso.
+- male02 camina con desplazamiento, balanceo corporal y movimiento vertical.
+- Evitan obstáculos mediante la función de colisiones del juego y ajustan su altura al suelo.
+- Todos los modelos, texturas y cargadores están incluidos localmente; no requieren Internet.
+- No se modificaron el tutorial, las bicicletas ni sus controles.

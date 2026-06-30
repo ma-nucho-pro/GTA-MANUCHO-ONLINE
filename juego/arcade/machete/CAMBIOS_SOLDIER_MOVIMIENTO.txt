@@ -1,0 +1,8 @@
+GTA MANUCHO — Soldier y movimiento
+
+- Se reemplazó el robot por el Soldier animado de los ejemplos oficiales de Three.js.
+- Se añadieron las animaciones Idle, Walk y Run.
+- El personaje ahora se mueve con WASD o flechas en tercera y primera persona.
+- Shift permite correr.
+- La cámara de tercera persona sigue al personaje desde atrás.
+- V alterna entre tercera y primera persona.

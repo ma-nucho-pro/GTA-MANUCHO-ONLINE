@@ -1,0 +1,16 @@
+V61 - Inventario Q, cajas aleatorias, estrellas y policia terrestre
+
+- Se elimino el segundo inventario con I.
+- El inventario original de la esquina se usa con Q.
+- Al iniciar solo aparece el puno; pistola y telefono dejaron de estar disponibles por defecto.
+- Las armas encontradas en cajas se agregan al inventario original Q.
+- Codigos: GUN o PISTOL = pistola; AK47 o METRA = AK-47; ARM = escopeta.
+- Enter ya no activa el jetpack ni muestra el cartel de jetpack desactivado.
+- Se quitaron la pantalla PREPARANDO GTA MANUCHO y los avisos de carga de tanque/aeronaves/personajes.
+- Las cajas aparecen en posiciones aleatorias de superficies firmes.
+- Se agregaron estrellas doradas ya creadas en la ciudad; cada una reduce un nivel de busqueda.
+- Los policias peatones quedan pegados al suelo.
+- Con 1-2 estrellas persiguen sin disparar.
+- Con 3-4 estrellas intentan arrestar al jugador si logran acercarse.
+- Con 5 estrellas disparan con cadencia y dano equilibrados.
+- Se conservan el tanque de 4 estrellas y los aviones policiales de 5 estrellas.

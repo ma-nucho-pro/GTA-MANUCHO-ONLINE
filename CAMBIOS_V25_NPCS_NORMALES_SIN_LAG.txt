@@ -1,0 +1,10 @@
+VERSIÓN V25
+
+- Se corrigió la animación que volteaba o hacía caminar al revés a Michelle y Ready Player Me.
+- La caminata ahora es aditiva respecto a la postura base de cada modelo.
+- Se corrigió el nombre de huesos de Ready Player Me para que la animación sí se aplique.
+- Los NPC usan una simulación estable a 30 Hz y animación fija a 15 Hz.
+- Se eliminó el aumento repentino de trabajo al acercarse a los NPC.
+- Las texturas y shaders de los NPC se precalientan durante la pantalla de carga.
+- Se eliminó el cambio dinámico de resolución que podía causar tirones; queda un valor fijo de rendimiento.
+- Se mantienen 7 civiles, 3 integrantes de banda naranja, reclutamiento con F, bicicletas y tutorial.

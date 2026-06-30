@@ -1,0 +1,11 @@
+GTA MANUCHO — NUEVO JUEGO
+
+- Se integró un personaje humano controlable en tercera persona.
+- El personaje oficial Soldier de los ejemplos de Three.js se carga en segundo plano.
+- Mientras termina la descarga inicial, aparece un personaje humano local para que el juego no se bloquee.
+- V alterna entre tercera y primera persona.
+- WASD mueve al personaje, Shift corre y Espacio salta.
+- El renderizado comienza antes de terminar la generación del mundo.
+- La pantalla de carga bloqueante se oculta aproximadamente después de un segundo.
+- El mundo sigue apareciendo progresivamente mientras ya puedes verlo.
+- Se usa el preset gráfico bajo durante el inicio para reducir el tiempo de carga.

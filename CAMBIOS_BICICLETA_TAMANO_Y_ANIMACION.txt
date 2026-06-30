@@ -1,0 +1,25 @@
+CORRECCIÓN: TAMAÑO Y ANIMACIÓN DE BICICLETA
+
+TUTORIAL
+- La bicicleta Carbon Frame fue ampliada de escala 18 a escala 32.
+- Se reajustó su altura para mantenerla sobre el suelo.
+- El personaje queda sentado a la altura del asiento.
+- Al montar adopta postura de ciclista: cuerpo inclinado, brazos al manillar y piernas flexionadas.
+- Al avanzar, las piernas pedalean alternadamente.
+- Al girar, el cuerpo se inclina ligeramente.
+- El área de montaje automático se amplió para coincidir con el nuevo tamaño.
+
+BOSQUE
+- La bicicleta se amplió proporcionalmente.
+- El personaje utiliza la misma postura de conducción.
+- Las piernas pedalean según la velocidad.
+- La animación propia de la bicicleta cambia de velocidad según el movimiento.
+- La postura se restaura al bajar.
+
+CONTROLES
+- Acercarse o pasar por encima: montaje automático.
+- E: montar o bajar.
+- W/S: avanzar y retroceder.
+- A/D: girar.
+- Shift: acelerar.
+- V: cambiar cámara.

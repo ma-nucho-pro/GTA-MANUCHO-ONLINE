@@ -1,0 +1,13 @@
+VERSIÓN V66 · MAPA, RADAR Y SKINS
+
+- Eliminados los carteles flotantes de territorios verde, rojo, azul, morado y naranja.
+- Eliminados los nombres flotantes sobre policías, bandas y vehículos.
+- El radar inferior izquierdo ahora es único, estable y no parpadea.
+- Radar y mapa TAB usan las mismas coordenadas y se actualizan con el jugador a pie o en vehículo.
+- Nuevo mapa TAB en SVG con apariencia satelital, carreteras, edificios, zonas y servicios.
+- Clic izquierdo en el mapa: marca un destino.
+- El destino aparece en el radar con flecha, ruta y distancia.
+- Clic derecho o botón BORRAR DESTINO: elimina el destino.
+- Integrada la skin policial Collada incluida en police.zip.
+- Integrado el modelo MD2 y las skins incluidas en bandas.zip para todas las bandas.
+- Se mantiene la escala de policías y bandas respecto del personaje principal.

@@ -1,0 +1,7 @@
+GTA MANUCHO OFFLINE V24
+
+- Sandbox Mega Saltos: carga física progresiva y mapa disponible desde el primer instante.
+- Carrera Internacional: mapa 10 veces más grande (24 000 x 19 000), ruta clara de punto a punto, ciudad con niebla, edificios, carteles, rampas tipo cuña y meta.
+- Visualizador de mapa en tiempo real en los tres niveles, con posición, progreso y distancia restante.
+- Siete coches rivales NPC en Vuelta Rápida y Carrera Internacional.
+- Se conserva el personaje Soldier, la entrada al coche, las tres cámaras con V y el funcionamiento offline.

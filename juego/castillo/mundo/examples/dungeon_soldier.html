@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Dungeon Soldier — Museo interactivo, computadoras, planeta y estatuas</title>
+<link rel="icon" href="../favicon.ico">
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;min-height:100dvh;overflow:hidden;background:#080d12;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{position:fixed;inset:0;display:block;width:100vw!important;height:100vh!important;max-width:none!important;max-height:none!important}#hud{position:fixed;inset:0;z-index:5;pointer-events:none}.box{position:absolute;padding:12px 14px;border:1px solid #ffffff2c;border-radius:13px;background:#07101bc9;backdrop-filter:blur(9px);box-shadow:0 12px 35px #0007}.info{top:16px;left:16px}.info b{letter-spacing:.08em}.small{margin-top:5px;color:#ffffffb3;font-size:12px}#status{margin-top:8px;color:#9be7b3;font-size:12px}#cam{top:16px;right:16px;font-size:12px}#fps{top:62px;right:16px;font-size:12px;color:#9be7b3}#keys{left:50%;bottom:16px;transform:translateX(-50%);font-size:12px;color:#ffffffc4;white-space:nowrap}#cross{display:none;position:absolute;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%)}#cross:before,#cross:after{content:"";position:absolute;background:#fff;box-shadow:0 0 3px #000}#cross:before{left:8px;width:2px;height:18px}#cross:after{top:8px;width:18px;height:2px}#loading{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:radial-gradient(circle,#192838d9,#03070cef)}#card{width:min(470px,calc(100vw - 32px));padding:28px;border:1px solid #ffffff2c;border-radius:20px;background:#08111bf2;text-align:center;box-shadow:0 25px 70px #0009}h1{margin:0 0 9px;font-size:27px}p{margin:0 0 18px;color:#ffffffb9;line-height:1.5;font-size:14px}#loadText{font-size:13px;color:#c8d7e8;margin:12px 0 10px}.bar{height:8px;background:#ffffff18;border-radius:999px;overflow:hidden}.bar div{width:6%;height:100%;background:linear-gradient(90deg,#5cdb91,#87c9ff);transition:width .25s}#play{margin-top:20px;width:100%;padding:13px;border:0;border-radius:12px;background:#7de4a3;color:#07110b;font-weight:800;opacity:.45}#play.ready{opacity:1;cursor:pointer}#err{display:none;margin-top:13px;padding:10px;border-radius:10px;background:#a8323244;color:#ffb7b7;text-align:left;font-size:12px}#resume{display:none;position:fixed;z-index:15;left:50%;top:50%;transform:translate(-50%,-50%);padding:12px 17px;border:1px solid #ffffff38;border-radius:12px;background:#07101bd9;color:#fff;cursor:pointer}@media(max-width:720px){#keys{width:calc(100vw - 20px);white-space:normal;text-align:center}}
+
+#interactHint{display:none;position:fixed;z-index:12;left:50%;bottom:72px;transform:translateX(-50%);padding:11px 16px;border:1px solid #71dfff66;border-radius:12px;background:#06101ee8;color:#e9fbff;font-size:13px;font-weight:700;box-shadow:0 12px 32px #0008;pointer-events:none;text-align:center}
+#terminalOverlay{display:none;position:fixed;inset:0;z-index:40;background:#02070df2;align-items:center;justify-content:center;padding:18px}
+#terminalPanel{position:relative;width:min(1180px,96vw);height:min(760px,94vh);border:1px solid #78dfff55;border-radius:18px;overflow:hidden;background:linear-gradient(145deg,#071421,#02070d);box-shadow:0 28px 90px #000;display:flex;flex-direction:column}
+#terminalTop{height:58px;flex:0 0 58px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #ffffff1c;background:#0a1724}
+#terminalTitle{font-weight:800;letter-spacing:.06em;color:#dff8ff}#terminalSubtitle{font-size:12px;color:#92aeca;margin-left:12px}
+#terminalClose{border:1px solid #ffffff35;border-radius:9px;background:#182838;color:#fff;padding:8px 12px;cursor:pointer;font-weight:700}
+#terminalViewport{position:relative;flex:1;min-height:0;overflow:hidden;background:radial-gradient(circle at 50% 45%,#132a46,#01050a 68%)}
+#terminalCanvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block}
+#terminalLabels{position:absolute;inset:0;pointer-events:none}.planet-label{display:none;position:absolute;transform:translate(-50%,-50%);padding:6px 9px;border:1px solid #8edfff88;border-radius:8px;background:#061526d9;color:#e9fbff;font-size:12px;white-space:nowrap;box-shadow:0 4px 14px #0008}.planet-label:after{content:"";position:absolute;left:50%;top:100%;width:1px;height:16px;background:#8edfffaa}
+#youtubeExperience{display:none;position:absolute;inset:0;padding:26px;overflow:auto;background:radial-gradient(circle,#15283a,#03070d)}
+#youtubeGrid{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:20px;max-width:1050px;margin:auto;perspective:1100px}.videoCard{padding:12px;border:1px solid #7edfff44;border-radius:14px;background:#07131fe8;box-shadow:0 18px 35px #0008;transform-style:preserve-3d}.videoCard:nth-child(1){transform:rotateY(5deg)}.videoCard:nth-child(2){transform:rotateY(-5deg)}.videoCard:nth-child(3){transform:rotateY(5deg)}.videoCard:nth-child(4){transform:rotateY(-5deg)}.videoCard iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:9px;background:#000}.videoCard b{display:block;margin-top:9px;color:#dff8ff;font-size:13px}
+#terminalHelp{height:50px;flex:0 0 50px;display:flex;align-items:center;justify-content:center;padding:0 16px;border-top:1px solid #ffffff1c;background:#07121d;color:#aac4da;font-size:12px;text-align:center}
+@media(max-width:760px){#youtubeGrid{grid-template-columns:1fr}#terminalPanel{width:98vw;height:96vh}#terminalSubtitle{display:none}}
+
+
+#returnCastle{position:fixed;z-index:60;right:16px;bottom:16px;padding:11px 16px;border:1px solid #ffd27a88;border-radius:11px;background:#1b1209e8;color:#ffe9bf;font:800 12px Segoe UI,Arial;letter-spacing:.05em;cursor:pointer;box-shadow:0 12px 30px #0009}
+#returnCastle:hover{background:#34200d}
+</style>
+</head>
+<body>
+<div id="hud"><div class="box info"><b>DUNGEON SOLDIER</b><div class="small">X-Wing · museo ampliado · computadoras · planeta interactivo · estatuas</div><div id="status">Cargando mapa y personaje…</div></div><div class="box" id="cam">Cámara: tercera persona</div><div class="box" id="fps">FPS: --</div><div class="box" id="keys">A pie: WASD · Click usar computadora/estatua · Nave: Enter · V cámara · F pantalla completa</div><div id="cross"></div></div>
+<div id="loading"><div id="card"><h1>Dungeon — Museo interactivo del planeta</h1><p>Museo ampliado con computadoras interactivas, planeta controlable, etiquetas, galería de videos y estatuas iluminadas, manteniendo la resolución adaptativa.</p><div id="loadText">Preparando archivos locales…</div><div class="bar"><div id="progress"></div></div><button id="play" disabled>ESPERANDO MAPA Y PERSONAJE…</button><div id="err"></div></div></div>
+<button id="resume">Haz clic para controlar la cámara</button>
+<div id="interactHint"></div>
+
+<button id="returnCastle" type="button">VOLVER AL CASTILLO</button>
+<div id="terminalOverlay">
+  <div id="terminalPanel">
+    <div id="terminalTop"><div><span id="terminalTitle">TERMINAL DEL MUSEO</span><span id="terminalSubtitle"></span></div><button id="terminalClose">CERRAR · ESC</button></div>
+    <div id="terminalViewport">
+      <canvas id="terminalCanvas"></canvas>
+      <div id="terminalLabels">
+        <div class="planet-label" data-lat="-12.0464" data-lon="-77.0428">Lima · Perú</div>
+        <div class="planet-label" data-lat="40.7128" data-lon="-74.0060">Nueva York</div>
+        <div class="planet-label" data-lat="35.6762" data-lon="139.6503">Tokio</div>
+        <div class="planet-label" data-lat="-33.8688" data-lon="151.2093">Sídney</div>
+        <div class="planet-label" data-lat="51.5072" data-lon="-0.1276">Londres</div>
+      </div>
+      <div id="youtubeExperience"><div id="youtubeGrid">
+        <div class="videoCard"><iframe data-src="https://www.youtube.com/embed/SJOz3qjfQXU?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><b>Galería audiovisual 01</b></div>
+        <div class="videoCard"><iframe data-src="https://www.youtube.com/embed/Y2-xZ-1HE-Q?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><b>Galería audiovisual 02</b></div>
+        <div class="videoCard"><iframe data-src="https://www.youtube.com/embed/IrydklNpcFI?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><b>Galería audiovisual 03</b></div>
+        <div class="videoCard"><iframe data-src="https://www.youtube.com/embed/9ubytEsCaS0?rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><b>Galería audiovisual 04</b></div>
+      </div></div>
+    </div>
+    <div id="terminalHelp">Acércate a otra computadora y haz clic para cambiar de experiencia.</div>
+  </div>
+</div>
+
+<script type="importmap">{"imports":{"three":"../build/three.module.js","three/addons/":"./jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
+
+const $=id=>document.getElementById(id);
+const ui={loading:$('loading'),play:$('play'),loadText:$('loadText'),progress:$('progress'),err:$('err'),status:$('status'),cam:$('cam'),fps:$('fps'),cross:$('cross'),resume:$('resume'),interactHint:$('interactHint'),terminalOverlay:$('terminalOverlay'),terminalTitle:$('terminalTitle'),terminalSubtitle:$('terminalSubtitle'),terminalClose:$('terminalClose'),terminalViewport:$('terminalViewport'),terminalCanvas:$('terminalCanvas'),terminalLabels:$('terminalLabels'),youtubeExperience:$('youtubeExperience'),terminalHelp:$('terminalHelp')};
+window.__GAME_STATUS={map:false,soldier:false,ready:false,error:null};
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x101821);
+scene.fog=new THREE.FogExp2(0x101821,.017);
+const camera=new THREE.PerspectiveCamera(66,innerWidth/innerHeight,.05,180);
+const renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'high-performance',precision:'mediump',stencil:false});
+let renderScale=Math.min(devicePixelRatio,.90);const MIN_RENDER_SCALE=.58,MAX_RENDER_SCALE=.90;
+function applyRenderScale(){
+  const w=Math.max(1,window.innerWidth),h=Math.max(1,window.innerHeight);
+  renderer.setPixelRatio(renderScale);
+  renderer.setSize(w,h,false);
+  renderer.domElement.style.width='100vw';renderer.domElement.style.height='100vh';
+  renderer.domElement.style.inset='0';renderer.domElement.style.position='fixed';
+}
+applyRenderScale();renderer.shadowMap.enabled=false;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;document.body.prepend(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xcbe4ff,0x22291b,1.45));const sun=new THREE.DirectionalLight(0xffefd1,2);sun.position.set(8,18,10);scene.add(sun);
+
+const player=new THREE.Group();scene.add(player);
+const blob=new THREE.Mesh(new THREE.CircleGeometry(.47,24),new THREE.MeshBasicMaterial({color:0,transparent:true,opacity:.27,depthWrite:false}));blob.rotation.x=-Math.PI/2;blob.position.y=.012;player.add(blob);
+let soldier=null,mixer=null,actions={},current='';let mapReady=false,soldierReady=false,started=false,firstPerson=false;let yaw=0,pitch=-.22,vy=0,onGround=false,jump=false;
+const keys=Object.create(null),mapMeshes=[],floorMeshes=[];
+const pools=[];let lastPoolSplash=0;let featureReady=false;
+let museumGroup=null,museumBounds=null,planetGroup=null,planetEarth=null,planetClouds=null,planetMoon=null;
+const volumeBeams=[],museumDust=[],computerScreens=[],interactiveComputers=[],decalTargetMeshes=[],spotlightTargetMeshes=[];
+let museumSpotA=null,museumSpotB=null,spotlightMode=0;
+let terminalOpen=false,terminalType='',terminalRenderer=null,terminalScene=null,terminalCamera=null,terminalPlanetGroup=null,terminalEarth=null,terminalClouds=null,terminalMoon=null,terminalStars=null;
+let terminalYaw=0,terminalPitch=0,terminalDistance=5.2,terminalDragging=false,terminalLastX=0,terminalLastY=0,terminalFlyYaw=0,terminalFlyPitch=0,terminalFlyRoll=0;
+const terminalKeys=Object.create(null),terminalLabelsData=[];let terminalVideoLoaded=false;
+const terminalTmpA=new THREE.Vector3(),terminalTmpB=new THREE.Vector3(),terminalTmpC=new THREE.Vector3(),terminalRay=new THREE.Raycaster();
+
+let xwingGroup=null,onShip=false,shipSpeed=0,shipYaw=0,shipPitch=0,shipRoll=0,shipTakeoffTarget=0,shipTakingOff=false;const xwingPhysicalMeshes=[];
+const xwingSeatLocal=new THREE.Vector3(0,1.18,-.48),xwingExitLocal=new THREE.Vector3(0,.58,4.45),shipForward=new THREE.Vector3(),shipEuler=new THREE.Euler(0,0,0,'YXZ');
+const groundRay=new THREE.Raycaster(),wallRay=new THREE.Raycaster(),camRay=new THREE.Raycaster();
+const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(),d=new THREE.Vector3(),n=new THREE.Vector3();const nm=new THREE.Matrix3();const collisionOrigins=[new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()];let cameraCollisionFrame=0,cachedCameraDistance=4.25;
+
+
+function registerPhysical(mesh,{walkable=true,obstacle=true}={}){
+  mesh.updateMatrixWorld(true);
+  if(walkable&&!floorMeshes.includes(mesh))floorMeshes.push(mesh);
+  if(obstacle&&!mapMeshes.includes(mesh))mapMeshes.push(mesh);
+  return mesh;
+}
+function makeMat(color,metalness=.25,roughness=.55){return new THREE.MeshStandardMaterial({color,metalness,roughness,side:THREE.DoubleSide});}
+function addSafetyFloor(){
+  const invisible=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide});
+  const base=new THREE.Mesh(new THREE.BoxGeometry(29,.18,38),invisible);base.name='SueloFisicoSeguridad';base.position.set(2.5,.20,.5);scene.add(base);registerPhysical(base);
+  const supports=[[-5.5,1.39,2.7,11.3,.16,6.0],[10.7,1.39,2.4,5.7,.16,22.0]];
+  for(const [x,y,z,w,h,d] of supports){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),invisible.clone());m.name='SoporteFisicoCasa';m.position.set(x,y,z);scene.add(m);registerPhysical(m);}
+}
+function stair(x,y,z,w,h,d,color=0x303b46){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),makeMat(color,.55,.45));m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);registerPhysical(m);return m;
+}
+function createXWing(){
+  const hit=groundAt(3,-9.5,12);const base=hit?hit.point.y:.42;const cx=3,cz=-9.7;
+  const pad=new THREE.Mesh(new THREE.CylinderGeometry(4.5,4.5,.48,48),makeMat(0x232c36,.72,.38));pad.position.set(cx,base+.24,cz);pad.receiveShadow=true;scene.add(pad);registerPhysical(pad);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(3.65,.08,10,64),new THREE.MeshBasicMaterial({color:0x6fd5ff}));ring.rotation.x=Math.PI/2;ring.position.set(cx,base+.5,cz);scene.add(ring);
+  for(let i=0;i<5;i++){const top=base+.10+(i+1)*.10;stair(cx,base+(i+1)*.05,cz+4.15-i*.62,2.1,(i+1)*.10,.75,0x364451);}
+  const g=new THREE.Group();g.name='XWingPathTracer';g.rotation.order='YXZ';g.position.set(cx,base+.82,cz);scene.add(g);xwingGroup=g;
+  const white=makeMat(0xd7d9d4,.45,.34),dark=makeMat(0x27303a,.7,.25),red=makeMat(0x9d3030,.45,.42),glass=new THREE.MeshPhysicalMaterial({color:0x76b8d9,metalness:.2,roughness:.12,transparent:true,opacity:.72,transmission:.3});
+  const add=(geo,mat,pos,rot=[0,0,0],walk=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(...pos);m.rotation.set(...rot);m.castShadow=false;m.receiveShadow=false;g.add(m);registerPhysical(m,{walkable:walk,obstacle:true});xwingPhysicalMeshes.push(m);return m;};
+  add(new THREE.CylinderGeometry(.42,.62,4.7,18),white,[0,.36,0],[Math.PI/2,0,0],true);
+  add(new THREE.ConeGeometry(.42,1.55,18),white,[0,.36,-3.1],[-Math.PI/2,0,0],true);
+  add(new THREE.BoxGeometry(.72,.22,2.2),red,[0,.55,.2],[0,0,0],true);
+  add(new THREE.SphereGeometry(.44,18,12,0,Math.PI*2,0,Math.PI/2),glass,[0,.76,-.45],[0,0,0],true);
+  const wingGeo=new THREE.BoxGeometry(3.7,.18,1.15);
+  add(wingGeo,white,[1.78,.12,.2],[0,.18,.13],true);add(wingGeo,white,[-1.78,.12,.2],[0,-.18,-.13],true);
+  add(wingGeo,white,[1.78,-.12,.45],[0,-.18,-.13],true);add(wingGeo,white,[-1.78,-.12,.45],[0,.18,.13],true);
+  const engGeo=new THREE.CylinderGeometry(.24,.28,2.25,16);
+  for(const x of [-1.7,1.7])for(const yy of [-.02,.26]){add(engGeo,dark,[x,yy,.35],[Math.PI/2,0,0],false);add(new THREE.CylinderGeometry(.16,.22,.55,16),red,[x,yy,1.7],[Math.PI/2,0,0],false);}
+  for(const x of [-3.15,3.15]){add(new THREE.CylinderGeometry(.06,.06,2.7,8),dark,[x,.15,-.45],[Math.PI/2,0,0],false);}
+  const beacon=new THREE.PointLight(0x65d9ff,3,10);beacon.position.set(0,1.3,0);g.add(beacon);
+  g.updateMatrixWorld(true);
+}
+function createFluidPool(cx,cz,w,d,index){
+  const hit=groundAt(cx,cz,16);const base=hit?hit.point.y:.42;const poolY=base+.24;
+  const bounds={minX:cx-w/2+.30,maxX:cx+w/2-.30,minZ:cz-d/2+.30,maxZ:cz+d/2-.30};
+  const borderMat=makeMat(index%2?0x314a57:0x2f4655,.42,.46);const parts=[
+    [cx,base+.18,cz-d/2,w,.36,.30],[cx,base+.18,cz+d/2,w,.36,.30],
+    [cx-w/2,base+.18,cz,.30,.36,d],[cx+w/2,base+.18,cz,.30,.36,d]
+  ];
+  for(const [x,y,z,sx,sy,sz] of parts){const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),borderMat);m.position.set(x,y,z);scene.add(m);registerPhysical(m);}
+  const bottom=new THREE.Mesh(new THREE.BoxGeometry(w-.55,.09,d-.55),makeMat(index%2?0x103b50:0x12334b,.02,.94));bottom.position.set(cx,base+.045,cz);scene.add(bottom);registerPhysical(bottom);
+  const uniforms={uTime:{value:0},uRipple:{value:new THREE.Vector2(999,999)},uRippleAge:{value:99},uColorA:{value:new THREE.Color(index%2?0x1d86ad:0x167aa8)},uColorB:{value:new THREE.Color(index%2?0x8befff:0x63dfff)}};
+  const material=new THREE.ShaderMaterial({uniforms,transparent:true,depthWrite:false,side:THREE.DoubleSide,vertexShader:`
+    uniform float uTime;uniform vec2 uRipple;uniform float uRippleAge;varying float vWave;
+    void main(){vec3 p=position;float wave=sin((p.x+p.y)*1.65+uTime*2.25)*.035+sin(p.x*2.4-p.y*1.7+uTime*1.6)*.018;float dist=distance(p.xy,uRipple);float ripple=sin(dist*8.5-uRippleAge*8.0)*exp(-dist*.62-uRippleAge*.78)*.20*step(uRippleAge,4.2);wave+=ripple;p.z+=wave;vWave=wave;gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`,
+    fragmentShader:`uniform vec3 uColorA;uniform vec3 uColorB;varying float vWave;void main(){float t=clamp(vWave*4.0+.48,0.0,1.0);vec3 col=mix(uColorA,uColorB,t);gl_FragColor=vec4(col,.64);}`
+  });
+  const plane=new THREE.Mesh(new THREE.PlaneGeometry(w-.60,d-.60,20,14),material);plane.rotation.x=-Math.PI/2;plane.position.set(cx,poolY,cz);scene.add(plane);
+  pools.push({cx,cz,w,d,poolY,bounds,plane,uniforms,rippleStart:-99});
+}
+function createPools(){
+  const layouts=[[-6.0,3.1,6.4,4.4],[3.2,2.0,5.4,4.0],[6.4,-4.1,4.8,4.2],[11.1,7.7,2.9,6.0],[11.1,-2.6,2.9,5.0],[-1.5,-9.7,3.6,3.8]];
+  layouts.forEach((q,i)=>createFluidPool(...q,i));
+}
+function poolAt(x,z){return pools.find(p=>x>p.bounds.minX&&x<p.bounds.maxX&&z>p.bounds.minZ&&z<p.bounds.maxZ)||null;}
+function addRipple(x,z,power=1){
+  const pool=poolAt(x,z);if(!pool)return false;pool.uniforms.uRipple.value.set(x-pool.cx,pool.cz-z);pool.rippleStart=clock.elapsedTime;pool.uniforms.uRippleAge.value=0;return true;
+}
+function updateWater(_dt,time,moving){
+  if(!pools.length)return;const active=!onShip?poolAt(player.position.x,player.position.z):null;
+  if(active&&moving&&time-lastPoolSplash>.22){addRipple(player.position.x,player.position.z,.85);lastPoolSplash=time;}
+  for(const pool of pools){pool.uniforms.uTime.value=time;pool.uniforms.uRippleAge.value=Math.max(0,time-pool.rippleStart);}
+}
+
+function makeCheckerTexture(){
+  const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;const ctx=canvas.getContext('2d');
+  const n=8,size=canvas.width/n;for(let z=0;z<n;z++)for(let x=0;x<n;x++){ctx.fillStyle=(x+z)%2?'#202833':'#87919a';ctx.fillRect(x*size,z*size,size,size)}
+  const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;tex.wrapS=tex.wrapT=THREE.RepeatWrapping;tex.repeat.set(4,3);return tex;
+}
+function makeEarthTexture(){
+  const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=512;const ctx=canvas.getContext('2d');
+  const ocean=ctx.createLinearGradient(0,0,0,512);ocean.addColorStop(0,'#0b315f');ocean.addColorStop(.5,'#176ca0');ocean.addColorStop(1,'#08284f');ctx.fillStyle=ocean;ctx.fillRect(0,0,1024,512);
+  const poly=(pts,color)=>{ctx.beginPath();pts.forEach((p,i)=>(i?ctx.lineTo(...p):ctx.moveTo(...p)));ctx.closePath();ctx.fillStyle=color;ctx.fill();};
+  poly([[95,105],[170,65],[240,80],[285,145],[260,190],[210,205],[182,272],[145,250],[120,190]],'#4d7f45');
+  poly([[250,245],[300,260],[335,325],[320,425],[278,475],[245,390],[220,300]],'#4c7b3d');
+  poly([[430,115],[510,75],[600,95],[655,145],[620,205],[545,210],[525,280],[470,250],[445,185]],'#6d8b4a');
+  poly([[535,250],[600,230],[650,270],[632,380],[575,455],[525,365]],'#51733d');
+  poly([[650,105],[730,80],[835,110],[920,165],[880,225],[790,245],[735,205],[690,180]],'#5c8242');
+  poly([[815,325],[900,315],[950,360],[922,410],[850,405]],'#7b8d4f');
+  ctx.globalAlpha=.30;ctx.fillStyle='#d4b96a';for(const [x,y,rx,ry] of [[245,145,58,26],[545,165,70,22],[720,155,95,25],[600,315,55,45]]){ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;
+  const polar=ctx.createLinearGradient(0,0,0,90);polar.addColorStop(0,'rgba(255,255,255,.95)');polar.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=polar;ctx.fillRect(0,0,1024,95);ctx.save();ctx.translate(0,512);ctx.scale(1,-1);ctx.fillStyle=polar;ctx.fillRect(0,0,1024,80);ctx.restore();
+  const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;return tex;
+}
+function makeCloudTexture(){
+  const canvas=document.createElement('canvas');canvas.width=512;canvas.height=256;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,512,256);
+  ctx.fillStyle='rgba(255,255,255,.38)';for(let i=0;i<48;i++){const x=(i*83)%512,y=28+((i*47)%195),rx=18+(i%6)*7,ry=4+(i%4)*3;ctx.beginPath();ctx.ellipse(x,y,rx,ry,(i%5)*.18,0,Math.PI*2);ctx.fill()}
+  const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;return tex;
+}
+function makeSignTexture(text){
+  const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const ctx=canvas.getContext('2d');ctx.fillStyle='#07111d';ctx.fillRect(0,0,512,128);ctx.strokeStyle='#6edcff';ctx.lineWidth=5;ctx.strokeRect(5,5,502,118);ctx.fillStyle='#dff8ff';ctx.font='700 38px Segoe UI,Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,256,64);const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;return tex;
+}
+
+function makeMonitorTexture(title,subtitle,color='#6edcff'){
+  const cv=document.createElement('canvas');cv.width=512;cv.height=288;const x=cv.getContext('2d');
+  const g=x.createLinearGradient(0,0,512,288);g.addColorStop(0,'#06111f');g.addColorStop(1,'#0b2338');x.fillStyle=g;x.fillRect(0,0,512,288);
+  x.strokeStyle=color;x.lineWidth=8;x.strokeRect(12,12,488,264);x.fillStyle='#dff8ff';x.font='800 33px Segoe UI,Arial';x.textAlign='center';x.fillText(title,256,106);x.fillStyle='#9fc4dc';x.font='22px Segoe UI,Arial';x.fillText(subtitle,256,154);x.fillStyle=color;x.fillRect(120,205,272,8);x.fillStyle='#bcefff';x.font='700 18px Segoe UI,Arial';x.fillText('ACÉRCATE Y HAZ CLIC',256,245);
+  const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;return t;
+}
+function makeSplatterTexture(color){
+  const cv=document.createElement('canvas');cv.width=cv.height=256;const x=cv.getContext('2d');x.clearRect(0,0,256,256);x.fillStyle=color;
+  x.beginPath();for(let i=0;i<34;i++){const a=i/34*Math.PI*2,r=58+(i%5)*10+Math.sin(i*4.7)*18;const px=128+Math.cos(a)*r,py=128+Math.sin(a)*r;i?x.lineTo(px,py):x.moveTo(px,py)}x.closePath();x.fill();
+  for(let i=0;i<18;i++){x.beginPath();const a=i*2.19,r=72+(i%6)*18;x.arc(128+Math.cos(a)*r,128+Math.sin(a)*r,3+(i%5)*2.3,0,Math.PI*2);x.fill()}
+  const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;return t;
+}
+function createComputer(parent,x,z,rotY,type,title,subtitle,color){
+  const cg=new THREE.Group();cg.position.set(x,0,z);cg.rotation.y=rotY;parent.add(cg);
+  const deskMat=makeMat(0x283847,.45,.55),edgeMat=makeMat(0x101821,.72,.38),screenMat=new THREE.MeshStandardMaterial({map:makeMonitorTexture(title,subtitle,color),emissive:new THREE.Color(color),emissiveIntensity:.28,roughness:.48,metalness:.15});
+  const desk=new THREE.Mesh(new THREE.BoxGeometry(3.15,.20,1.35),deskMat);desk.position.y=1.05;cg.add(desk);registerPhysical(desk,{walkable:true,obstacle:true});
+  for(const lx of [-1.28,1.28]){const leg=new THREE.Mesh(new THREE.BoxGeometry(.16,1.04,.16),edgeMat);leg.position.set(lx,.52,.42);cg.add(leg);registerPhysical(leg,{walkable:false,obstacle:true})}
+  const tower=new THREE.Mesh(new THREE.BoxGeometry(.48,.88,.72),edgeMat);tower.position.set(1.12,.56,-.22);cg.add(tower);registerPhysical(tower,{walkable:false,obstacle:true});
+  const monitor=new THREE.Mesh(new THREE.BoxGeometry(1.78,1.04,.14),screenMat);monitor.position.set(0,1.78,-.22);cg.add(monitor);registerPhysical(monitor,{walkable:false,obstacle:true});monitor.userData.terminalType=type;monitor.userData.terminalTitle=title;computerScreens.push(monitor);
+  const stand=new THREE.Mesh(new THREE.BoxGeometry(.14,.62,.14),edgeMat);stand.position.set(0,1.32,-.18);cg.add(stand);
+  const keyboard=new THREE.Mesh(new THREE.BoxGeometry(1.22,.07,.42),makeMat(0x151c25,.5,.46));keyboard.position.set(0,1.18,.26);keyboard.rotation.x=-.10;cg.add(keyboard);
+  cg.userData.terminalType=type;cg.userData.title=title;cg.userData.screen=monitor;interactiveComputers.push(cg);return cg;
+}
+function createSpotlightStatue(parent,part,stone,metal){
+  const g=new THREE.Group();g.position.set(-6.3,0,4.8);parent.add(g);
+  const ped=new THREE.Mesh(new THREE.CylinderGeometry(1.05,1.28,1.15,24),stone);ped.position.y=.70;g.add(ped);registerPhysical(ped,{walkable:true,obstacle:true});
+  const body=new THREE.Mesh(new THREE.CylinderGeometry(.43,.68,1.75,18),makeMat(0xc9c4b8,.18,.72));body.position.y=2.05;g.add(body);registerPhysical(body,{walkable:false,obstacle:true});spotlightTargetMeshes.push(body);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.42,20,14),makeMat(0xd8d1c4,.12,.78));head.position.y=3.12;g.add(head);spotlightTargetMeshes.push(head);
+  const armGeo=new THREE.CylinderGeometry(.12,.15,1.34,12);for(const side of [-1,1]){const arm=new THREE.Mesh(armGeo,makeMat(0xc9c4b8,.18,.72));arm.position.set(side*.57,2.25,0);arm.rotation.z=side*.58;g.add(arm);spotlightTargetMeshes.push(arm)}
+  const target=new THREE.Object3D();target.position.set(0,2.15,0);g.add(target);
+  museumSpotA=new THREE.SpotLight(0xffc46d,24,16,.34,.44,1.2);museumSpotA.position.set(-3.1,6.5,2.6);museumSpotA.target=target;parent.add(museumSpotA);
+  museumSpotB=new THREE.SpotLight(0x65c8ff,20,16,.28,.42,1.2);museumSpotB.position.set(-9.2,6.2,6.5);museumSpotB.target=target;parent.add(museumSpotB);
+  for(const [x,z,c] of [[-3.1,2.6,0xffc46d],[-9.2,6.5,0x65c8ff]]){const beam=new THREE.Mesh(new THREE.ConeGeometry(1.05,5.8,18,1,true),new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.045,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));beam.position.set(x,3.7,z);beam.rotation.z=.17;parent.add(beam);volumeBeams.push(beam)}
+  return g;
+}
+function createDecalStatue(parent,stone){
+  const g=new THREE.Group();g.position.set(0,0,4.8);parent.add(g);
+  const ped=new THREE.Mesh(new THREE.CylinderGeometry(1.05,1.30,1.15,24),stone);ped.position.y=.70;g.add(ped);registerPhysical(ped,{walkable:true,obstacle:true});
+  const white=makeMat(0xd7d7d2,.05,.84);const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.55,1.18,8,16),white);torso.position.y=2.15;g.add(torso);registerPhysical(torso,{walkable:false,obstacle:true});decalTargetMeshes.push(torso);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.42,24,16),white);head.position.y=3.35;g.add(head);decalTargetMeshes.push(head);
+  const legGeo=new THREE.CapsuleGeometry(.20,.92,6,12);for(const side of [-1,1]){const leg=new THREE.Mesh(legGeo,white);leg.position.set(side*.27,1.12,0);g.add(leg);decalTargetMeshes.push(leg)}
+  const colors=['#ff3158','#34d5ff','#ffe45e','#8eff68'];for(let i=0;i<7;i++){const decal=new THREE.Mesh(new THREE.PlaneGeometry(.38+(i%3)*.12,.38+(i%2)*.16),new THREE.MeshBasicMaterial({map:makeSplatterTexture(colors[i%colors.length]),transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-4,side:THREE.DoubleSide}));const a=i*2.1;decal.position.set(Math.sin(a)*.43,1.85+(i%4)*.38,.50);decal.rotation.set(0,0,a*.4);g.add(decal)}
+  return g;
+}
+function addDecalAtHit(hit){
+  if(!hit||!hit.face)return;const colors=['#ff3158','#34d5ff','#ffe45e','#8eff68','#ff9c3d'];const mat=new THREE.MeshBasicMaterial({map:makeSplatterTexture(colors[Math.floor(Math.random()*colors.length)]),transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-8,side:THREE.DoubleSide});const size=.28+Math.random()*.34;const decal=new THREE.Mesh(new THREE.PlaneGeometry(size,size),mat);const worldNormal=hit.face.normal.clone().transformDirection(hit.object.matrixWorld).normalize();decal.position.copy(hit.point).addScaledVector(worldNormal,.012);decal.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),worldNormal);decal.rotateZ(Math.random()*Math.PI*2);scene.add(decal);setTimeout(()=>{if(scene.children.includes(decal)){scene.remove(decal);decal.geometry.dispose();mat.map.dispose();mat.dispose()}},45000);
+}
+function cycleSpotlights(){
+  spotlightMode=(spotlightMode+1)%4;const palette=[[0xffc46d,0x65c8ff],[0xff4d8d,0x54ffb4],[0xa783ff,0xffea61],[0xffffff,0x7cd9ff]][spotlightMode];museumSpotA.color.setHex(palette[0]);museumSpotB.color.setHex(palette[1]);museumSpotA.intensity=18+spotlightMode*4;museumSpotB.intensity=17+((spotlightMode+2)%4)*3;ui.status.textContent='Estatua de focos: iluminación '+(spotlightMode+1)+'/4';
+}
+
+function createMuseum(mapRoot){
+  const box=new THREE.Box3().setFromObject(mapRoot),mapEdge=box.max.x-.35,mz=THREE.MathUtils.clamp((box.min.z+box.max.z)*.5,-2.5,2.5);
+  const edgeHit=groundAt(mapEdge-1.0,mz,24),base=edgeHit?edgeHit.point.y:.42,mx=box.max.x+18.0,w=28.0,dpt=21.0,h=7.5;
+  const g=new THREE.Group();g.name='MuseoInteractivoPlaneta';g.position.set(mx,base,mz);scene.add(g);museumGroup=g;
+  museumBounds={minX:mx-w*.5,maxX:mx+w*.5,minZ:mz-dpt*.5,maxZ:mz+dpt*.5};
+  const wallMat=makeMat(0x26313c,.35,.72),trimMat=makeMat(0x111821,.58,.56),metal=makeMat(0x596674,.72,.32),stone=makeMat(0x8d969b,.12,.82);
+  const part=(geo,mat,x,y,z,walkable=false,obstacle=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=false;m.receiveShadow=false;g.add(m);registerPhysical(m,{walkable,obstacle});return m};
+  part(new THREE.BoxGeometry(w,.26,dpt),new THREE.MeshStandardMaterial({map:makeCheckerTexture(),metalness:.08,roughness:.72}),0,.13,0,true,true);
+  part(new THREE.BoxGeometry(w,.32,dpt),trimMat,0,-.10,0,false,true);
+  part(new THREE.BoxGeometry(.34,h,dpt),wallMat,w*.5,h*.5,0,false,true);
+  part(new THREE.BoxGeometry(w,h,.34),wallMat,0,h*.5,-dpt*.5,false,true);
+  part(new THREE.BoxGeometry(w,h,.34),wallMat,0,h*.5,dpt*.5,false,true);
+  const door=4.6,frontX=-w*.5;part(new THREE.BoxGeometry(.34,h,(dpt-door)*.5),wallMat,frontX,h*.5,-(dpt+door)*.25,false,true);part(new THREE.BoxGeometry(.34,h,(dpt-door)*.5),wallMat,frontX,h*.5,(dpt+door)*.25,false,true);part(new THREE.BoxGeometry(.34,1.45,door),wallMat,frontX,h-.725,0,false,true);
+  part(new THREE.BoxGeometry(w,.24,dpt),trimMat,0,h+.12,0,false,true);
+  for(const z of [-8.4,0,8.4])part(new THREE.BoxGeometry(w,.10,.10),metal,0,6.5,z,false,false);
+  const bridgeLen=(mx-w*.5)-mapEdge+1.0,bridgeX=mapEdge+bridgeLen*.5-.5;const bridge=new THREE.Mesh(new THREE.BoxGeometry(bridgeLen,.24,4.1),makeMat(0x3e4b58,.5,.48));bridge.position.set(bridgeX,base+.12,mz);scene.add(bridge);registerPhysical(bridge,{walkable:true,obstacle:true});
+  for(const side of [-1,1]){const rail=new THREE.Mesh(new THREE.BoxGeometry(bridgeLen,.12,.12),metal);rail.position.set(bridgeX,base+.72,mz+side*1.98);scene.add(rail);registerPhysical(rail,{walkable:false,obstacle:true})}
+  const sign=new THREE.Mesh(new THREE.PlaneGeometry(6.4,1.35),new THREE.MeshBasicMaterial({map:makeSignTexture('MUSEO INTERACTIVO DEL PLANETA'),transparent:true}));sign.position.set(frontX-.19,5.15,0);sign.rotation.y=-Math.PI/2;g.add(sign);
+  const contactMat=new THREE.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.34,depthWrite:false});const addContact=(x,z,r)=>{const q=new THREE.Mesh(new THREE.CircleGeometry(r,24),contactMat);q.rotation.x=-Math.PI/2;q.position.set(x,.275,z);g.add(q)};
+
+  createComputer(g,-8.8,-7.7,0,'fly','TIERRA · VUELO','WASD · R/F · Q/E','#73dfff');
+  createComputer(g,-3.2,-7.7,0,'earth','TIERRA TSL','DÍA · NOCHE · ATMÓSFERA','#78ffb6');
+  createComputer(g,2.4,-7.7,0,'labels','ETIQUETAS 2D','CIUDADES SOBRE EL PLANETA','#ffc970');
+  createComputer(g,8.0,-7.7,0,'youtube','GALERÍA CSS3D','VIDEOS INTERACTIVOS','#ff779e');
+
+  createSpotlightStatue(g,part,stone,metal);addContact(-6.3,4.8,1.3);
+  createDecalStatue(g,stone);addContact(0,4.8,1.3);
+  const abstract=part(new THREE.TorusKnotGeometry(.82,.22,80,12),makeMat(0xc28d43,.78,.26),6.0,2.05,5.0,false,true);abstract.rotation.x=.4;abstract.rotation.z=.3;part(new THREE.CylinderGeometry(.78,.95,1.2,18),stone,6.0,.78,5.0,true,true);addContact(6.0,5.0,1.0);
+
+  part(new THREE.CylinderGeometry(1.10,1.36,1.18,24),metal,7.4,.82,.2,true,true);addContact(7.4,.2,1.4);
+  planetGroup=new THREE.Group();planetGroup.position.set(7.4,3.35,.2);g.add(planetGroup);
+  const geo=new THREE.SphereGeometry(1.62,48,24),earthMat=new THREE.MeshPhongMaterial({map:makeEarthTexture(),specular:0x667788,shininess:24});planetEarth=new THREE.Mesh(geo,earthMat);planetEarth.rotation.z=.40;planetGroup.add(planetEarth);
+  planetClouds=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({map:makeCloudTexture(),transparent:true,opacity:.55,depthWrite:false}));planetClouds.scale.setScalar(1.018);planetClouds.rotation.z=.40;planetGroup.add(planetClouds);
+  planetGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.80,40,20),new THREE.MeshBasicMaterial({color:0x54aaff,transparent:true,opacity:.13,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false})));
+  const halo=new THREE.Mesh(new THREE.TorusGeometry(2.12,.025,8,64),new THREE.MeshBasicMaterial({color:0x67d9ff,transparent:true,opacity:.64}));halo.rotation.x=Math.PI/2;planetGroup.add(halo);
+  planetMoon=new THREE.Mesh(new THREE.SphereGeometry(.28,18,10),makeMat(0xb8b8b2,.08,.92));planetGroup.add(planetMoon);
+  const starPos=[];for(let i=0;i<150;i++){const ang=i*2.399,rad=2.0+(i%9)*.14,y=((i*37)%100)/100*5.0-2.5;starPos.push(Math.cos(ang)*rad,y,Math.sin(ang)*rad)}const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(starPos,3));planetGroup.add(new THREE.Points(sg,new THREE.PointsMaterial({color:0xcdeeff,size:.045,transparent:true,opacity:.74,depthWrite:false})));
+  for(const [x,z,col] of [[-8.8,-7.7,0x70dfff],[-3.2,-7.7,0x70ffb6],[2.4,-7.7,0xffc970],[8.0,-7.7,0xff779e],[7.4,.2,0x80d7ff]]){const light=new THREE.PointLight(col,2.3,7,2);light.position.set(x,5.8,z);g.add(light);const beam=new THREE.Mesh(new THREE.CylinderGeometry(.04,1.05,5.3,16,1,true),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.045,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));beam.position.set(x,3.15,z);g.add(beam);volumeBeams.push(beam)}
+  for(let f=0;f<2;f++){const pts=[];for(let i=0;i<110;i++)pts.push((Math.random()-.5)*w*.85,.45+Math.random()*6.0,(Math.random()-.5)*dpt*.85);const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));const dust=new THREE.Points(dg,new THREE.PointsMaterial({color:f?0xa9dcff:0xffe2aa,size:.028,transparent:true,opacity:.26,depthWrite:false,blending:THREE.AdditiveBlending}));g.add(dust);museumDust.push(dust)}
+  g.updateMatrixWorld(true);
+}
+function insideMuseum(x,z){return museumBounds&&x>museumBounds.minX&&x<museumBounds.maxX&&z>museumBounds.minZ&&z<museumBounds.maxZ}
+function updateMuseum(time,dt){
+  if(planetEarth){planetEarth.rotation.y+=dt*.14;planetClouds.rotation.y+=dt*.20;const a=time*.42;planetMoon.position.set(Math.cos(a)*2.45,.30+Math.sin(a*.7)*.32,Math.sin(a)*2.45);planetMoon.rotation.y+=dt*.25}
+  for(let i=0;i<volumeBeams.length;i++){volumeBeams[i].material.opacity=.060+Math.sin(time*.75+i*1.7)*.014}
+  for(let i=0;i<museumDust.length;i++){museumDust[i].rotation.y+=dt*(i?-.018:.014);museumDust[i].position.y=Math.sin(time*.22+i)*.06}
+}
+function createFeatures(mapRoot){if(featureReady)return;addSafetyFloor();createXWing();createPools();createMuseum(mapRoot);featureReady=true;}
+
+
+function initTerminalScene(){
+  if(terminalRenderer)return;
+  terminalRenderer=new THREE.WebGLRenderer({canvas:ui.terminalCanvas,antialias:false,powerPreference:'high-performance',alpha:true,precision:'mediump'});terminalRenderer.setPixelRatio(Math.min(devicePixelRatio,1));terminalRenderer.outputColorSpace=THREE.SRGBColorSpace;terminalRenderer.toneMapping=THREE.ACESFilmicToneMapping;terminalRenderer.toneMappingExposure=1.12;
+  terminalScene=new THREE.Scene();terminalScene.background=new THREE.Color(0x01040a);terminalCamera=new THREE.PerspectiveCamera(52,1,.05,100);terminalScene.add(new THREE.HemisphereLight(0x9fd7ff,0x06101a,1.6));const sunL=new THREE.DirectionalLight(0xffffff,4.2);sunL.position.set(5,3,5);terminalScene.add(sunL);const rim=new THREE.PointLight(0x2c8dff,12,18,2);rim.position.set(-4,1,-3);terminalScene.add(rim);
+  terminalPlanetGroup=new THREE.Group();terminalScene.add(terminalPlanetGroup);const geo=new THREE.SphereGeometry(1.62,64,32);terminalEarth=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({map:makeEarthTexture(),specular:0x628bb1,shininess:40}));terminalEarth.rotation.z=.408;terminalPlanetGroup.add(terminalEarth);terminalClouds=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({map:makeCloudTexture(),transparent:true,opacity:.57,depthWrite:false}));terminalClouds.scale.setScalar(1.018);terminalClouds.rotation.z=.408;terminalPlanetGroup.add(terminalClouds);terminalPlanetGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.78,48,24),new THREE.MeshBasicMaterial({color:0x4a9dff,transparent:true,opacity:.16,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false})));
+  terminalMoon=new THREE.Mesh(new THREE.SphereGeometry(.30,20,12),new THREE.MeshStandardMaterial({color:0xb9b9b3,roughness:.92}));terminalScene.add(terminalMoon);
+  const stars=[];for(let i=0;i<520;i++){const r=12+((i*19)%90)/10,a=i*2.399,y=((i*37)%100)/100*14-7;stars.push(Math.cos(a)*r,y,Math.sin(a)*r)}const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(stars,3));terminalStars=new THREE.Points(sg,new THREE.PointsMaterial({color:0xcceaff,size:.045,transparent:true,opacity:.75,depthWrite:false}));terminalScene.add(terminalStars);
+  [...ui.terminalLabels.querySelectorAll('.planet-label')].forEach(el=>{const lat=Number(el.dataset.lat)*Math.PI/180,lon=Number(el.dataset.lon)*Math.PI/180;const r=1.72;terminalLabelsData.push({el,pos:new THREE.Vector3(r*Math.cos(lat)*Math.cos(lon),r*Math.sin(lat),-r*Math.cos(lat)*Math.sin(lon))})});
+  const cv=ui.terminalCanvas;cv.addEventListener('pointerdown',e=>{terminalDragging=true;terminalLastX=e.clientX;terminalLastY=e.clientY;cv.setPointerCapture?.(e.pointerId)});cv.addEventListener('pointerup',()=>terminalDragging=false);cv.addEventListener('pointerleave',()=>terminalDragging=false);cv.addEventListener('pointermove',e=>{if(!terminalDragging)return;const dx=e.clientX-terminalLastX,dy=e.clientY-terminalLastY;terminalLastX=e.clientX;terminalLastY=e.clientY;if(terminalType==='fly'){terminalFlyYaw-=dx*.004;terminalFlyPitch=THREE.MathUtils.clamp(terminalFlyPitch-dy*.004,-1.45,1.45)}else{terminalYaw-=dx*.006;terminalPitch=THREE.MathUtils.clamp(terminalPitch-dy*.006,-1.25,1.25)}});cv.addEventListener('wheel',e=>{e.preventDefault();if(terminalType==='fly')terminalCamera.translateZ(e.deltaY*.004);else terminalDistance=THREE.MathUtils.clamp(terminalDistance+e.deltaY*.006,2.4,10)},{passive:false});
+}
+function resizeTerminal(){if(!terminalRenderer)return;const r=ui.terminalViewport.getBoundingClientRect(),w=Math.max(2,r.width),h=Math.max(2,r.height);terminalRenderer.setSize(w,h,false);terminalCamera.aspect=w/h;terminalCamera.updateProjectionMatrix()}
+function loadYoutubeFrames(){if(terminalVideoLoaded)return;terminalVideoLoaded=true;ui.youtubeExperience.querySelectorAll('iframe[data-src]').forEach(f=>{f.src=f.dataset.src})}
+function openTerminal(type,title){
+  terminalOpen=true;terminalType=type;document.exitPointerLock?.();ui.terminalOverlay.style.display='flex';ui.youtubeExperience.style.display=type==='youtube'?'block':'none';ui.terminalCanvas.style.display=type==='youtube'?'none':'block';ui.terminalLabels.style.display=type==='labels'?'block':'none';ui.terminalTitle.textContent=title||'TERMINAL DEL MUSEO';
+  const info={fly:['Vuelo libre alrededor de la Tierra','WASD mover · R/F subir/bajar · Q/E rotar · flechas orientar · rueda acercar'],earth:['Planeta Tierra · iluminación dinámica','Arrastra para rotar · rueda para acercar · la luz recorre el planeta'],labels:['Etiquetas CSS2D sobre el planeta','Arrastra para rotar · rueda para acercar · las etiquetas siguen su posición'],youtube:['Galería audiovisual CSS3D','Usa los controles de cada video. Esta sección necesita conexión a Internet.']}[type];ui.terminalSubtitle.textContent=info[0];ui.terminalHelp.textContent=info[1];
+  if(type==='youtube'){loadYoutubeFrames()}else{initTerminalScene();terminalYaw=.45;terminalPitch=.15;terminalDistance=5.2;terminalFlyYaw=0;terminalFlyPitch=0;terminalFlyRoll=0;terminalCamera.position.set(0,0,5.2);terminalCamera.rotation.set(0,0,0,'YXZ');setTimeout(resizeTerminal,30)}
+}
+function closeTerminal(){if(!terminalOpen)return;terminalOpen=false;terminalType='';ui.terminalOverlay.style.display='none';Object.keys(terminalKeys).forEach(k=>terminalKeys[k]=false);setTimeout(lock,90)}
+function updateTerminal(dt,time){
+  if(!terminalOpen||terminalType==='youtube'||!terminalRenderer)return;
+  resizeTerminal();terminalEarth.rotation.y+=dt*(terminalType==='earth'?.22:.10);terminalClouds.rotation.y+=dt*.15;terminalStars.rotation.y+=dt*.006;const ma=time*.34;terminalMoon.position.set(Math.cos(ma)*3.0,.35+Math.sin(ma*.7)*.45,Math.sin(ma)*3.0);
+  if(terminalType==='fly'){
+    const move=terminalTmpA.set(0,0,0),spd=(terminalKeys.ShiftLeft||terminalKeys.ShiftRight)?4.8:2.4;if(terminalKeys.KeyW)move.z-=1;if(terminalKeys.KeyS)move.z+=1;if(terminalKeys.KeyA)move.x-=1;if(terminalKeys.KeyD)move.x+=1;if(terminalKeys.KeyR)move.y+=1;if(terminalKeys.KeyF)move.y-=1;
+    terminalFlyYaw+=((terminalKeys.ArrowLeft?1:0)-(terminalKeys.ArrowRight?1:0))*dt*1.15;terminalFlyPitch+=((terminalKeys.ArrowUp?1:0)-(terminalKeys.ArrowDown?1:0))*dt*1.15;terminalFlyPitch=THREE.MathUtils.clamp(terminalFlyPitch,-1.45,1.45);terminalFlyRoll+=((terminalKeys.KeyQ?1:0)-(terminalKeys.KeyE?1:0))*dt*1.1;
+    terminalCamera.rotation.order='YXZ';terminalCamera.rotation.set(terminalFlyPitch,terminalFlyYaw,terminalFlyRoll);if(move.lengthSq()){move.normalize().multiplyScalar(spd*dt).applyQuaternion(terminalCamera.quaternion);terminalCamera.position.add(move)}
+    const dist=terminalCamera.position.length();if(dist<2.15)terminalCamera.position.setLength(2.15);if(dist>18)terminalCamera.position.setLength(18);
+  }else{
+    const cp=Math.cos(terminalPitch);terminalCamera.position.set(Math.sin(terminalYaw)*cp*terminalDistance,Math.sin(terminalPitch)*terminalDistance,Math.cos(terminalYaw)*cp*terminalDistance);terminalCamera.lookAt(0,0,0);
+  }
+  if(terminalType==='earth'){const angle=time*.22;terminalScene.children.filter(o=>o.isDirectionalLight).forEach(l=>l.position.set(Math.cos(angle)*5,2.5,Math.sin(angle)*5))}
+  if(terminalType==='labels'){
+    const rect=ui.terminalViewport.getBoundingClientRect();for(const item of terminalLabelsData){terminalTmpB.copy(item.pos).applyEuler(terminalPlanetGroup.rotation);terminalTmpC.copy(terminalTmpB).project(terminalCamera);const visible=terminalTmpC.copy(terminalCamera.position).sub(terminalTmpB).dot(terminalTmpB)>0;item.el.style.display=visible?'block':'none';item.el.style.left=((terminalTmpC.x*.5+.5)*rect.width)+'px';item.el.style.top=((-terminalTmpC.y*.5+.5)*rect.height)+'px'}
+  }
+  terminalRenderer.render(terminalScene,terminalCamera);
+}
+function nearestComputer(maxDist=3.25){let best=null,bestD=maxDist;for(const comp of interactiveComputers){comp.getWorldPosition(terminalTmpA);const d=terminalTmpA.distanceTo(player.position);if(d<bestD){best=comp;bestD=d}}return best}
+function updateInteractionHint(){
+  if(!started||onShip||terminalOpen){ui.interactHint.style.display='none';return}
+  const comp=nearestComputer();if(comp){ui.interactHint.style.display='block';ui.interactHint.textContent='COMPUTADORA: '+comp.userData.title+' · HAZ CLIC PARA USARLA';return}
+  const rr=new THREE.Raycaster();rr.setFromCamera(new THREE.Vector2(0,0),camera);const dh=rr.intersectObjects(decalTargetMeshes,false)[0],sh=rr.intersectObjects(spotlightTargetMeshes,false)[0];if(dh&&dh.distance<4){ui.interactHint.style.display='block';ui.interactHint.textContent='ESTATUA DE DECALS · HAZ CLIC PARA PINTAR';return}if(sh&&sh.distance<4){ui.interactHint.style.display='block';ui.interactHint.textContent='ESTATUA DE FOCOS · HAZ CLIC PARA CAMBIAR LA ILUMINACIÓN';return}ui.interactHint.style.display='none';
+}
+function tryMuseumInteraction(){
+  if(!started||onShip||terminalOpen)return false;const comp=nearestComputer();if(comp){openTerminal(comp.userData.terminalType,comp.userData.title);return true}
+  const rr=new THREE.Raycaster();rr.setFromCamera(new THREE.Vector2(0,0),camera);const dh=rr.intersectObjects(decalTargetMeshes,false)[0];if(dh&&dh.distance<4){addDecalAtHit(dh);ui.status.textContent='Nueva pintura aplicada a la estatua';return true}const sh=rr.intersectObjects(spotlightTargetMeshes,false)[0];if(sh&&sh.distance<4){cycleSpotlights();return true}return false;
+}
+
+
+function error(msg){window.__GAME_STATUS.error=msg;ui.err.style.display='block';ui.err.textContent=msg+' Extrae todo el ZIP nuevamente y usa INICIAR_JUEGO.cmd.';ui.loadText.textContent='Error de carga';ui.status.textContent='Error al cargar';}
+function normal(hit){if(!hit.face)return n.set(0,1,0);nm.getNormalMatrix(hit.object.matrixWorld);return n.copy(hit.face.normal).applyNormalMatrix(nm).normalize();}
+function groundAt(x,z,y){const list=floorMeshes.length?floorMeshes:mapMeshes;if(!list.length)return null;groundRay.set(a.set(x,y,z),b.set(0,-1,0));groundRay.near=0;groundRay.far=60;for(const hit of groundRay.intersectObjects(list,false)){if(Math.abs(normal(hit).y)>.42)return hit;}return null;}
+function spawn(){for(const q of [[12,16],[10,15],[-9,4],[-8,3],[14,-11],[8,14],[0,10],[0,-10]]){const h=groundAt(q[0],q[1],18);if(h){player.position.set(q[0],h.point.y+.03,q[1]);onGround=true;vy=0;return;}}player.position.set(12,2,16);}
+function blocked(origin,dir,dist){wallRay.set(origin,dir);wallRay.near=.02;wallRay.far=dist+.3;for(const hit of wallRay.intersectObjects(mapMeshes,false)){if(Math.abs(normal(hit).y)<.62)return true;}return false;}
+function collision(move){const len=move.length();if(len<.0001)return false;const dir=c.copy(move).normalize(),side=d.set(-dir.z,0,dir.x).multiplyScalar(.27),y=player.position.y;collisionOrigins[0].set(player.position.x,y+.72,player.position.z);collisionOrigins[1].set(player.position.x,y+1.36,player.position.z);collisionOrigins[2].set(player.position.x+side.x,y+1,player.position.z+side.z);collisionOrigins[3].set(player.position.x-side.x,y+1,player.position.z-side.z);return collisionOrigins.some(o=>blocked(o,dir,len));}
+function fade(name,t=.18){const next=actions[name];if(!next||current===name)return;actions[current]?.fadeOut(t);next.reset().fadeIn(t).play();current=name;}
+function ready(){if(!mapReady||!soldierReady)return;window.__GAME_STATUS.ready=true;ui.progress.style.width='100%';ui.loadText.textContent='Mapa y Soldier cargados correctamente';ui.play.disabled=false;ui.play.classList.add('ready');ui.play.textContent='ENTRAR AL MAPA';ui.status.textContent='Listo para jugar';spawn();cameraUpdate(1);}
+
+const manager=new THREE.LoadingManager();manager.onProgress=(_u,l,t)=>{ui.progress.style.width=Math.max(8,Math.min(96,Math.round(l/Math.max(t,1)*100)))+'%';ui.loadText.textContent=`Cargando recursos locales… ${l}/${t}`};manager.onError=u=>error('No se pudo abrir: '+u);
+new UltraHDRLoader(manager).setPath('textures/equirectangular/').load('royal_esplanade_2k.hdr.jpg',tex=>{tex.mapping=THREE.EquirectangularReflectionMapping;scene.background=tex;scene.backgroundBlurriness=.12},undefined,()=>{});
+const loader=new GLTFLoader(manager).setPath('models/gltf/');
+loader.load('dungeon_warkarma.glb',g=>{const root=g.scene;root.traverse(o=>{if(!o.isMesh)return;const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>{if(m)m.side=THREE.DoubleSide});mapMeshes.push(o);if((o.name||'').toLowerCase().includes('floor'))floorMeshes.push(o)});scene.add(root);root.updateMatrixWorld(true);mapReady=true;window.__GAME_STATUS.map=true;createFeatures(root);ui.status.textContent='Mapa, museo, planeta, X-Wing y piscinas cargados; preparando Soldier…';ready()},x=>{if(x.total)ui.loadText.textContent='Cargando mapa… '+Math.round(x.loaded/x.total*100)+'%'},e=>{console.error(e);error('No se pudo cargar dungeon_warkarma.glb.')});
+loader.load('Soldier.glb',g=>{soldier=g.scene;soldier.traverse(o=>{if(o.isMesh)o.frustumCulled=true});soldier.rotation.y=0;player.add(soldier);mixer=new THREE.AnimationMixer(soldier);g.animations.forEach(clip=>actions[clip.name]=mixer.clipAction(clip));if(!actions.Idle&&g.animations[0])actions.Idle=mixer.clipAction(g.animations[0]);if(!actions.Run&&g.animations[1])actions.Run=mixer.clipAction(g.animations[1]);if(!actions.Walk&&g.animations[3])actions.Walk=mixer.clipAction(g.animations[3]);if(actions.Walk)actions.Walk.timeScale=1.08;if(actions.Run)actions.Run.timeScale=.92;current='Idle';actions.Idle?.play();soldierReady=true;window.__GAME_STATUS.soldier=true;ui.status.textContent=mapReady?'Mapa y personaje listos':'Soldier cargado; preparando mapa…';ready()},x=>{if(x.total&&mapReady)ui.loadText.textContent='Cargando Soldier… '+Math.round(x.loaded/x.total*100)+'%'},e=>{console.error(e);error('No se pudo cargar Soldier.glb.')});
+
+function shipWorldPoint(local,out=new THREE.Vector3()){if(!xwingGroup)return out.set(0,0,0);xwingGroup.updateMatrixWorld(true);return out.copy(local).applyMatrix4(xwingGroup.matrixWorld);}
+function toggleShip(){
+  if(!started||!xwingGroup)return;
+  onShip=!onShip;vy=0;onGround=true;
+  if(onShip){
+    shipSpeed=0;shipYaw=xwingGroup.rotation.y;shipPitch=0;shipRoll=0;yaw=-shipYaw;pitch=-.08;shipTakeoffTarget=xwingGroup.position.y+6.2;shipTakingOff=true;for(const m of xwingPhysicalMeshes){let i=floorMeshes.indexOf(m);if(i>=0)floorMeshes.splice(i,1);i=mapMeshes.indexOf(m);if(i>=0)mapMeshes.splice(i,1);}
+    player.position.copy(shipWorldPoint(xwingSeatLocal));soldier.visible=false;blob.visible=false;fade('Idle',.15);
+    ui.status.textContent='X-Wing encendida · despegue automático';
+  }else{
+    const exit=shipWorldPoint(xwingExitLocal);const safe=groundAt(exit.x,exit.z,xwingGroup.position.y+50);player.position.set(exit.x,safe?safe.point.y+.03:Math.max(.5,exit.y),exit.z);
+    soldier.visible=!firstPerson;blob.visible=!firstPerson;onGround=!!safe;shipTakingOff=false;shipSpeed=0;yaw=-shipYaw;if(!safe)spawn();
+    ui.status.textContent='Fuera de la X-Wing';
+  }
+  cameraUpdate(1);
+}
+function updateShip(dt){
+  if(!onShip||!xwingGroup)return false;
+  const turn=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0);
+  shipYaw-=turn*1.35*dt;yaw=-shipYaw;
+  const throttle=(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0);
+  const turbo=!!(keys.ShiftLeft||keys.ShiftRight);const targetSpeed=throttle>0?(turbo?22:12):throttle<0?-4:0;
+  shipSpeed=THREE.MathUtils.lerp(shipSpeed,targetSpeed,1-Math.exp(-2.7*dt));
+  const climb=(keys.Space?1:0)-(keys.ControlLeft||keys.ControlRight?1:0);
+  shipPitch=THREE.MathUtils.lerp(shipPitch,THREE.MathUtils.clamp(pitch*.72+climb*.10,-.42,.34),1-Math.exp(-3.8*dt));
+  shipRoll=THREE.MathUtils.lerp(shipRoll,-turn*.48,1-Math.exp(-5.2*dt));
+  if(shipTakingOff){xwingGroup.position.y=THREE.MathUtils.lerp(xwingGroup.position.y,shipTakeoffTarget,1-Math.exp(-1.75*dt));if(Math.abs(xwingGroup.position.y-shipTakeoffTarget)<.08)shipTakingOff=false;}
+  shipEuler.set(shipPitch,shipYaw,shipRoll,'YXZ');xwingGroup.quaternion.setFromEuler(shipEuler);
+  shipForward.set(0,0,-1).applyQuaternion(xwingGroup.quaternion).normalize();
+  xwingGroup.position.addScaledVector(shipForward,shipSpeed*dt);xwingGroup.position.y+=climb*6.5*dt;
+  xwingGroup.position.x=THREE.MathUtils.clamp(xwingGroup.position.x,-145,145);xwingGroup.position.z=THREE.MathUtils.clamp(xwingGroup.position.z,-145,145);xwingGroup.position.y=THREE.MathUtils.clamp(xwingGroup.position.y,2.4,85);
+  player.position.copy(shipWorldPoint(xwingSeatLocal));vy=0;onGround=true;fade('Idle',.18);
+  ui.status.textContent=(shipTakingOff?'Despegando':'Volando')+' · Velocidad '+Math.abs(shipSpeed).toFixed(1)+' · Altura '+xwingGroup.position.y.toFixed(1);
+  return Math.abs(shipSpeed)>.1||shipTakingOff||climb!==0;
+}
+function movement(dt){
+  if(terminalOpen)return false;
+  if(!started||!soldier||!mapReady)return false;
+  if(onShip)return updateShip(dt);
+  const f=(keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0),s=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0),run=!!(keys.ShiftLeft||keys.ShiftRight),moving=f!==0||s!==0;
+  if(jump&&onGround){vy=5.4;onGround=false}jump=false;
+  if(moving){
+    const forward=a.set(Math.sin(yaw),0,-Math.cos(yaw)),right=b.set(Math.cos(yaw),0,Math.sin(yaw)),dir=c.set(0,0,0).addScaledVector(forward,f).addScaledVector(right,s).normalize(),move=d.copy(dir).multiplyScalar((run?4.25:2.15)*dt),nx=player.position.x+move.x,nz=player.position.z+move.z,h=groundAt(nx,nz,player.position.y+1.25),gy=h?h.point.y:null;
+    if(!(onGround&&gy===null)&&!(onGround&&gy>player.position.y+.58)&&!collision(move)){
+      player.position.x=nx;player.position.z=nz;
+      if(onGround&&gy!==null){const delta=gy-player.position.y;if(delta>=-.52&&delta<=.58)player.position.y=gy+.03;else if(delta<-.52)onGround=false;}
+    }
+    const target=Math.atan2(dir.x,dir.z)+Math.PI;let diff=Math.atan2(Math.sin(target-soldier.rotation.y),Math.cos(target-soldier.rotation.y));soldier.rotation.y+=diff*Math.min(1,dt*11);
+  }
+  vy-=13.5*dt;player.position.y+=vy*dt;
+  const floor=groundAt(player.position.x,player.position.z,player.position.y+1.1);
+  if(floor&&vy<=0&&player.position.y<=floor.point.y+.08){player.position.y=floor.point.y+.03;vy=0;onGround=true;}
+  if(player.position.y<-12)spawn();
+  if(!onGround)fade(run?'Run':'Walk',.12);else if(moving)fade(run?'Run':'Walk');else fade('Idle',.24);
+  const insidePool=!!poolAt(player.position.x,player.position.z);
+  ui.status.textContent=(run&&moving?'Corriendo':moving?'Caminando':onGround?'En reposo':'Saltando')+(insidePool?' · Piscina interactiva':'')+(insideMuseum(player.position.x,player.position.z)?' · Museo interactivo':'')+' · Altura '+player.position.y.toFixed(1);
+  return moving;
+}
+function cameraUpdate(dt){
+  if(onShip&&xwingGroup){
+    const seat=shipWorldPoint(xwingSeatLocal,a),forward=b.set(0,0,-1).applyQuaternion(xwingGroup.quaternion).normalize(),up=c.set(0,1,0).applyQuaternion(xwingGroup.quaternion).normalize();
+    if(firstPerson){camera.position.copy(seat).addScaledVector(up,.38).addScaledVector(forward,.22);camera.lookAt(d.copy(camera.position).addScaledVector(forward,20));return;}
+    const desired=d.copy(seat).addScaledVector(forward,-8.4).addScaledVector(up,3.0);camera.position.lerp(desired,dt>=1?1:1-Math.pow(.0015,dt));camera.lookAt(seat);return;
+  }
+  const eye=a.copy(player.position).add(b.set(0,1.55,0)),view=c.set(Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(yaw)*Math.cos(pitch)).normalize();
+  if(firstPerson){camera.position.copy(eye);camera.lookAt(d.copy(eye).addScaledVector(view,10));return;}
+  if(dt>=1||cameraCollisionFrame++%3===0){const test=d.copy(eye).addScaledVector(view,-4.25);test.y+=.35;const ray=b.copy(test).sub(eye),dist=ray.length();cachedCameraDistance=4.25;if(dist>.01&&mapMeshes.length){camRay.set(eye,ray.normalize());camRay.near=.05;camRay.far=dist;const hits=camRay.intersectObjects(mapMeshes,false);if(hits.length)cachedCameraDistance=Math.max(.45,hits[0].distance-.22);}}
+  const desired=d.copy(eye).addScaledVector(view,-cachedCameraDistance);desired.y+=.35;camera.position.lerp(desired,dt>=1?1:1-Math.pow(.0008,dt));camera.lookAt(eye);
+}
+function toggle(){firstPerson=!firstPerson;soldier.visible=!firstPerson&&!onShip;blob.visible=!firstPerson&&!onShip;ui.cam.textContent='Cámara: '+(firstPerson?'primera persona':'tercera persona');ui.cross.style.display=firstPerson?'block':'none';cameraUpdate(1)}
+function lock(){renderer.domElement.requestPointerLock?.()}
+function enterFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.({navigationUI:'hide'}).catch(()=>{});else document.exitFullscreen?.().catch(()=>{})}
+ui.play.onclick=()=>{if(!window.__GAME_STATUS.ready)return;started=true;ui.loading.style.display='none';if(!document.fullscreenElement)document.documentElement.requestFullscreen?.({navigationUI:'hide'}).catch(()=>{});setTimeout(lock,180)};ui.resume.onclick=lock;ui.terminalClose.onclick=closeTerminal;renderer.domElement.onclick=()=>{if(started&&!terminalOpen&&document.pointerLockElement!==renderer.domElement)lock()};renderer.domElement.addEventListener('mousedown',e=>{if(!started||terminalOpen)return;if(tryMuseumInteraction()){e.preventDefault();return}if(!pools.length||document.pointerLockElement!==renderer.domElement)return;const rr=new THREE.Raycaster();rr.setFromCamera(new THREE.Vector2(0,0),camera);const h=rr.intersectObjects(pools.map(p=>p.plane),false)[0];if(h)addRipple(h.point.x,h.point.z,1.5)});document.addEventListener('pointerlockchange',()=>ui.resume.style.display=started&&document.pointerLockElement!==renderer.domElement?'block':'none');document.addEventListener('mousemove',e=>{if(terminalOpen||document.pointerLockElement!==renderer.domElement)return;if(onShip){shipYaw-=e.movementX*.00155;yaw=-shipYaw}else yaw+=e.movementX*.0022;pitch=THREE.MathUtils.clamp(pitch-e.movementY*.0018,onShip?-.52:-.72,onShip?.38:.2)});addEventListener('keydown',e=>{if(terminalOpen){terminalKeys[e.code]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(e.code==='Escape'){e.preventDefault();closeTerminal()}return}keys[e.code]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','Enter'].includes(e.code))e.preventDefault();if(e.code==='Space'&&!e.repeat&&!onShip)jump=true;if(e.code==='KeyV'&&!e.repeat&&started)toggle();if(e.code==='KeyE'&&!e.repeat&&started&&!onShip)addRipple(player.position.x,player.position.z,1.8);if(e.code==='KeyF'&&!e.repeat)enterFullscreen();if(e.code==='Enter'&&!e.repeat&&started)toggleShip()},{passive:false});addEventListener('keyup',e=>{keys[e.code]=false;terminalKeys[e.code]=false});addEventListener('blur',()=>Object.keys(keys).forEach(k=>keys[k]=false));addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();applyRenderScale();if(terminalOpen)resizeTerminal()});document.addEventListener('fullscreenchange',()=>setTimeout(()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();applyRenderScale()},80));
+const clock=new THREE.Clock();let fpsFrames=0,fpsElapsed=0;
+renderer.setAnimationLoop(()=>{const dt=Math.min(clock.getDelta(),.05),time=clock.elapsedTime;const moving=movement(dt)||false;if(!terminalOpen)mixer?.update(dt);updateWater(dt,time,moving);updateMuseum(time,dt);if(!terminalOpen)cameraUpdate(dt);updateInteractionHint();if(terminalOpen)updateTerminal(dt,time);renderer.render(scene,camera);fpsFrames++;fpsElapsed+=dt;if(fpsElapsed>=1){const fps=Math.round(fpsFrames/fpsElapsed);ui.fps.textContent='FPS: '+fps+' · Escala '+renderScale.toFixed(2);if(fps<48&&renderScale>MIN_RENDER_SCALE){renderScale=Math.max(MIN_RENDER_SCALE,renderScale-.08);applyRenderScale()}else if(fps>88&&renderScale<MAX_RENDER_SCALE){renderScale=Math.min(MAX_RENDER_SCALE,renderScale+.04);applyRenderScale()}fpsFrames=0;fpsElapsed=0;}});
+</script>
+
+<script>
+(function(){
+  const button=document.getElementById('returnCastle');
+  const goBack=()=>{
+    try{sessionStorage.setItem('VICE_RETURN_FROM_CASTLE','1');}catch(e){}
+    location.href='../../../index.html?from=castillo';
+  };
+  button?.addEventListener('click',goBack);
+})();
+</script>
+</body>
+</html>

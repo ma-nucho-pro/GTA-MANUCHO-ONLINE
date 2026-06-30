@@ -1,0 +1,15 @@
+V49 - Mundo DESERT, aeronaves exactas y codigos globales
+
+- Se integraron localmente los cuatro modelos GLB exactos adjuntados:
+  JET = SF1
+  HELICOPTER = U1H
+  PLANE = FM2
+  FLY = MD5
+- Los codigos JET, HELICOPTER, PLANE y FLY generan la aeronave delante del jugador en GTA MANUCHO y en DESERT.
+- Todas las aeronaves se pueden montar con E y volar.
+- Controles: W/S velocidad, A/D giro, Espacio subir, C o Ctrl bajar, Shift turbo, V cambiar camara, E salir.
+- Se creo un iglu de arena con letrero DESERT fuera del Parque del Retiro y un camino firme.
+- El iglu abre el mundo TERRAIN SOLDIER SKATE DOBLE TERRENO.
+- El mundo DESERT contiene por defecto los cuatro modelos exactos y permite regresar al iglu.
+- ARKEA ahora muestra el exhibit SF1/U1H/FM2/MD5 en lugar del mensaje Boeing 747.
+- Los modelos se cargan de forma secuencial y en tiempo libre para reducir tirones.

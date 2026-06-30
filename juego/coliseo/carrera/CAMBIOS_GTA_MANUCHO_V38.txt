@@ -1,0 +1,8 @@
+V38
+- Cambio exclusivo en Sandbox Mega Saltos.
+- Se eliminó el diseño que colocaba plataformas de lado o por encima del coche.
+- El coche aparece en el suelo, alineado y mirando hacia la primera rampa.
+- Cada rampa tiene forma de pirámide: comienza en el suelo, sube gradualmente y vuelve al suelo.
+- Se distribuyeron más de 70 rampas por todo el mapa en un recorrido serpenteante y conectado.
+- Se redujo el ancho, grosor y pendiente para que las rampas puedan subirse con el coche.
+- Se conserva la carga física cercana para evitar congelamientos.

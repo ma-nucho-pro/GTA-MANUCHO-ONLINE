@@ -1,0 +1,23 @@
+CORRECCIÓN DE ORIENTACIÓN Y POSTURA DE BICICLETA
+
+TUTORIAL
+- W avanza hacia la parte delantera real de la bicicleta y del personaje.
+- A gira a la izquierda y D gira a la derecha.
+- La cámara inicial queda detrás del personaje.
+- La pelvis se coloca sobre el sillín, no sobre el centro de las ruedas.
+- Las manos se ajustan directamente a ambos lados del manillar.
+- Los codos se flexionan y el torso se inclina como al conducir una motocicleta/bicicleta.
+- Rodillas y pies siguen el movimiento circular de los pedales.
+
+BOSQUE
+- El modelo Carbon Frame quedó orientado hacia el sentido real de avance.
+- El personaje se sienta sobre el sillín.
+- Las manos se mantienen sobre el manillar.
+- Las piernas pedalean y los pies siguen los pedales.
+
+CONTROLES
+W/S: avanzar/retroceder
+A/D: girar
+Shift: acelerar
+E: montar o bajar
+V: cambiar cámara

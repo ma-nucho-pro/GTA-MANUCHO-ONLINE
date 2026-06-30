@@ -1,0 +1,17 @@
+GTA MANUCHO Offline V22
+
+CAMBIOS EN SANDBOX MEGA SALTOS
+- La tecla V alterna entre cámara normal y cámara amplia.
+- La cámara amplia funciona tanto al caminar como al conducir.
+- Se eliminó la inclinación de cámara causada por la carga desigual de la suspensión en Sandbox.
+- La cámara usa seguimiento suavizado para reducir el temblor al iniciar y subir rampas.
+- Las rampas aumentaron su grosor físico de 4 a 8 unidades.
+- Los contactos de suspensión se conservan durante varios pasos físicos para evitar perder el suelo en las uniones.
+- Se redujo el solapamiento entre rampas conectadas para evitar vibraciones en sus juntas.
+- Las superficies planas se separaron visualmente unos milímetros del suelo para eliminar el parpadeo o temblor visual.
+- Se corrigió la capa visual del terreno que estaba superpuesta al asfalto.
+
+CONTROLES
+- V: alternar cámara normal/amplia.
+- WASD o flechas: mover personaje o conducir, según el estado.
+- X: subir o bajar del coche.

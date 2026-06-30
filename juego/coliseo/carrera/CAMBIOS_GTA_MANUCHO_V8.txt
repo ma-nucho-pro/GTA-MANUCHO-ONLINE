@@ -1,0 +1,11 @@
+GTA MANUCHO OFFLINE V8 - SANDBOX MEGA SALTOS
+
+- Sandbox reconstruido como terreno gigante de 1200 x 1600 unidades.
+- Más de 50 rampas y plataformas.
+- Rutas central, oeste, este y laterales.
+- Plataformas aéreas de hasta 144 unidades de altura.
+- Ocho aros de puntuación y niveles progresivos.
+- Sistema de niveles, combos, récord y puntos por tiempo en el aire y volteretas.
+- Suelo dividido en losas gruesas de colisión para evitar que el automóvil lo atraviese.
+- Barrera de seguridad física: si el coche cae bajo el terreno, vuelve inmediatamente sobre el suelo sin perder la posición horizontal.
+- Carrera Internacional y Vuelta Rápida no fueron modificadas.

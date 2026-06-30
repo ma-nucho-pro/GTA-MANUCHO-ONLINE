@@ -1,0 +1,22 @@
+CORRECCIÓN OFFLINE DE LOS NIVELES
+
+Problemas encontrados en la copia original:
+- models/laguna-seca.glb no era un modelo 3D; contenía solamente un mensaje de “No Content”.
+- La iluminación HDR del nivel se descargaba desde internet.
+- El modo de salas dependía de Supabase, Playroom y conexiones WebSocket.
+- Algunas fuentes y recursos de interfaz no estaban guardados localmente.
+
+Correcciones incluidas:
+- track4.glb se utiliza como circuito completo.
+- laguna-seca.glb fue reemplazado por una copia válida del circuito para proteger rutas antiguas.
+- El HDR, las fuentes, imágenes, modelos y sonidos necesarios están dentro de esta carpeta.
+- Carrera online fue sustituida por Carrera individual sin conexión.
+- Los mejores tiempos se guardan en el navegador mediante localStorage.
+- No se necesita npm install ni conexión a internet.
+
+EJECUCIÓN
+1. Instala Node.js LTS una sola vez.
+2. Haz doble clic en INICIAR_JUEGO.cmd.
+3. Abre http://localhost:3000
+
+También puedes abrir CMD en esta carpeta y ejecutar: node server.js

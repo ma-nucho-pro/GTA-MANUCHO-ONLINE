@@ -1,0 +1,11 @@
+CORRECCIÓN DE BICICLETA CARBON FRAME
+
+1. Se restauró el arranque original del bosque para evitar que la bicicleta bloquee la carga del mundo.
+2. La bicicleta se carga mediante un módulo independiente y compatible con el Three.js del bosque.
+3. El modelo CarbonFrameBike.glb adjuntado aparece en el tutorial y cerca del inicio del bosque.
+4. En ambos lugares puede montarse y manejarse.
+5. Al montar dice y muestra:
+   - Español: “Oh mierda, aquí vamos de nuevo”.
+   - Inglés: “Oh shit, here we go again”.
+6. Controles: E montar/bajar, W/S avanzar/retroceder, A/D girar, Shift acelerar y V cambiar cámara.
+7. Si un navegador no permite voz, la frase sigue apareciendo escrita y el juego continúa.

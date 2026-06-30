@@ -1,0 +1,15 @@
+BOSQUE 7 — CORRECCIÓN DE CARGA
+
+Causa del bloqueo:
+El mundo original creaba atlas octaédricos para la vegetación lejana. Por cada
+especie realizaba 64 ángulos y tres lecturas de GPU a 256x256. En algunos equipos
+la fase "capturing octahedral impostors" quedaba esperando indefinidamente.
+
+Corrección:
+- Se conserva el mundo original de bosque(7).
+- Se conservan el terreno, agua, iluminación, dispersión de vegetación, texturas
+  de hojas, corteza y modelos originales.
+- Los árboles lejanos usan el LOD de malla de baja geometría que ya trae el mundo.
+- Ya no se ejecutan las lecturas GPU que congelaban la carga.
+- Se amplió la capacidad del LOD lejano para mantener el bosque visible.
+- GTA MANUCHO, el museo, el tutorial y Shift + I + L no se modificaron.

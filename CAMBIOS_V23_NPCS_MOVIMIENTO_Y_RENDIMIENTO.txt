@@ -1,0 +1,10 @@
+VERSIÓN V23 — NPC MÓVILES Y RENDIMIENTO
+
+- Aumentada la velocidad visible de civiles y banda naranja para la escala real de GTA MANUCHO.
+- Movimiento de posición en cada fotograma para caminar de forma fluida.
+- Animaciones limitadas a 24 FPS cerca y 12 FPS lejos.
+- Consultas de suelo escalonadas cada 0,3 segundos por NPC en vez de realizarlas en todos los fotogramas.
+- Separación entre peatones calculada con menor frecuencia.
+- Comprobaciones de amenazas, reclutamiento y bandas distribuidas en intervalos distintos.
+- Rutas más largas para evitar recalcular trayectos continuamente.
+- Se mantienen la banda naranja MD2, reclutamiento con F, tutorial, bicicletas y bosque.

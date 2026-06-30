@@ -1,0 +1,14 @@
+SUBIR A UN HOSTING
+
+El juego es estático. Para Vercel, Netlify o cPanel debes subir el contenido de esta carpeta,
+con index.html en la raíz del sitio.
+
+Estructura correcta:
+  public_html/index.html
+  public_html/assets/
+  public_html/models/
+  public_html/audio/
+  public_html/environment/
+
+En hosting no necesitas mantener server.js ejecutándose. Ese archivo se usa solamente para
+probar el juego en tu computadora mediante Node.js.

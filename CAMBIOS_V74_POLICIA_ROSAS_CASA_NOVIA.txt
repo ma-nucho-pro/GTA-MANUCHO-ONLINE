@@ -1,0 +1,37 @@
+GTA MANUCHO V74 — POLICÍA, RENDIMIENTO Y CASA DE LA SEGUNDA NOVIA
+
+1. POLICÍAS DE PIE
+- La orientación de la skin Collada se calcula automáticamente según su caja 3D.
+- Los agentes ya no deben aparecer tumbados en el suelo.
+- Conservan la marcha procedural y miran en la dirección de desplazamiento.
+
+2. MENSAJE ATROPELLADO
+- Subir o bajar de un vehículo ya no activa el aviso ATROPELLADO.
+- Se añadió un margen de seguridad de 3 segundos después de bajar.
+- El aviso solo puede aparecer ante el impacto real de un vehículo en movimiento.
+
+3. POLICÍA MÁS FLUIDA
+- Máximo de dos agentes Collada activos en persecuciones intensas.
+- En niveles bajos solo se procesa un agente cercano.
+- La policía base duplicada permanece desactivada para evitar doble IA y dobles disparos.
+- La preparación policial se realiza durante la carga y no en mitad de la partida.
+
+4. DAÑO AJUSTADO
+- Los disparos enemigos quitan un poco más de vida que en V73, sin volver al daño excesivo de versiones anteriores.
+
+5. CASA DE LA SEGUNDA NOVIA
+- Nueva casa al noreste de la ciudad.
+- Marcada con un corazón en el radar y en el mapa TAB.
+- Se puede entrar con E y salir al mismo punto exterior.
+- Dentro aparece el personaje incluido en casa.zip.
+
+6. MISIÓN DE ROSAS
+- Hay cuatro ramos flotantes por la ciudad.
+- Recoge uno con E y llévalo a la casa marcada con corazón.
+- Cada entrega paga $750.
+- Los ramos vuelven a aparecer después de 60 segundos.
+
+NOTA DE LOS ARCHIVOS ADJUNTOS
+- rosas.zip no contenía un modelo 3D de rosas; traía un ejemplo de reflejos y texturas.
+  Por eso se construyó un ramo 3D ligero y se reutilizó una de sus texturas en el interior.
+- casa.zip contenía el personaje Kira, que se integró dentro de la casa.

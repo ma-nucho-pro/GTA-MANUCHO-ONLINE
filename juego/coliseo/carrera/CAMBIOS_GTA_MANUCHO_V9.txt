@@ -1,0 +1,9 @@
+GTA MANUCHO OFFLINE V9
+
+- Sandbox ampliado de 1200 x 1600 a 12000 x 16000 unidades (10 veces por dimensión).
+- Suelo único, grueso y continuo para impedir que el coche lo atraviese.
+- Coche colocado a y=0.96, apoyado sobre las ruedas desde el inicio.
+- Personaje colocado mediante raycast sobre la superficie real del suelo.
+- Más de 600 rampas, plataformas, saltos y rutas acrobáticas.
+- Seis distritos de acrobacias, torres gigantes, wall rides y autopista central.
+- Progresión ampliada hasta 15 niveles.

@@ -1,0 +1,14 @@
+CONTROLES - GTA MANUCHO GALERÍA THREE.JS
+
+W / Flecha arriba: avanzar
+S / Flecha abajo: retroceder
+A / Flecha izquierda: moverse a la izquierda
+D / Flecha derecha: moverse a la derecha
+Shift: correr
+Espacio: saltar
+V: alternar entre tercera y primera persona
+Ratón: mover la cámara
+Rueda: acercar o alejar la cámara en tercera persona
+
+En primera persona, haz clic sobre el juego para fijar el ratón.
+Explora la pared principal, la escultura y los tres paneles de la pared derecha.

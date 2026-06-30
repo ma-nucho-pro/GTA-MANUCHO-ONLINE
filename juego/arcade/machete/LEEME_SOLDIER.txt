@@ -1,0 +1,13 @@
+GTA MANUCHO — PERSONAJE SOLDIER
+
+1. Extrae todo el ZIP en una carpeta nueva.
+2. Abre INICIAR_GTA_MANUCHO.cmd.
+3. En la primera apertura, el iniciador descarga el Soldier oficial de Three.js (aprox. 2 MB) y lo guarda en assets\Soldier.glb.
+4. Después, el juego puede reutilizar ese archivo local.
+
+CONTROLES
+- W, A, S y D o flechas: mover al personaje.
+- Shift: correr.
+- Arrastrar el mouse: girar la cámara.
+- V: alternar tercera y primera persona.
+- Clic: cortar la madera.

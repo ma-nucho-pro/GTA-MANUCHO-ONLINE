@@ -1,0 +1,9 @@
+V53 - ARKEA sin teletransporte y aeronaves fluidas
+
+- Eliminado directamente del juego base el disparador invisible del Boeing antiguo que enviaba al jugador al cielo.
+- La zona de ARKEA ya no modifica la altura del jugador al caminar sobre el lugar de la exhibicion vieja.
+- Los materiales de las aeronaves se simplificaron conservando color y textura principal.
+- Las texturas se suben a la GPU una por una durante turnos libres.
+- Los shaders se compilan de forma asincrona antes de mostrar cada aeronave.
+- Cada aeronave permanece oculta hasta quedar preparada, evitando la pausa al acercarse.
+- Las animaciones de rotores y helices lejanas se actualizan solo cuando son necesarias.

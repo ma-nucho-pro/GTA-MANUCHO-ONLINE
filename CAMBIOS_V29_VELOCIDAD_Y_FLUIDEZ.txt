@@ -1,0 +1,9 @@
+VERSIÓN V29
+
+- Coche del jugador: velocidad máxima y aceleración aumentadas.
+- Tráfico Ferrari: velocidad visible y continua.
+- NPC: rutas mucho más largas por el mapa y velocidad de caminata aumentada.
+- Eliminadas consultas constantes de colisiones y suelo durante la conducción.
+- Eliminado el escaneo periódico de tráfico/NPC que causaba microcongelamientos.
+- Actualización de matriz del coche limitada al contenedor, sin recorrer todo el Ferrari cada fotograma.
+- Se mantiene la calidad gráfica completa y los modelos Ferrari de Three.js.

@@ -1,0 +1,12 @@
+VERSIÓN 19 — PEATONES PERSISTENTES Y NATURALES
+
+- Máximo 10 peatones activos.
+- Distribución inicial por sectores y distancias diferentes.
+- Ya no aparecen varios NPC juntos al caminar.
+- Los peatones que quedan detrás no desaparecen inmediatamente.
+- Reciclaje únicamente a más de 430 unidades, fuera de cámara y uno cada 6.5 segundos.
+- Los NPC reciclados esperan fuera de pantalla antes de mostrarse.
+- Rutas continuas sin ida y vuelta brusca.
+- Velocidad, giro, separación y animación de caminar suavizados.
+- Tamaño aumentado y calculado con respecto al personaje principal.
+- Sin cambios en tutorial, bicicletas o bosque.

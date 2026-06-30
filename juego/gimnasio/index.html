@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Gimnasio · GTA MANUCHO</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07090b;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{display:block;width:100%;height:100%}.panel{position:fixed;z-index:10;background:#071019df;border:1px solid #ffffff35;border-radius:12px;box-shadow:0 10px 30px #0008}#stats{left:14px;top:14px;padding:13px 15px;min-width:230px}.title{font-size:18px;font-weight:1000;letter-spacing:.08em;color:#ff6a45}.small{font-size:11px;color:#cbd5df;margin-top:4px}#points{font-size:28px;font-weight:1000;margin-top:5px}#prompt{left:50%;bottom:24px;transform:translateX(-50%);padding:10px 15px;font-weight:900;letter-spacing:.04em;display:none}#exit{position:fixed;right:14px;bottom:14px;z-index:20;padding:11px 15px;border:1px solid #ff5837;border-radius:10px;background:#10161d;color:#fff;font-weight:900;cursor:pointer}#loading{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:#040609f4;font-weight:900;letter-spacing:.05em}#cross{position:fixed;left:50%;top:50%;width:16px;height:16px;z-index:8;transform:translate(-50%,-50%)}#cross:before,#cross:after{content:"";position:absolute;background:#fff}#cross:before{left:7px;width:2px;height:16px}#cross:after{top:7px;width:16px;height:2px}
+</style>
+<script type="importmap">{"imports":{"three":"../bosque/libs/three.module.js"}}</script>
+</head>
+<body><div id="loading">CARGANDO EL GIMNASIO…</div><div id="cross"></div><div id="stats" class="panel"><div class="title">GTA MANUCHO BOXING GYM</div><div class="small">PUNTOS DE ENTRENAMIENTO</div><div id="points">0</div><div class="small">WASD mover · Ratón mirar · Shift correr · E entrenar · V cámara</div></div><div id="prompt" class="panel">E · ENTRENAR EN EL SACO</div><button id="exit">SALIR A GTA MANUCHO</button><script type="module" src="./game.js?v=69"></script></body></html>

@@ -1,0 +1,7 @@
+CORRECCIÓN V14
+
+- Solo se invirtió el desplazamiento a pie en el tutorial.
+- A pie: W mueve hacia atrás y S mueve hacia delante.
+- Al montar la bicicleta, W y S conservan exactamente el comportamiento de la versión V13.
+- La postura, el pedaleo, las manos en el manillar y el movimiento de la bicicleta no fueron modificados.
+- El bosque no fue modificado.

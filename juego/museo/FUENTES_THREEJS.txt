@@ -1,0 +1,9 @@
+EJEMPLOS OFICIALES USADOS COMO REFERENCIA
+
+https://threejs.org/examples/webgl_loader_texture_exr.html
+https://threejs.org/examples/webgl_materials_normalmap_object_space.html
+https://threejs.org/examples/webgl_materials_texture_manualmipmap.html
+https://threejs.org/examples/webgl_materials_video.html
+https://threejs.org/examples/webgl_texture2darray.html
+https://threejs.org/examples/webgl_texture2darray_compressed.html
+https://threejs.org/examples/webgl_texture2darray_layerupdate.html

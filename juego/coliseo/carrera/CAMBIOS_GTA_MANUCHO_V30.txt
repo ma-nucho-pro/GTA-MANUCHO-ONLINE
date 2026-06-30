@@ -1,0 +1,12 @@
+GTA MANUCHO OFFLINE V30
+
+- Los tres niveles dejan de usar la cámara del coche mientras el personaje está a pie; se elimina el movimiento tipo shake antes de subir.
+- La altura del personaje se estabiliza cuando está quieto para evitar vibraciones visuales del suelo.
+- Vuelta Rápida y Carrera Internacional ahora empiezan con el jugador en la última posición.
+- La posición cambia en tiempo real cuando el jugador adelanta o es adelantado por un NPC.
+- Las posiciones usan distancia de carrera acumulada y funcionan correctamente al cruzar la salida/meta.
+- Las dos carreras son de una vuelta: el primero que llega gana.
+- Se muestra un aviso claro de GANASTE o PERDISTE y quién llegó primero.
+- El mapa en vivo utiliza la posición real de carrera y la distancia acumulada de la vuelta.
+- Sandbox Mega Saltos conserva un camino largo, unido, con múltiples subidas y bajadas, pero usa menos tramos y menos objetos gráficos.
+- Se redujeron líneas y soportes repetidos, la distancia de dibujado y el número de colisiones registradas por cuadro para evitar congelamientos.

@@ -1,0 +1,6 @@
+GTA MANUCHO Mar V8
+- Se eliminó el inicio que quedaba bloqueado en “Preparando océano”.
+- El océano, barco provisional y personaje aparecen inmediatamente.
+- El barco, isla, boyas, rocas, vegetación y peces originales se cargan de forma progresiva.
+- Motor local Three.js con WebGLRenderer y GLTFLoader real.
+- No depende de WebGPU ni de internet.

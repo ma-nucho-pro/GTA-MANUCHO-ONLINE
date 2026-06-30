@@ -1,0 +1,24 @@
+GTA MANUCHO OFFLINE V7
+
+CAMBIOS PRINCIPALES
+
+1. CARRERA INTERNACIONAL
+- Nuevo Gran Premio Costa del Sol completamente distinto del circuito Ventara.
+- Pista cerrada rectangular de gran tamaño.
+- Chicanas en las rectas, boxes, parrilla de salida, graderías, iluminación y muros de seguridad.
+- Tres puntos de control funcionales para completar vueltas.
+
+2. SANDBOX DE ACROBACIAS
+- Parque de acrobacias independiente y de mayor tamaño.
+- Mega rampa central, plataformas elevadas, rampas laterales, wall rides y puente aéreo.
+- Cuatro aros de reto y zona de velocidad.
+- Sistema de puntuación por saltos, tiempo en el aire, volteretas, aros y combos.
+- Récord guardado localmente en el navegador.
+
+3. CONTROLES
+- Fuera del coche: WASD/flechas mueven al personaje.
+- X: subir o bajar del coche cuando está detenido.
+- Dentro del coche: los controles manejan el vehículo.
+
+EJECUCIÓN
+Ejecutar INICIAR_JUEGO.cmd y abrir http://localhost:3000

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="GTA MANUCHO — simulador 3D interactivo con Soldier animado, movimiento y cámaras en primera y tercera persona" />
+    <title>GTA MANUCHO</title>
+    <link rel="icon" type="image/png" href="./assets/favico-gVEU8cwR.png" />
+        <script type="module" crossorigin src="./assets/gta-ventara.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BuGIZBll.css">
+<style>
+#return-vice-city{position:fixed;top:14px;left:14px;z-index:99999;padding:11px 16px;border-radius:999px;background:rgba(7,12,20,.9);border:1px solid rgba(255,255,255,.35);color:#fff;text-decoration:none;font:800 13px Arial,sans-serif;box-shadow:0 10px 28px rgba(0,0,0,.35)}
+#return-vice-city:hover{background:#fff;color:#10141b}
+</style>
+</head>
+
+<body>
+    <a id="return-vice-city" href="../../index.html?from=arcade">← VOLVER AL SALÓN DE JUEGOS</a>
+    <div class="gta-brand pill-container">GTA MANUCHO</div>
+    <div class="camera-hud pill-container">V · CÁMARA: <strong id="camera-mode">TERCERA PERSONA</strong></div>
+    <div id="loading">
+        <div class="loading-inner">
+            <div class="loading-text">Cargando GTA MANUCHO…</div>
+            <div class="loading-count" id="loading-count">0 / 0</div>
+            <div class="loading-bar-track">
+                <div class="loading-bar-fill" id="loading-bar"></div>
+            </div>
+        </div>
+    </div>
+    <div id="hint-overlay" class="hint-overlay" style="display:none;">
+        <div class="hint-inner">
+            <div class="hint-line">&#8592; Arrastra para girar &#8594;</div>
+            <span class="hint-separator">&#10022;</span>
+            <div class="hint-line hint-action">WASD: moverte · Shift: correr · Clic: cortar · V: cámara</div>
+        </div>
+    </div>
+</body>
+
+</html>

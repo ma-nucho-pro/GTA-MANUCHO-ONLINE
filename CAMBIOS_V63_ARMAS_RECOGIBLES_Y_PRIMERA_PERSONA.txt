@@ -1,0 +1,11 @@
+V63 - Armas recogibles, inventario y primera persona
+
+- Al recoger un arma que sale de una caja, queda guardada de forma persistente en el inventario original.
+- El arma recogida se equipa y actualiza inmediatamente el icono del inventario.
+- Las armas que caen de las cajas flotan y giran para que se vean claramente.
+- Pistola: modelo Cerberus adjuntado.
+- AK-47: modelo FpsRig GLB adjuntado, con brazos en primera persona.
+- Escopeta: modelo Ithaca M37 adjuntado.
+- Los tres modelos se ven en primera persona.
+- Los recursos se cargan de uno en uno durante tiempos libres y se reutilizan mediante clones con geometrías compartidas.
+- Se mantienen modelos ligeros de respaldo mientras termina la carga, evitando bloquear el juego.

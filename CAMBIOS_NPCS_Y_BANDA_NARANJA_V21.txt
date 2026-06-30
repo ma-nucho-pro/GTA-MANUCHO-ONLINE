@@ -1,0 +1,11 @@
+VERSIÓN V21
+
+- Los 10 peatones civiles vuelven a caminar con velocidad lenta y visible.
+- Los civiles son un poco más bajos que el personaje principal.
+- Las bandas del juego son ligeramente más altas.
+- Se añadieron 4 miembros de la banda naranja repartidos por la ciudad.
+- Acércate a un miembro naranja y pulsa F para reclutarlo.
+- Puedes reclutar hasta 4 aliados.
+- Los aliados te siguen en formación.
+- Si un policía o una banda enemiga te dispara, los aliados reclutados responden y te defienden.
+- F cerca de un aliado reclutado hace que deje de seguirte.

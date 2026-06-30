@@ -1,0 +1,8 @@
+GTA MANUCHO OFFLINE V19
+
+- Corregida la conducción en Sandbox Mega Saltos.
+- WASD y flechas controlan el coche incluso si el panel de ajustes tiene el foco.
+- Añadidas líneas blancas centrales y laterales visibles en todas las rampas conectadas.
+- Añadidas marcas viales blancas sobre el suelo base y la zona de salida.
+- Las marcas son visuales y permanecen debajo del coche.
+- Aclarado ligeramente el asfalto para que se distinga la pista.

@@ -1,0 +1,10 @@
+GTA MANUCHO OFFLINE V20
+
+- El suelo base, la plataforma inicial y los tramos planos están exactamente a la misma altura.
+- Se eliminó el borde invisible que podía dejar el coche con las ruedas girando sin avanzar.
+- Cambio automático reforzado: W coloca marcha hacia delante y S coloca reversa cuando el coche está detenido.
+- Protección antiatasco suave para liberar el vehículo de una unión de rampas.
+- Líneas blancas permanentes alineadas con las diez rutas del Sandbox.
+- Cada ruta tiene línea central, líneas laterales y marcas transversales visibles en todo el mapa.
+- Las rampas conservan sus marcas blancas y colisión sólida.
+- Los colliders se registran antes de conducir y ya no aparecen debajo del coche durante la partida.

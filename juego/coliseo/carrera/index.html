@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./gta-ventara-logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>GTA MANUCHO Offline V41 — Pista Sandbox sólida y sin parpadeos</title>
+
+    <meta name="description" content="Juego de conducción local con personaje, coche y circuito incluido. Juega sin conexión a internet." />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GTA MANUCHO Offline" />
+    <meta property="og:description" content="Juego de conducción local con personaje, coche y circuito incluido. Juega sin conexión a internet." />
+    <meta property="og:url" content="./" />
+    <meta property="og:image" content="./gta-ventara-logo.svg" />
+    <meta property="og:image:alt" content="GTA MANUCHO share preview" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GTA MANUCHO Offline" />
+    <meta name="twitter:description" content="Juego de conducción local con personaje, coche y circuito incluido. Juega sin conexión a internet." />
+    <meta name="twitter:image" content="./gta-ventara-logo.svg" />
+    <meta name="twitter:image:alt" content="GTA MANUCHO share preview" />
+    <script type="module" crossorigin src="./assets/gta-ventara-v41.js?v=41"></script>
+    <link rel="modulepreload" crossorigin href="./assets/media-vendor-B3vTC4Y3.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-vendor-CJTAuEO4.js">
+    <link rel="modulepreload" crossorigin href="./assets/network-vendor-D-EvXTlc.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-vendor-CC_GfAUe.js">
+    <link rel="modulepreload" crossorigin href="./assets/three-vendor-BonXT3HA.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-offline-fixed-v3.css">
+    <link rel="stylesheet" href="./assets/gta-ventara-theme-v7.css">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <script>
+        window.__GTA_MANUCHO_OFFLINE__ = true;
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.getRegistrations().then(items => items.forEach(item => item.unregister()));
+        }
+        if ("caches" in window) {
+            caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key))));
+        }
+
+        // Mueve el panel de configuración de vehículo/HUD al extremo izquierdo.
+        (() => {
+            const moveTuningPanel = () => {
+                const nodes = Array.from(document.querySelectorAll('div'));
+                for (const node of nodes) {
+                    const content = (node.textContent || '').replace(/\s+/g, ' ').trim();
+                    if (!content.includes('HUD') || !content.includes('Vehicle') || !content.includes('Paint Material')) continue;
+
+                    let panel = node;
+                    while (panel.parentElement && panel.parentElement !== document.body) {
+                        const style = getComputedStyle(panel);
+                        if (style.position === 'fixed') break;
+                        panel = panel.parentElement;
+                    }
+                    if (getComputedStyle(panel).position !== 'fixed') continue;
+
+                    panel.style.setProperty('left', '8px', 'important');
+                    panel.style.setProperty('right', 'auto', 'important');
+                    panel.style.setProperty('top', '320px', 'important');
+                    panel.style.setProperty('max-height', 'calc(100vh - 100px)', 'important');
+                    panel.style.setProperty('z-index', '120', 'important');
+                    panel.dataset.gtaVentaraPanelLeft = 'true';
+                    return;
+                }
+            };
+
+            document.addEventListener('DOMContentLoaded', () => {
+                moveTuningPanel();
+                const observer = new MutationObserver(moveTuningPanel);
+                observer.observe(document.body, { childList: true, subtree: true });
+                window.setInterval(moveTuningPanel, 750);
+            });
+        })();
+    </script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <button id="return-to-coliseum" type="button">VOLVER AL COLISEO</button>
+    <style>
+      #return-to-coliseum{position:fixed;left:18px;top:18px;z-index:999999;padding:12px 18px;border:2px solid #56e6ff;border-radius:10px;background:rgba(5,12,22,.9);color:#fff;font:900 13px Arial,sans-serif;letter-spacing:.05em;cursor:pointer;box-shadow:0 12px 32px rgba(0,0,0,.45)}
+      #return-to-coliseum:hover{transform:translateY(-1px);background:rgba(10,35,55,.96)}
+    </style>
+    <script>
+      document.getElementById('return-to-coliseum').addEventListener('click', () => {
+        try { sessionStorage.setItem('vice-coliseum-return-pending', '1'); } catch {}
+        window.location.assign('../../index.html?from=coliseum');
+      });
+    </script>
+</body>
+
+</html>

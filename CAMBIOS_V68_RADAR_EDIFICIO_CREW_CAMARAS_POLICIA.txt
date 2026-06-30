@@ -1,0 +1,29 @@
+GTA MANUCHO V68 — CORRECCIONES SOLICITADAS
+
+CIUDAD Y RADAR
+- El radar inferior izquierdo ya no depende del radar antiguo del juego.
+- Muestra calles, zonas transitables, territorios, NPC de bandas, policías, vehículos y edificios de servicio.
+- Sigue al jugador a pie y al vehículo activo al conducir.
+- TAB abre el mapa SVG sincronizado.
+- Clic izquierdo en TAB coloca un destino visible en el radar con flecha y distancia.
+- Clic derecho o BORRAR DESTINO elimina el punto.
+
+ENTRADA A GAME OF CREW
+- Se retiró el botón flotante superior.
+- Se añadió un edificio negro y naranja dentro de GTA MANUCHO.
+- Está marcado con la letra C en el mapa y el radar.
+- Acércate a la puerta y pulsa E para entrar.
+
+GAME OF CREW
+- W avanza hacia donde mira la cámara y S retrocede.
+- V alterna primera y tercera persona.
+- Clic izquierdo dispara en ambas cámaras.
+- F o Ctrl izquierdo funcionan como disparo alternativo.
+- El arma se renderiza correctamente al estar unida a una cámara que forma parte de la escena.
+- Los disparos salen del centro real de la cámara y detectan enemigos de forma recursiva.
+- Se comienza en un tejado orientado hacia una escalera física que baja al patio.
+
+POLICÍA
+- Se conserva la transformación Z-UP del modelo Collada.
+- Se eliminó el giro adicional que hacía que algunos policías caminaran de espaldas.
+- La orientación erguida se restaura durante persecuciones y arrestos para evitar policías tumbados o con los pies arriba.

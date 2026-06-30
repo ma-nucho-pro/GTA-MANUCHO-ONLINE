@@ -1,0 +1,8 @@
+VERSIÓN V28 — SOLO COCHES THREE.JS
+
+- Eliminados todos los coches procedurales formados por cajas o bloques.
+- Eliminado el código que generaba sedanes, SUV, pickup, compactos y deportivos de ladrillos.
+- Se mantienen únicamente clones del Ferrari 458 Italia del ejemplo webgl_materials_car de Three.js.
+- Se incluyen seis Ferrari de diferentes colores: uno estacionado y cinco circulando.
+- Se conservan E para subir/bajar y V para cambiar entre las cinco cámaras.
+- Se conserva la conducción, el movimiento de ruedas, las rutas automáticas y la optimización anterior.

@@ -1,0 +1,6 @@
+GTA MANUCHO Mar V9
+
+- Se añadió el archivo local three.core.js que faltaba y bloqueaba el inicio.
+- three.module.js y todos sus addons ahora cargan completamente sin internet.
+- Se mantiene el océano, barco, isla, boyas, rocas, vegetación, peces y personaje.
+- Se añadió un aviso visible si algún archivo vuelve a faltar.

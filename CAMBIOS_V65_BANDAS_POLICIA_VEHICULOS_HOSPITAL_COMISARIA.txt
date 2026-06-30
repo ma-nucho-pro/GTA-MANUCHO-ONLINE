@@ -1,0 +1,29 @@
+V65 - BANDAS, POLICÍA, VEHÍCULOS, HOSPITAL Y COMISARÍA
+
+CAMBIOS PRINCIPALES
+- Policías y miembros de bandas ahora se ajustan automáticamente a la altura visual del personaje principal. Ya no aparecen exageradamente altos ni pequeños.
+- Policías y bandas usan personajes 3D animados con animaciones Idle, Walk y Run.
+- Se integraron las skins adjuntas para diferenciar policías y bandas azul, verde, morada, roja y naranja.
+- Las bandas enemigas atacan al jugador únicamente cuando entra en el territorio que controlan.
+- Los enemigos pueden perseguir, disparar y dañar al jugador o al vehículo que conduce.
+- La banda naranja es aliada del jugador. Acércate a un miembro naranja y pulsa G para reclutarlo.
+- Se pueden reclutar hasta 4 aliados. Los aliados siguen al jugador, defienden al jugador y combaten contra bandas enemigas.
+- Al eliminar a todos los enemigos de una zona, el territorio cambia a naranja, queda guardado y sus vehículos también pasan a la banda naranja.
+- La policía persigue desde una estrella, puede arrestar con niveles bajos y dispara desde dos estrellas.
+- La policía puede matar al jugador; al morir reaparece en el hospital y pierde dinero.
+- La policía puede detener al jugador y llevarlo a la celda de la comisaría antes de liberarlo con una multa.
+- Se añadieron patrullas policiales y vehículos de bandas que circulan y atacan cuando corresponde.
+- Se integró la ambulancia adjunta y el modelo de coche adjunto para patrullas y bandas.
+- Hospital y comisaría tienen interiores transitables. La comisaría incluye una celda y el hospital incluye camas, recepción y mesa de operaciones.
+- Dentro del hospital y la comisaría no atraviesan disparos desde el exterior.
+- Los sistemas de combate, vehículos y animación se actualizan de forma limitada para reducir tirones.
+
+CONTROLES NUEVOS
+- G cerca de un miembro naranja: reclutar aliado.
+- E junto a la entrada: entrar o salir del hospital/comisaría.
+- TAB: abrir o cerrar el mapa de territorios.
+
+INICIO
+1. Extrae todo el ZIP en una carpeta nueva.
+2. Ejecuta INICIAR_TUTORIAL_Y_JUEGO.cmd.
+3. Completa el tutorial o utiliza el atajo indicado en LEEME_PRIMERO.txt.

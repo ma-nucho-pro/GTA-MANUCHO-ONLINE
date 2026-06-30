@@ -1,0 +1,15 @@
+GTA MANUCHO V73 — CARTELES PUBLICITARIOS
+
+Se añadieron:
+- 10 carteles con las imágenes proporcionadas por el usuario.
+- 1 pantalla de video Vimeo, con reproducción automática, sin sonido y en bucle.
+- 6 carteles disponibles con el texto:
+  ANÚNCIATE
+  https://www.paypal.com/paypalme/gtamanucho
+
+Las diez imágenes están guardadas dentro del juego en juego/ad-assets, por lo que
+se ven aunque el servidor de imágenes original no esté disponible. La pantalla de
+video necesita conexión a Internet porque reproduce el contenido desde Vimeo.
+
+La pantalla de video se carga únicamente cuando el jugador se aproxima y se retira
+cuando se aleja, para reducir el uso de memoria, red y procesador.

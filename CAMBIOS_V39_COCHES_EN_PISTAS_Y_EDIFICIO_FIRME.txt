@@ -1,0 +1,8 @@
+V39 - Coches solo en pistas y edificio firme
+
+- Eliminadas las pistas artificiales que se habian puesto encima del mapa.
+- Los coches vuelven a usar solo rutas seguras de la ciudad base y sus puentes.
+- Se quitaron las rutas del agua y de la ampliacion artificial para evitar coches sobre el mar.
+- La ciudad extra se reconstruyo sobre una base solida profunda.
+- El edificio principal ahora es un rascacielos firme, inspirado en el ejemplo del generador de edificios.
+- Se agrego suelo solido a la nueva zona para que no quede flotando.

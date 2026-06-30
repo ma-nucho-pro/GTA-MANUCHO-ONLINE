@@ -1,0 +1,8 @@
+CORRECCIÓN V13
+
+1. En el tutorial, W vuelve a ser avance real hacia delante y S retroceso.
+2. Shift acelera con W, no con S.
+3. Se eliminó un segundo bucle de animación que consumía el reloj de Three.js y dejaba el movimiento casi detenido.
+4. Se corrigieron los nombres reales de los huesos del Soldier.glb (mixamorigHips, mixamorigLeftArm, etc.).
+5. La postura al montar ahora puede doblar realmente espalda, brazos, rodillas y pies hacia manillar, sillín y pedales.
+6. La corrección de huesos también se aplicó a la bicicleta del bosque.

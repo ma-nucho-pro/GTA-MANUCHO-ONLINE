@@ -1,0 +1,11 @@
+GTA MANUCHO OFFLINE V14
+
+- Rampas del Sandbox reforzadas con bloques de colisión de 18 unidades de espesor.
+- Los extremos de cada tramo coinciden con el siguiente para evitar huecos.
+- Eliminadas las bandas y flechas elevadas de colores.
+- Señalización blanca colocada al ras del asfalto y debajo del coche.
+- Línea blanca central y marcas transversales para apreciar el avance.
+- Líneas blancas discretas sobre el piso base del mapa.
+- Las marcas son solo visuales y no alteran la suspensión.
+- Registro de todos los colliders antes de declarar listo el Sandbox.
+- Protección inmediata si el coche intenta caer por debajo del piso.

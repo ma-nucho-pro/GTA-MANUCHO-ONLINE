@@ -1,0 +1,12 @@
+GTA MANUCHO V79 — RADIO BROWSER
+
+- Radio pública integrada dentro de ESC > OPCIONES > CONFIG. SONIDO.
+- Búsqueda asíncrona por género con Radio Browser API.
+- Selector de emisora, anterior, siguiente, encender/pausar y apagar.
+- Volumen independiente de radio.
+- Modo SOLO EN VEHÍCULOS o SIEMPRE.
+- Un único objeto Audio nativo, sin WebAudio, analizadores ni trabajo por fotograma pesado.
+- Timeout, fallback y manejo de errores para que una emisora caída no rompa el juego.
+- La consulta solo ocurre cuando el usuario pulsa BUSCAR EMISORAS.
+
+Ruta: ESC > OPCIONES > CONFIG. SONIDO

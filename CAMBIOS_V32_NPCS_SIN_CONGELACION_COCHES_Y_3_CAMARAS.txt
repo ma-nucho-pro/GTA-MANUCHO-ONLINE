@@ -1,0 +1,21 @@
+VERSIÓN V32
+
+1. NPC SIN CONGELACIÓN AL APARECER
+- Los modelos de peatones se cargan, crean y precalientan mientras sigue visible la transición.
+- La ciudad se muestra solo después de compilar pieles, huesos, materiales y primeras animaciones.
+- Se evita el tirón que ocurría cuando los NPC aparecían después de entrar al mapa.
+- La banda naranja usa recursos locales para impedir descargas y decodificaciones inesperadas.
+- Se reutilizan cálculos de cámara y memoria durante la simulación de peatones.
+
+2. COCHES CIRCULANDO DESDE LAS PISTAS
+- Los cuatro Ferrari de Three.js arrancan sobre rutas viales.
+- Todos circulan automáticamente; ya no queda un coche estacionado.
+- Los coches y sus materiales también se precalientan antes de descubrir la ciudad.
+
+3. SOLO TRES CÁMARAS DEL COCHE
+Pulsa V para alternar únicamente entre:
+- Cerca detrás.
+- Ventana / primera persona mirando la calle.
+- Dron arriba y detrás del coche.
+
+Controles: W/S acelerar y frenar, A/D girar, V cambiar cámara, E subir o bajar.

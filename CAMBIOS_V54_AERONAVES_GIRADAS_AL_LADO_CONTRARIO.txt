@@ -1,0 +1,7 @@
+V54 - Aeronaves giradas al lado contrario
+
+- Las cuatro aeronaves estacionadas en ARKEA fueron giradas 180 grados.
+- Las escaleras giran junto con cada aeronave y permanecen en el lado correcto.
+- Las cuatro aeronaves estacionadas del mundo DESERT tambien fueron giradas 180 grados.
+- Los codigos JET, HELICOPTER, PLANE y FLY siguen apareciendo delante del jugador.
+- No se cambiaron los controles, disparos, camaras ni la postura sentada del piloto.

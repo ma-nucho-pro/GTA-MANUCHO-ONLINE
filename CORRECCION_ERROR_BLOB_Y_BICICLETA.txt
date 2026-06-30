@@ -1,0 +1,21 @@
+CORRECCIÓN DEL BOSQUE Y LA BICICLETA
+
+1. Se corrigió el SyntaxError "Unexpected token '.'" generado dentro de una URL blob.
+2. Se reparó basis_transcoder.js en el tutorial y en el bosque.
+3. La bicicleta CarbonFrameBike.glb se carga localmente, sin depender de Internet.
+4. La bicicleta del tutorial se colocó más cerca del personaje y por encima del suelo.
+5. La bicicleta se puede montar y manejar en el tutorial y en el bosque.
+6. Al montar en el tutorial se escucha:
+   Español: "Oh mierda, aquí vamos de nuevo".
+   Inglés: "Oh shit, here we go again".
+
+CONTROLES
+E: montar o bajar
+W / S: avanzar o retroceder
+A / D: girar
+Shift: acelerar
+V: cambiar cámara
+
+INICIO
+Descomprime todo el ZIP y ejecuta INICIAR_TUTORIAL_Y_JUEGO.cmd.
+No abras los archivos HTML directamente.

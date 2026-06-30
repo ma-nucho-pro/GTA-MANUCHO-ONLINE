@@ -1,0 +1,39 @@
+DUNGEON X-WING — MUSEO INTERACTIVO DEL PLANETA
+
+CÓMO INICIAR
+1. Extrae TODO el archivo ZIP en una carpeta nueva.
+2. Haz doble clic en INICIAR_JUEGO.cmd.
+3. No cierres la ventana negra mientras juegas.
+4. Pulsa ENTRAR AL MAPA.
+
+CONTROLES A PIE
+- W A S D: caminar.
+- Shift: correr.
+- Espacio: saltar.
+- V: primera/tercera persona.
+- F: pantalla completa.
+- Ratón: mirar.
+
+NAVE X-WING
+- Enter: subir o bajar.
+- W/S: acelerar o frenar.
+- A/D: girar.
+- Espacio/Ctrl: subir o bajar.
+- Shift + W: turbo.
+
+MUSEO INTERACTIVO
+- Acércate a una computadora y haz clic para abrirla.
+- Computadora 1: vuelo libre alrededor de la Tierra.
+- Computadora 2: Tierra con iluminación de día y noche.
+- Computadora 3: etiquetas 2D de ciudades sobre el planeta.
+- Computadora 4: galería de videos interactivos (requiere Internet).
+- Estatua de focos: acércate, apunta y haz clic para cambiar la iluminación.
+- Estatua de decals: acércate, apunta y haz clic para pintar sobre ella.
+- Esc: cerrar una computadora.
+
+CONTROLES DEL PLANETA
+- Arrastrar: rotar el planeta.
+- Rueda: acercar o alejar.
+- En vuelo libre: W A S D, R/F, Q/E y flechas.
+
+El juego mantiene resolución adaptativa y antialias desactivado para conservar el rendimiento.

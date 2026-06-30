@@ -1,0 +1,41 @@
+GTA MANUCHO V83
+================
+
+CORRECCIONES PRINCIPALES
+- Policía corregida para permanecer de pie. El modelo Stormtrooper declaraba Z_UP,
+  pero sus vértices ya estaban orientados en Y_UP; se eliminó el giro que lo dejaba
+  de cabeza.
+- El mar usa Water.js y waternormals locales del paquete adjuntado.
+- La textura y las ondas del mar funcionan sin depender de Internet.
+- El reflejo del agua se renderiza a baja resolución y con actualización limitada
+  para evitar congelamientos cerca del océano y los barcos.
+- El personaje conserva la natación y el buceo del juego base al caer al mar.
+- NPC, bandas, ladrones, policías, coches y tanques no pueden circular sobre el agua.
+  Se hunden y desaparecen si caen al mar. Las aeronaves sí pueden volar sobre él.
+- Los policías que persiguen al jugador dentro del mar pueden caer y desaparecer.
+
+VEHÍCULOS RESTAURADOS
+- Se precargan el helicóptero U1H, el jet SF1, el avión FM2 y la aeronave MD5.
+- Se añadió nuevamente un tanque jugable estacionado en la zona ARKEA.
+- Los tanques policiales siguen apareciendo con el nivel de búsqueda correspondiente.
+- Se conservan los códigos y controles existentes de aeronaves y tanque.
+
+OPTIMIZACIÓN
+- Mar, barcos, policía, bandas, ambulancia, patrullas, tanque y aeronaves se cargan
+  detrás de la pantalla inicial, antes de mostrar la ciudad.
+- Los modelos pesados se cargan de uno en uno y entre fotogramas.
+- Las IA y animaciones secundarias permanecen pausadas mientras la pantalla de carga
+  sigue visible.
+- Las reflexiones del mar se actualizan solo cuando la cámara cambia lo suficiente.
+- Peces, tiburones y entorno submarino solo se actualizan cuando el jugador está cerca.
+
+CONTROLES DEL MAR
+- WASD: nadar.
+- Espacio: subir.
+- Clic: descender o sumergirse.
+
+CONTROLES DEL BARCO
+- E: subir o bajar.
+- W/S: avanzar o retroceder.
+- A/D: girar.
+- V: cambiar cámara.

@@ -1,0 +1,12 @@
+VERSIÓN V35 — NPC Y COCHES INDEPENDIENTES DEL JUGADOR
+
+- Los NPC se crean completos durante la pantalla de carga.
+- Ya no se espera a que aparezca ni termine de cargar el modelo del jugador.
+- La altura de NPC y coches es fija y no se calcula desde el personaje.
+- La población toma un origen una sola vez al iniciar y después funciona de manera independiente.
+- Se eliminó la aparición, ocultamiento, reciclaje y recolocación de NPC por proximidad.
+- Los NPC permanecen caminando por sus rutas aunque el jugador esté lejos.
+- Los cuatro coches se colocan aleatoriamente en segmentos de las pistas y arrancan durante la carga.
+- Los coches ya no se muestran u ocultan según la distancia del jugador.
+- NPC y coches se cargan en paralelo y la ciudad no se descubre hasta que ambos están preparados.
+- Se mantienen las tres cámaras del coche y la discoteca continúa eliminada.

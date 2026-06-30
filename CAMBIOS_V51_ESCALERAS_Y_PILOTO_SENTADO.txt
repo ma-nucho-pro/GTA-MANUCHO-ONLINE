@@ -1,0 +1,10 @@
+V51 - Escaleras de acceso y piloto sentado en aeronaves
+
+- Se agregaron escaleras con escalones, plataforma y barandas junto a las cuatro aeronaves de ARKEA.
+- Las escaleras tienen obstáculos físicos para poder subir por ellas.
+- El piloto se coloca en el asiento del lado contrario.
+- El personaje mira hacia delante siguiendo la orientación de la aeronave.
+- Se aplica una postura sentada con muslos, rodillas, brazos y antebrazos flexionados.
+- La postura se reaplica justo antes del render para evitar que la animación normal lo vuelva a poner de pie.
+- En primera persona el cuerpo se oculta para no tapar la vista; en las cámaras externas se ve sentado.
+- Al bajar se restauran la posición, huesos y animación Idle originales.

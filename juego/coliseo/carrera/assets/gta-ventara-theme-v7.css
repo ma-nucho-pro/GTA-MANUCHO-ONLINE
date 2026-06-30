@@ -1,0 +1,55 @@
+@font-face{font-family:"Ventara Display";src:url("./fonts/exo2.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Ventara Mono";src:url("./fonts/azeret-mono.woff2") format("woff2");font-display:swap}
+:root{--ventara-cyan:#00e5ff;--ventara-pink:#ff2d95;--ventara-lime:#a4ff43;--ventara-violet:#7657ff;--ventara-bg:#090713;--ventara-panel:rgba(19,14,38,.82)}
+html,body,#root,.container{background:#090713!important;font-family:"Ventara Display",Arial,sans-serif!important}
+.home-screen{background:
+ radial-gradient(circle at 12% 20%,rgba(0,229,255,.13),transparent 30%),
+ radial-gradient(circle at 84% 72%,rgba(255,45,149,.14),transparent 34%),
+ linear-gradient(135deg,#080612 0%,#100a20 48%,#070b16 100%)!important;color:#f8f5ff!important}
+.home-screen:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(164,255,67,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.1) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+.home-topbar__logo{width:clamp(230px,24vw,430px)!important;height:auto!important;filter:drop-shadow(0 0 18px rgba(0,229,255,.24)) drop-shadow(0 0 28px rgba(255,45,149,.18))!important}
+.splash-screen__logo{width:min(680px,76vw)!important;height:auto!important;filter:drop-shadow(0 0 28px rgba(0,229,255,.35)) drop-shadow(0 0 36px rgba(255,45,149,.28))!important}
+.home-info__title{font-family:"Ventara Display",Impact,sans-serif!important;font-weight:900!important;font-style:italic!important;letter-spacing:.02em!important;text-transform:uppercase!important;text-shadow:0 0 24px rgba(0,229,255,.18)}
+.home-info__eyebrow,.home-info__status,.home-thumb__label,.home-driver__label,.home-car-color__label,.home-lb__label,.home-track__label{font-family:"Ventara Mono",monospace!important;letter-spacing:.16em!important;text-transform:uppercase!important}
+.home-info__desc{font-family:"Ventara Display",Arial,sans-serif!important;font-weight:500!important;color:#beb7d5!important;line-height:1.55!important}
+.home-info__status{color:var(--ventara-lime)!important;text-shadow:0 0 14px rgba(164,255,67,.45)!important}
+.home-preview__frame,.home-thumb,.home-driver,.home-car-color__picker,.home-clock,.home-distance,.input-device-badge,.home-btn--settings{background:linear-gradient(145deg,rgba(31,22,58,.9),rgba(12,11,28,.92))!important;border-color:rgba(118,87,255,.4)!important;box-shadow:0 18px 44px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.04)!important}
+.home-thumb.is-active,.home-thumb:hover{border-color:var(--ventara-cyan)!important;box-shadow:0 0 0 1px var(--ventara-cyan),0 0 24px rgba(0,229,255,.32)!important}
+.home-thumb:nth-child(2).is-active{border-color:var(--ventara-pink)!important;box-shadow:0 0 0 1px var(--ventara-pink),0 0 24px rgba(255,45,149,.32)!important}
+.home-thumb:nth-child(3).is-active{border-color:var(--ventara-lime)!important;box-shadow:0 0 0 1px var(--ventara-lime),0 0 24px rgba(164,255,67,.28)!important}
+.home-track{border-color:rgba(118,87,255,.42)!important;background:linear-gradient(90deg,rgba(0,229,255,.7),rgba(118,87,255,.72),rgba(255,45,149,.76))!important}
+.home-accent-line{background:linear-gradient(90deg,var(--ventara-cyan),var(--ventara-violet),var(--ventara-pink))!important;box-shadow:0 0 18px rgba(0,229,255,.28)!important}
+.home-driver__input{font-family:"Ventara Mono",monospace!important;color:#fff!important;letter-spacing:.08em!important}
+.flag-picker__trigger,.flag-picker__dropdown{background:#16102b!important;border-color:rgba(0,229,255,.38)!important}
+.flag-picker__option.is-active{outline:2px solid var(--ventara-lime)!important;box-shadow:0 0 12px rgba(164,255,67,.45)!important}
+.home-clock__time,.home-distance__value{font-family:"Ventara Mono",monospace!important;color:#fff!important}
+.home-lb__rank{color:var(--ventara-pink)!important}.home-lb__time{color:var(--ventara-cyan)!important}
+.settings-panel,.home-name-prompt__dialog{background:linear-gradient(160deg,rgba(19,13,39,.97),rgba(8,8,20,.98))!important;border-color:rgba(0,229,255,.3)!important}
+.game-loading-overlay,.splash-screen{background:radial-gradient(circle at center,#17102f,#05040b 72%)!important}
+@media(max-width:760px){.home-topbar__logo{width:210px!important}.home-info__title{font-size:clamp(34px,10vw,58px)!important}}
+
+
+/* GTA MANUCHO V24: mapa completo en tiempo real */
+.gta-map-visualizer{position:fixed;top:18px;right:18px;z-index:160;box-sizing:border-box;width:278px;padding:10px 12px 11px;border:1px solid rgba(32,223,255,.58);border-radius:13px;background:linear-gradient(145deg,rgba(5,10,18,.94),rgba(16,22,36,.9));box-shadow:0 12px 38px rgba(0,0,0,.48),0 0 24px rgba(32,223,255,.12);backdrop-filter:blur(9px);font-family:'Share Tech Mono','Azeret Mono',monospace;color:#f4fbff;pointer-events:none}
+.gta-map-visualizer__header,.gta-map-visualizer__footer{display:flex;align-items:center;justify-content:space-between;gap:10px;letter-spacing:.08em}.gta-map-visualizer__header{padding:1px 2px 8px;font-size:12px}.gta-map-visualizer__header strong{color:#21dfff;text-shadow:0 0 12px rgba(33,223,255,.55)}.gta-map-visualizer__header span{color:#ffcf38}.gta-map-visualizer__canvas{display:block;border-radius:8px;border:1px solid rgba(255,255,255,.14);background:#07101a}.gta-map-visualizer__footer{padding:8px 2px 0;font-size:12px}.gta-map-visualizer__footer span{color:#fff}.gta-map-visualizer__footer b{color:#75ff8b;font-weight:700}
+@media(max-width:700px){.gta-map-visualizer{top:10px;right:8px;width:214px;padding:8px}.gta-map-visualizer__canvas{width:196px!important;height:140px!important}.gta-map-visualizer__header,.gta-map-visualizer__footer{font-size:10px}}
+
+/* GTA MANUCHO V25: minimapa fijo arriba a la izquierda y jugador claramente visible */
+.gta-map-visualizer{top:18px!important;left:18px!important;right:auto!important;width:300px!important;padding:10px 12px 11px!important;z-index:190!important}
+.gta-map-visualizer__canvas{width:272px!important;height:190px!important}
+@media(max-width:700px){.gta-map-visualizer{top:8px!important;left:8px!important;right:auto!important;width:228px!important;padding:8px!important}.gta-map-visualizer__canvas{width:210px!important;height:146px!important}}
+
+
+/* GTA MANUCHO V26: minimapa superior izquierdo sin solapamientos */
+.gta-map-visualizer{top:16px!important;left:16px!important;right:auto!important;width:318px!important;padding:10px 12px 12px!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;overflow:visible!important;z-index:220!important;background:linear-gradient(155deg,rgba(4,9,17,.98),rgba(13,19,32,.96))!important}
+.gta-map-visualizer__header{position:static!important;width:100%!important;box-sizing:border-box!important;padding:2px 2px 9px!important;display:flex!important;justify-content:space-between!important;align-items:center!important}
+.gta-map-visualizer__canvas{position:static!important;display:block!important;width:292px!important;height:194px!important;max-width:100%!important;flex:none!important;border:1px solid rgba(255,255,255,.18)!important;border-radius:9px!important;background:#050a12!important}
+.gta-map-visualizer__stats{position:static!important;margin-top:9px!important;width:100%!important;box-sizing:border-box!important;display:grid!important;grid-template-columns:auto 1fr auto!important;gap:8px!important;align-items:center!important;padding:9px 10px!important;border:1px solid rgba(32,223,255,.28)!important;border-radius:9px!important;background:rgba(14,20,34,.96)!important;box-shadow:inset 0 1px rgba(255,255,255,.04)!important;font-family:'Share Tech Mono','Azeret Mono',monospace!important;font-size:11px!important;letter-spacing:.05em!important;color:#fff!important}
+.gta-map-visualizer__stats span:first-child{color:#ffcf38!important;font-weight:700!important}.gta-map-visualizer__stats span:nth-child(2){text-align:center!important;color:#f4fbff!important}.gta-map-visualizer__stats b{color:#75ff8b!important;font-size:13px!important}
+@media(max-width:700px){.gta-map-visualizer{top:8px!important;left:8px!important;width:250px!important;padding:8px!important}.gta-map-visualizer__canvas{width:232px!important;height:152px!important}.gta-map-visualizer__stats{font-size:9px!important;padding:7px!important;gap:5px!important}}
+
+/* V27: controles del personaje debajo del velocímetro y mapa sin superposición */
+#gta-ventara-player-controls button[aria-label="Subir o bajar del coche"]{right:22px!important;bottom:14px!important;min-width:210px!important;z-index:260!important}
+.gta-map-visualizer{left:16px!important;right:auto!important;top:16px!important}
+.gta-map-visualizer__stats{position:static!important;margin-top:9px!important}
+@media(max-width:700px){#gta-ventara-player-controls button[aria-label="Subir o bajar del coche"]{right:8px!important;bottom:8px!important;min-width:175px!important;padding:11px 12px!important;font-size:12px!important}}

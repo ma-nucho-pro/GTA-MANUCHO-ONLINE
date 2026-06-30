@@ -1,0 +1,21 @@
+V40 - Trafico, orientacion de NPC y salon de juegos
+
+1. Coches
+- Las rutas se reconstruyeron usando las dimensiones exactas de las islas de asfalto y puentes de buildWorld.
+- Cada punto y cada segmento se valido para permanecer sobre una superficie de trafico.
+- Si un coche sale de una superficie valida, vuelve inmediatamente a su ruta.
+- El Parque del Retiro permanece bloqueado para el trafico.
+- Los 16 coches se crean durante la carga y no dependen de la distancia del jugador.
+
+2. NPC
+- Eliminado el giro adicional de 180 grados que hacia que caminaran de espaldas.
+- La direccion visual ahora coincide con la direccion de movimiento.
+
+3. Salon de juegos
+- Agregado fuera del Parque del Retiro, en una plataforma firme de la ciudad.
+- Tiene entrada, paredes, techo, letrero, iluminacion visual y dos computadoras.
+- Computadora 1: GTA MANUCHO / simulador de cortar madera con machete.
+- Computadora 2: lanzador del juego de conduccion Slow Roads.
+- Al acercarse mucho a una computadora el juego se abre automaticamente.
+- Tambien se puede pulsar E desde una distancia corta.
+- Los juegos incluyen una opcion para volver al salon de juegos.

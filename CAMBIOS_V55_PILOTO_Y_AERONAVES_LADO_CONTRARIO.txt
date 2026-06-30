@@ -1,0 +1,8 @@
+V55 - Piloto y aeronaves al lado contrario
+
+- El piloto cambia al costado contrario de la cabina en las cuatro aeronaves.
+- El desplazamiento lateral se reduce para que el personaje quede dentro del asiento y no flotando fuera.
+- El personaje mira hacia delante y mantiene la postura sentada.
+- Las escaleras de ARKEA pasan al mismo costado nuevo del acceso.
+- Las aeronaves estacionadas en ARKEA y DESERT se orientan al lado contrario de la V54.
+- Las aeronaves invocadas con JET, HELICOPTER, PLANE y FLY no cambian su lógica de aparición ni vuelo.

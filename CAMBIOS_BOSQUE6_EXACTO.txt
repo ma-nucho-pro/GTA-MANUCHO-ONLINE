@@ -1,0 +1,7 @@
+- Se sustituyó la zona del bosque por el contenido de bosque(6).zip.
+- El archivo assets/game-original.js procede del mundo adjuntado.
+- Se conserva su terreno, vegetación, iluminación, agua, controlador y estructura originales.
+- Solo se desactivaron las consultas de tiempo GPU y los límites especiales durante la creación del renderer para mejorar compatibilidad.
+- El Soldier se carga localmente.
+- El portal de GTA MANUCHO abre bosque(6) sin usar el modo simplificado fast.
+- Se añadió únicamente una puerta de regreso a GTA MANUCHO.

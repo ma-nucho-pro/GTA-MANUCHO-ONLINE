@@ -1,0 +1,11 @@
+BICICLETA CARBON FRAME
+
+E: montar o bajar
+W / S: avanzar o retroceder
+A / D: girar
+Shift: acelerar
+V: cambiar primera/tercera persona
+
+La bicicleta aparece cerca del punto inicial del bosque.
+
+ENTER: bajarse de la bicicleta (también funciona la tecla E).

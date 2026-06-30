@@ -1,0 +1,12 @@
+GTA MANUCHO V80
+
+- Corregida la orientación del indicador del jugador en el mapa TAB.
+- RADIO separada de CONFIG. SONIDO.
+- Emisoras mostradas como tarjetas con imágenes/favicons de Radio Browser.
+- Botones del menú activados desde pointerup/click para una respuesta inmediata.
+- Los controles deslizantes pesados ya no reconstruyen el render en cada píxel del arrastre.
+- Tipografía de ajustes con estilo Franklin Gothic condensado y alternativas del sistema.
+- Jetpack físico colocado en el centro de Fog City (ciudad de los caballos).
+- E equipa el jetpack; ESPACIO sube; SHIFT baja; ENTER lo deja en el suelo.
+- El jetpack no aparece por defecto, no se guarda en inventario y no se conserva como progreso.
+- Al equiparlo se muestra en la espalda del personaje como mochila propulsora.

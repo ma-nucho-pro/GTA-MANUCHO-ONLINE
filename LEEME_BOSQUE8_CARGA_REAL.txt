@@ -1,0 +1,6 @@
+BOSQUE(8) - CARGA REAL
+
+Se incluyó el contenido exacto de bosque(8).zip.
+El archivo original completo permanece en juego/bosque/assets/game-exacto-bosque8.js.
+Para evitar el bloqueo del equipo durante las capturas GPU de atlas, el portal carga el terreno original en modo estable y reconstruye la vegetación sobre ese mismo terreno en lotes pequeños.
+Shift + I + L sigue saltando el tutorial.

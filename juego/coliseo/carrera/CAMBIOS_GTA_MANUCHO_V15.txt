@@ -1,0 +1,10 @@
+GTA MANUCHO Offline V15
+
+- Corregida la entrada inicial al coche en Sandbox Mega Saltos.
+- La distancia para subir se calcula horizontalmente, evitando fallos por diferencias de altura.
+- El personaje inicia a una distancia segura del coche y se ajusta al suelo antes de caminar.
+- Corregida la salida del coche: solo se permite detenido y con apoyo de ruedas.
+- El personaje aparece fuera del volumen del vehículo y se ajusta al piso/rampa durante varios fotogramas.
+- El raycast del personaje ignora la carrocería para evitar que aparezca sobre el coche.
+- El control del coche se desbloquea inmediatamente después de subir.
+- Se añadió protección contra doble pulsación y foco retenido por el botón.

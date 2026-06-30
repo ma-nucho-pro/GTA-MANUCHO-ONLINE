@@ -1,0 +1,43 @@
+VERSIÓN V34 — MODO FLUIDO SIN CONGELACIONES
+
+CORRECCIONES PRINCIPALES
+
+1. Se eliminaron las tareas pesadas que se construían varios segundos después de comenzar a jugar.
+   Esas tareas podían detener la pantalla al crear de golpe otras ciudades, agentes, tráfico y zonas secundarias.
+
+2. Se desactivaron definitivamente los sistemas duplicados de NPC, tráfico y agentes policiales del juego base.
+   Solo funcionan los peatones optimizados y los coches Three.js solicitados.
+
+3. Los NPC ahora usan variantes humanas locales ligeras, sin esqueletos GLB pesados.
+   Siguen caminando por el mapa, mantienen diferentes colores y la banda naranja continúa disponible.
+
+4. Se redujo la población a cinco civiles y dos miembros de la banda naranja, separados por sectores.
+
+5. Las comprobaciones de suelo dejaron de ejecutarse en cada fotograma.
+   Ahora se realizan de manera limitada y la recuperación de una posición inválida continúa siendo inmediata.
+
+6. El escaneo de visibilidad de la ciudad se divide en grupos pequeños.
+   Ya no recorre grandes partes del escenario durante un único fotograma.
+
+7. Los NPC no son apagados y encendidos bruscamente por el sistema de distancia.
+   Esto evita la pausa que se producía cuando volvían a aparecer.
+
+8. El radar y la interfaz se actualizan con una frecuencia controlada para evitar picos periódicos.
+
+9. Se eliminaron asignaciones de memoria que ocurrían en cada fotograma:
+   - lectura repetida de parámetros de la URL;
+   - clonación continua del vector de cámara;
+   - creación continua de colores del cielo;
+   - creación de arreglos para calcular los FPS.
+
+10. Las luces virtuales se ordenan con menor frecuencia.
+
+11. Los coches continúan circulando por las pistas y conservan las tres cámaras:
+    - cerca detrás;
+    - primera persona desde la ventana;
+    - arriba y detrás, estilo dron.
+
+12. La discoteca continúa completamente eliminada.
+
+INICIO
+Ejecutar INICIAR_JUEGO.cmd o INICIAR_TUTORIAL_Y_JUEGO.cmd.

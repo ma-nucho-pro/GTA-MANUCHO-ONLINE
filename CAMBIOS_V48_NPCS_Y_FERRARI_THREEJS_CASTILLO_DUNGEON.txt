@@ -1,0 +1,13 @@
+V48 - NPC y Ferrari de Three.js + castillo con mundo Dungeon
+
+- Regresan los NPC GLB Michelle de Three.js.
+- Se carga un solo modelo Michelle y se crean 14 personajes de forma escalonada.
+- Los NPC se actualizan a frecuencia limitada y no dependen de la cercania del jugador.
+- Regresa el Ferrari 458 Italia GLB de Three.js.
+- Se carga un solo Ferrari y se crean 12 coches de forma escalonada.
+- Se mantiene el trafico en rutas firmes y se evita la precarga pesada.
+- La ciudad se muestra antes de iniciar las cargas GLB para evitar congelar la entrada.
+- Los sistemas se reparten en distintos turnos libres del navegador.
+- Se agrego un castillo firme en la isla norte de GTA MANUCHO.
+- Al pulsar E en el portal del castillo se abre el mundo Dungeon adjuntado.
+- El mundo Dungeon incluye un boton para volver al mismo castillo.

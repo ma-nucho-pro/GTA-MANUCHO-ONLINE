@@ -1,0 +1,9 @@
+CORRECCIONES REALIZADAS
+
+- El Soldier del tutorial se orientó 180 grados para mirar hacia el avance.
+- Shift + I + L funciona manteniendo las teclas o pulsándolas rápidamente con Shift.
+- El bosque 5 sigue usando el motor exacto del ZIP adjuntado.
+- Entrada estable: fast=1, preset=low, dpr=0.70 y archivos totalmente locales.
+- Terreno exacto optimizado: alturas 256x256, erosión 128x128 y 24 iteraciones.
+- La pantalla de carga se dibuja antes de compilar el mundo WebGPU.
+- JS, modelos y texturas locales se guardan en caché para futuras entradas.

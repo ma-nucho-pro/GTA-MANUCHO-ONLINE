@@ -1,0 +1,8 @@
+CORRECCIÓN DEL SENTIDO DE AVANCE DEL TUTORIAL
+
+- Se corrigió la orientación visual del personaje en 180 grados.
+- Se corrigió la orientación visual de la bicicleta en 180 grados.
+- W ahora hace que el personaje camine hacia donde mira.
+- W ahora hace que la bicicleta avance por la rueda delantera.
+- A sigue girando a la izquierda y D a la derecha.
+- No se alteró la postura sobre el sillín, el agarre al manillar ni el pedaleo.

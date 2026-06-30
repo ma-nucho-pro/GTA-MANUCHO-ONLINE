@@ -1,0 +1,35 @@
+SOLDIER SKATE - RAMPA Y DOBLE TERRENO EXTERIOR FISICO
+
+1. Extrae TODO el contenido del ZIP en una carpeta.
+2. Ejecuta INICIAR_JUEGO.cmd (o INICIAR_JUEGO.bat).
+3. No cierres la ventana negra mientras juegas.
+4. Pulsa ENTRAR AL MAPA.
+
+CONTROLES A PIE
+- W A S D: caminar
+- Shift: correr
+- Espacio: saltar
+- V: primera / tercera persona
+- Ratón: mirar
+
+CONTROLES DEL SKATE
+- Acércate al skate y pulsa Enter para subir.
+- W: acelerar
+- S: frenar / retroceder
+- A / D: girar
+- Shift: turbo
+- Espacio: ollie
+- Enter: bajar del skate
+
+NUEVO TERRENO
+- La rampa marrón continúa siendo física.
+- La primera zona exterior rojiza continúa disponible.
+- Se añadió una segunda corona de montañas rojizas basada en Terrain Raycasting.
+- El personaje, el skate y los objetos respetan las alturas de las tres zonas.
+- Con el juego activo, haz clic para colocar un marcador sobre el terreno que estás mirando.
+
+El Soldier y las dependencias principales están incluidos localmente.
+VERSIÓN CORREGIDA
+- Reparado el error de sintaxis que detenía la carga en la pantalla inicial.
+- Se conservan el Soldier, el skate, la rampa marrón y los dos terrenos exteriores físicos.
+

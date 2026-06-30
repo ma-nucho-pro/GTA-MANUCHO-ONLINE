@@ -1,0 +1,35 @@
+GTA MANUCHO V70 — AMBULANCIA, RENDIMIENTO, PROPIEDADES Y GUARDADO
+
+1. AMBULANCIA
+- Se corrigió el eje visual del modelo de ambulancia.
+- La carrocería ahora mira hacia el mismo lado al que avanza el controlador.
+- No se invirtieron W/S ni la dirección de la cámara.
+
+2. MENOS CONGELAMIENTOS
+- El radar se actualiza a una frecuencia estable y más ligera.
+- Las colisiones de vehículos se procesan por intervalos, no en cada ciclo de IA.
+- Los vehículos policiales y de bandas reutilizan la altura del suelo y reducen raycasts.
+- Los sistemas añadidos se pausan cuando la pestaña está oculta.
+- Los interiores de propiedades cargan sus modelos únicamente al entrar.
+
+3. PROPIEDADES COMPRABLES
+- Galería privada: $175 000.
+- Villa con piscina: $325 000.
+- Residencia moderna: $260 000.
+- Se identifican en el radar y el mapa TAB mediante un disquete azul/negro.
+- Acércate al disquete y pulsa E para comprar.
+- Después de comprar, pulsa E para entrar o guardar la partida.
+
+4. INTERIORES
+- Se puede caminar dentro de cada propiedad con el personaje.
+- WASD: caminar. SHIFT: correr. V: primera/tercera persona. E: interactuar.
+- En la Galería privada se colocó el cuadro del ZIP "cuadro poner" dentro del salón del ZIP "aqui poner el cuadrado".
+- La Villa integra el modelo de piscina y las texturas de agua adjuntas.
+- La Residencia moderna usa un interior arquitectónico transitable y ligero.
+
+5. GUARDAR Y CARGAR PARTIDAS
+- El disquete de una propiedad comprada permite descargar una partida .vcsave.
+- Cada propiedad crea un archivo diferente, por lo que se pueden conservar varios guardados.
+- El archivo incluye posición, dinero, salud, armadura, propiedades, territorios, inventario, peinado y otros datos locales del juego.
+- Para continuar, pulsa CARGAR PARTIDA o F9 y selecciona el archivo .vcsave.
+- También se puede guardar desde el disquete dentro de la propiedad.

@@ -1,0 +1,21 @@
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# Cachés y archivos temporales
+__pycache__/
+*.pyc
+*.log
+*.tmp
+*.temp
+.cache/
+
+# Dependencias opcionales de desarrollo
+node_modules/
+
+# Paquetes generados localmente
+*.zip

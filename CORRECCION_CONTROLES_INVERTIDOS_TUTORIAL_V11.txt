@@ -1,0 +1,9 @@
+CORRECCIÓN DE CONTROLES INVERTIDOS EN EL TUTORIAL — V11
+
+- W mueve hacia atrás.
+- S mueve hacia delante.
+- La inversión funciona a pie y montado en bicicleta.
+- Shift + S acelera hacia delante.
+- El giro de las ruedas coincide con el nuevo sentido.
+- A y D conservan sus giros.
+- El bosque no fue modificado.

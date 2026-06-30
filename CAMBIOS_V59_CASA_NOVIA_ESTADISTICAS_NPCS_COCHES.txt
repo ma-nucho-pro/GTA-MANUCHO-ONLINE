@@ -1,0 +1,13 @@
+V59 - Casa de la novia, estadísticas y tráfico/población aleatoria
+
+- Se agregó una casa sólida fuera del Parque del Retiro.
+- Al acercarse a la puerta y pulsar E se entra a la casa.
+- Dentro se reproduce el video exacto MaryOculus.webm adjuntado.
+- La visita dura 10 segundos y luego el personaje sale a la puerta.
+- La visita aumenta Sex Appeal, Autoestima, Carisma y Respeto.
+- La tecla J abre y cierra el panel de estadísticas.
+- Las estadísticas se guardan en localStorage.
+- Se aumentaron los NPC Michelle a 21, distribuidos de forma aleatoria por rutas firmes.
+- Se aumentaron los Ferrari a 16, distribuidos aleatoriamente por carreteras seguras.
+- NPC y coches se crean gradualmente después de mostrar la ciudad para evitar congelaciones.
+- Se añadió validación para que los NPC no caminen sobre el suelo azul.

@@ -1,0 +1,9 @@
+VERSIÓN 27 — COCHES GRANDES Y RENDIMIENTO
+
+- 8 coches de tamaño proporcional al personaje.
+- 7 coches circulan; 1 permanece estacionado para robarlo fácilmente.
+- Ferrari de alta calidad precargado y calentado en GPU durante la pantalla inicial.
+- Eliminación de tráfico y NPC base duplicados que seguían ejecutándose en segundo plano.
+- Conducción optimizada: una sola colisión periódica y altura del suelo en caché.
+- V mantiene cinco cámaras: normal, cerca, lejos, arriba y primera persona.
+- No se baja la resolución ni la calidad gráfica.

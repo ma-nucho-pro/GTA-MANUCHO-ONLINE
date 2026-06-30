@@ -1,0 +1,7 @@
+V37
+- Solo Sandbox Mega Saltos.
+- Corregida la altura base: todas las rampas comienzan y terminan en el suelo real.
+- Corregida la orientación: las subidas ya no están al revés.
+- El coche aparece sobre el tramo inicial, frente a la primera rampa y mirando hacia el recorrido.
+- El camino de rampas triangulares sigue conectado por todo el mapa.
+- Se redujo la inclinación de varias rampas para que el coche pueda subirlas con normalidad.

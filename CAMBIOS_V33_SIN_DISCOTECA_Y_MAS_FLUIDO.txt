@@ -1,0 +1,7 @@
+VERSIÓN V33 — DISCOTECA ELIMINADA Y MAYOR FLUIDEZ
+
+- Se eliminó físicamente del código el bloque completo de la discoteca.
+- Se eliminó su marcador DISCO CLUB del mapa.
+- Ya no se crean sus luces, audio, animaciones, muebles, hologramas ni cargas externas escalonadas.
+- Se añadió un precalentamiento final de NPC y coches usando la iluminación, niebla y entorno reales de GTA MANUCHO antes de retirar la pantalla de carga.
+- Se mantienen los coches circulando por las pistas y las tres cámaras de conducción de V32.

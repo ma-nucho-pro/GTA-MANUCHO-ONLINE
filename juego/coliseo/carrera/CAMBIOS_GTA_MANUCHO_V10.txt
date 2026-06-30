@@ -1,0 +1,7 @@
+GTA MANUCHO Offline V10
+
+- Corregido el acceso y control del coche en Sandbox Mega Saltos.
+- El panel de ajustes abierto ya no bloquea los controles del vehículo en Sandbox.
+- Distancia de acceso ampliada en Sandbox para facilitar subir al coche.
+- Panel HUD/Vehicle/Paint Material reubicado al extremo izquierdo.
+- La tecla X y el botón SUBIR/BAJAR continúan funcionando.

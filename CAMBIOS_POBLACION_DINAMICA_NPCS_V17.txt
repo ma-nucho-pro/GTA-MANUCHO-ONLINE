@@ -1,0 +1,10 @@
+VERSIÓN V17 — POBLACIÓN DINÁMICA DE PEATONES
+
+- Los NPC ahora igualan automáticamente la altura real del personaje principal.
+- Se cargan los tres modelos una sola vez y sus geometrías/texturas se reutilizan.
+- Se mantiene un pool de 18 peatones en equipos normales y 12 en equipos modestos.
+- Los peatones lejanos se reciclan y reaparecen en calles cercanas al jugador.
+- Movimiento y animación limitados a 30 actualizaciones por segundo.
+- Animación completa solo en peatones cercanos.
+- Sombras desactivadas y frustum culling activado para reducir lag.
+- Tutorial, bosque y bicicletas no fueron modificados.

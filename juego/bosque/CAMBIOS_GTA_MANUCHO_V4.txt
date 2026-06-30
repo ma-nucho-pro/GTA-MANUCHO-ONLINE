@@ -1,0 +1,8 @@
+GTA MANUCHO V4
+
+- El personaje ya no se muestra durante la generación incompleta del terreno.
+- El juego coloca la cámara y los pies del personaje sobre la altura física real antes de mostrar la escena.
+- Se eliminó la pantalla intermedia donde el personaje aparecía debajo de las montañas.
+- Se añadió un modo de carga rápida que omite vegetación, partículas, niebla volumétrica y otros procesos pesados.
+- El terreno de calidad baja usa una resolución más ligera y menos iteraciones de erosión.
+- La cámara de primera y tercera persona conserva la altura correcta del suelo.

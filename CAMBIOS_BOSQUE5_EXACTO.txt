@@ -1,0 +1,7 @@
+CORRECCIÓN BOSQUE 5 EXACTO
+
+- El portal exterior abre ahora el contenido original de bosque(5).zip.
+- Se quitó el bosque ligero creado anteriormente.
+- Se mantiene el Soldier local para evitar descargas externas.
+- Se agregó una puerta de regreso a GTA MANUCHO y la tecla Esc.
+- Se usa el parámetro fast=1 disponible en el mundo original para reducir el tiempo inicial sin reemplazar su escenario.

@@ -1,0 +1,7 @@
+CORRECCIÓN DE CARGA DE BOSQUE(7)
+
+- Se conserva el mundo, terreno, vegetación y controlador originales.
+- Se reemplazó únicamente la captura GPU de atlas de hojas y cortezas por generación local en CPU.
+- Esto evita que la carga se quede detenida en "capturing foliage atlases".
+- Los árboles mantienen sus cuatro celdas de atlas, colores por especie, variación, corteza, normales y rugosidad.
+- Se conserva Shift + I + L para completar el tutorial.

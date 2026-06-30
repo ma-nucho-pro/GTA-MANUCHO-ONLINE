@@ -1,0 +1,10 @@
+GTA MANUCHO V76 · IDENTIDAD, PISTA, ICONOS Y FLUIDEZ
+
+1. Se eliminó definitivamente la pantalla antigua “Living World 3D / Empezar juego” del juego principal.
+2. Se corrigió el culling que podía ocultar el suelo, las carreteras y las islas completas.
+3. Todo el nombre visible del proyecto se cambió a GTA MANUCHO.
+4. Se añadió el icono oficial proporcionado como favicon y arte del menú/carga.
+5. Se integraron nuevos iconos HD para puño, pistola, AK-47, escopeta y cámara.
+6. El radar y el mapa TAB usan iconos relacionados con hospital, policía, casa, novia, barbería, gimnasio, propiedades, taxi, ambulancia, salud, rosas y destino.
+7. Se redujo el tráfico a 12 coches y la frecuencia de algunas actualizaciones para disminuir tirones cerca de vehículos.
+8. Easter egg: abre ESC y pulsa Shift + M para ver ARKEA AI y las redes de Manucho.

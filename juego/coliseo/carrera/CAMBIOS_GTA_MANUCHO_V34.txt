@@ -1,0 +1,11 @@
+GTA MANUCHO OFFLINE V34
+
+CORRECCIÓN SANDBOX MEGA SALTOS
+- Se eliminó la corrección duplicada que modificaba directamente la altura del coche en cada cuadro.
+- Las colisiones activas se actualizan con menor frecuencia y solo alrededor del tramo actual.
+- Se ocultan las rampas, marcas, soportes y aros que están muy lejos del jugador.
+- La distancia de dibujo del Sandbox se redujo para evitar cargar todo el mapa gigante al mismo tiempo.
+- Las búsquedas de la pista usan el último tramo conocido en vez de recorrer siempre todo el circuito.
+- Las líneas del suelo y de la pista ahora usan materiales opacos para reducir el sobreprocesamiento gráfico.
+- La recuperación del coche solo se activa cuando realmente atraviesa el suelo durante una caída.
+- Se mantienen todas las rampas conectadas y el Sandbox continúa sin minimapa.

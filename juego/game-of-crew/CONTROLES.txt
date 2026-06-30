@@ -1,0 +1,16 @@
+GAME OF CREW · CONTROLES V68
+
+W / Flecha arriba: avanzar hacia donde mira la cámara
+S / Flecha abajo: retroceder
+A / D: moverse a izquierda / derecha
+Ratón: mirar
+Clic izquierdo: disparar
+F o Ctrl izquierdo: disparo alternativo si el navegador bloquea el ratón
+V: cambiar entre primera y tercera persona
+Shift: correr
+Espacio: saltar
+R: recargar
+E: recoger arma flotante
+1 / 2 / 3: cambiar de arma
+
+La partida comienza sobre un tejado. Avanza hacia la escalera para bajar al patio y recorrer el mapa completo.

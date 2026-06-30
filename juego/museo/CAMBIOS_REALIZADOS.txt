@@ -1,0 +1,15 @@
+GTA MANUCHO - GALERÍA THREE.JS
+
+Se mantuvo el Soldier oficial y el cambio de cámara con V.
+
+ELEMENTOS AGREGADOS DENTRO DEL MISMO JUEGO:
+1. Cuadro Memorial basado en webgl_loader_texture_exr.
+2. Escultura estilizada de Nefertiti con normal map en espacio de objeto.
+3. Cuadro Canestra di frutta de Caravaggio con filtrado mipmap.
+4. Pantalla de video usando HTMLVideoElement y THREE.VideoTexture.
+5. Panel de escáner volumétrico con THREE.DataArrayTexture.
+6. Panel de secuencia multicapa inspirado en 2D Compressed Texture Array.
+7. Panel con actualización independiente de capas usando addLayerUpdate().
+8. Paredes, marcos, placas, luces y colisiones para la galería.
+
+Los recursos de imagen y video necesarios están incluidos localmente.

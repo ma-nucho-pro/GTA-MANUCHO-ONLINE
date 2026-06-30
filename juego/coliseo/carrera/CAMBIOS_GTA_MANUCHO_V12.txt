@@ -1,0 +1,10 @@
+GTA MANUCHO OFFLINE V12
+
+- Se corrigió el bloqueo al cargar Sandbox Mega Saltos.
+- Los colliders de la pista se registran por lotes para evitar congelamientos.
+- Al subir al coche, los controles de conducción se activan inmediatamente.
+- Se eliminó el ajuste vertical continuo que hacía temblar el piso y el vehículo.
+- El suelo duro está separado de la pista para evitar colliders superpuestos.
+- El coche solo se recupera si cae realmente debajo del mapa.
+- Sandbox mantiene el tamaño 10X con una autopista continua de más de 150 tramos conectados.
+- El personaje y el coche aparecen sobre la superficie de salida.

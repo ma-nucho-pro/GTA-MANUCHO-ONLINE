@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Game of Crew · Batalla de bandas</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#04070b;color:#fff;font-family:Segoe UI,Arial,sans-serif}canvas{display:block;width:100%;height:100%}button{font:inherit}
+#hud{position:fixed;inset:0;z-index:10;pointer-events:none}.panel{position:absolute;background:rgba(5,9,15,.84);border:1px solid rgba(255,255,255,.2);border-radius:12px;backdrop-filter:blur(7px);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+#score{top:14px;left:14px;padding:12px 15px;min-width:250px}.title{font-weight:1000;letter-spacing:.11em;font-size:14px}.orange{color:#ff8a24}.enemy{color:#75b7ff}.row{display:flex;justify-content:space-between;gap:18px;margin-top:7px;font-size:13px;font-weight:800}#timer{font-size:19px;text-align:center;margin-top:7px}
+#cameraMode{left:50%;top:14px;transform:translateX(-50%);padding:9px 14px;font-size:11px;font-weight:900;letter-spacing:.05em;white-space:nowrap}
+#stats{right:14px;top:14px;padding:12px 15px;min-width:190px;text-align:right}.big{font-size:25px;font-weight:1000}.small{font-size:11px;color:#cbd5df;margin-top:3px}
+#inventory{left:50%;bottom:17px;transform:translateX(-50%);display:flex;gap:8px;padding:8px}.slot{width:120px;padding:8px 9px;border:1px solid rgba(255,255,255,.2);border-radius:9px;background:rgba(9,15,23,.8);font-size:11px;color:#9da9b5}.slot b{display:block;color:#fff;font-size:12px;margin-bottom:3px}.slot.active{border-color:#ff922f;box-shadow:0 0 16px rgba(255,126,27,.3)}.slot.locked{opacity:.42}
+#prompt{left:50%;bottom:99px;transform:translateX(-50%);padding:9px 14px;display:none;font-weight:900;font-size:12px;letter-spacing:.05em;border-color:#ffc45e;color:#fff0c5}
+#feed{left:14px;bottom:18px;width:min(330px,40vw);padding:10px 12px;font-size:11px;line-height:1.55;color:#d8e2ec;max-height:142px;overflow:hidden}
+#cross{position:absolute;left:50%;top:50%;width:22px;height:22px;transform:translate(-50%,-50%)}#cross:before,#cross:after{content:"";position:absolute;background:#fff;box-shadow:0 0 4px #000}#cross:before{left:10px;top:2px;width:2px;height:18px}#cross:after{left:2px;top:10px;width:18px;height:2px}
+#hit{position:absolute;left:50%;top:50%;width:28px;height:28px;transform:translate(-50%,-50%) rotate(45deg);opacity:0}#hit:before,#hit:after{content:"";position:absolute;background:#ff3939}#hit:before{left:13px;width:2px;height:28px}#hit:after{top:13px;width:28px;height:2px}
+#exit{position:fixed;z-index:30;right:14px;bottom:14px;pointer-events:auto;padding:11px 15px;border:1px solid #ff8a24;border-radius:10px;background:#0b1119;color:#fff;font-weight:900;letter-spacing:.06em;cursor:pointer}
+#resume{display:none;position:fixed;z-index:35;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;padding:13px 18px;border:1px solid #fff5;border-radius:12px;background:#07101be8;color:#fff;cursor:pointer}
+#loading,#result{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,rgba(24,45,66,.96),rgba(2,5,9,.98));padding:18px}#card,#resultCard{width:min(580px,96vw);padding:28px;border:1px solid rgba(255,255,255,.24);border-radius:20px;background:rgba(6,12,20,.96);text-align:center;box-shadow:0 25px 90px #000b}h1{margin:0 0 9px;font-size:31px;letter-spacing:.06em}p{color:#c8d3df;line-height:1.5;font-size:14px}.bar{height:9px;background:#ffffff17;border-radius:999px;overflow:hidden;margin:15px 0}.bar div{height:100%;width:5%;background:linear-gradient(90deg,#ff7c1b,#ffd365);transition:width .2s}#play,#restart,#returnCity{width:100%;padding:13px;border:0;border-radius:11px;background:#ff861f;color:#1d0c00;font-weight:1000;cursor:pointer;margin-top:12px}#play:disabled{opacity:.38;cursor:default}#result{display:none}.legend{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;margin-top:15px;font-size:12px;color:#cdd8e3}.legend div{padding:9px;border-radius:8px;background:#ffffff0b}
+#damage{position:fixed;inset:0;z-index:8;pointer-events:none;background:radial-gradient(circle,transparent 45%,rgba(190,0,0,.65));opacity:0;transition:opacity .12s}
+@media(max-width:760px){#inventory{width:96vw}.slot{width:auto;flex:1}#feed{display:none}#score{min-width:210px}#stats{top:132px}}
+</style>
+<script type="importmap">{"imports":{"three":"../bosque/libs/three.module.js"}}</script>
+</head>
+<body>
+<div id="damage"></div>
+<div id="hud">
+  <div id="score" class="panel"><div class="title">GAME OF CREW</div><div class="row"><span class="orange">NARANJA <b id="orangeScore">0</b></span><span class="enemy">RIVALES <b id="enemyScore">0</b></span></div><div id="timer">05:00</div><div class="small">Primero a 150 puntos o mayor puntuación al terminar.</div></div>
+  <div id="cameraMode" class="panel">CÁMARA: TERCERA PERSONA · V PARA CAMBIAR</div>
+  <div id="stats" class="panel"><div class="small">SALUD</div><div class="big" id="health">100</div><div class="small">ARMA / MUNICIÓN</div><div id="ammo" style="font-weight:1000;margin-top:4px">PISTOLA · 12 / 72</div><div class="small" id="kills">BAJAS: 0 · MUERTES: 0</div></div>
+  <div id="inventory" class="panel"></div>
+  <div id="prompt" class="panel"></div>
+  <div id="feed" class="panel">Prepárate para la batalla.</div>
+  <div id="cross"></div><div id="hit"></div>
+</div>
+<button id="exit">SALIR A GTA MANUCHO</button>
+<button id="resume">HAZ CLIC PARA VOLVER A LA PARTIDA</button>
+<div id="loading"><div id="card"><h1><span class="orange">GAME</span> OF CREW</h1><p>Batalla fluida en primera y tercera persona: tu personaje principal y la banda naranja contra rivales claramente visibles en un escenario Sponza local optimizado. Muévete con controles normales, derrota enemigos, recoge armas flotantes con <b>E</b> y gana más puntos que el equipo rival.</p><div id="loadText">Preparando mapa, bandas y arma…</div><div class="bar"><div id="progress"></div></div><div class="legend"><div><b>WASD</b> mover · <b>Shift</b> correr</div><div><b>Ratón</b> mirar · <b>Clic</b> disparar</div><div><b>Espacio</b> saltar · <b>R</b> recargar</div><div><b>E</b> recoger · <b>V</b> cámara · <b>1/2/3</b> armas</div></div><button id="play" disabled>ESPERANDO RECURSOS…</button><p id="warning" class="small"></p></div></div>
+<div id="result"><div id="resultCard"><h1 id="resultTitle">PARTIDA TERMINADA</h1><p id="resultText"></p><button id="restart">JUGAR OTRA VEZ</button><button id="returnCity">REGRESAR A GTA MANUCHO</button></div></div>
+<script type="module" src="./game.js?v=71"></script>
+</body>
+</html>

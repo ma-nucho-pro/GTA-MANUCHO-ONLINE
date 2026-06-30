@@ -1,0 +1,10 @@
+VERSIÓN V37
+
+- Integrados los tres NPC entregados: Ready Player Me, Michelle y male02.
+- Ready Player Me y Michelle usan caminata articulada adaptada del recurso local Soldier.
+- Ocho civiles y dos miembros de la banda se crean y precalientan antes de mostrar la ciudad.
+- Ningún NPC aparece, desaparece o se crea por cercanía al jugador.
+- El tráfico aumenta de cuatro a diez coches.
+- Los diez coches se crean durante la carga inicial y circulan siempre, estés cerca o lejos.
+- Los coches continúan limitados a las avenidas y puentes; no entran al Parque del Retiro.
+- Se conservan las tres cámaras del coche y la policía precargada.

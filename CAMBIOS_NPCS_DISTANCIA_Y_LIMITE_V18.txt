@@ -1,0 +1,10 @@
+VERSIÓN V18
+
+- Máximo 10 peatones activos.
+- Se generan entre 52 y 108 unidades del jugador.
+- Se distribuyen alrededor del jugador y con separación mínima entre ellos.
+- Nunca aparecen pegados al personaje.
+- Si se acercan demasiado, se alejan caminando en lugar de teletransportarse.
+- Cuando quedan muy lejos, desaparecen y reaparecen después de una pausa corta.
+- Los nuevos peatones aparecen de uno en uno y lejos, no seis de golpe.
+- Se conserva el tamaño real y el sistema de animación de V17.

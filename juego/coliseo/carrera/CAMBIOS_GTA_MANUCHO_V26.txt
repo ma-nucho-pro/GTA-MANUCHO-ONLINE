@@ -1,0 +1,9 @@
+GTA MANUCHO Offline V26
+
+- Sandbox Mega Saltos vuelve a abrir: se corrigió la referencia faltante del sistema de puntuación.
+- Minimapa fijo arriba a la izquierda con marcador del jugador actualizado desde una copia de posición en tiempo real.
+- Panel de posición, distancia y progreso colocado debajo del mapa, sin quedar oculto detrás.
+- Carrera Internacional conserva marcas viales blancas más visibles.
+- 7 rivales NPC en Carrera Internacional y 4 en Vuelta Rápida.
+- Los NPC esperan en la parrilla hasta que el jugador comienza a conducir y usan colores diferentes.
+- Puerto local: 3026.

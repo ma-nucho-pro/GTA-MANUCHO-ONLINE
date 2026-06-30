@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GTA MANUCHO · Mundo Barco</title>
+  <link rel="icon" type="image/png" href="./favicon-32x32.png" />
+  <style>
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#04101c;font-family:Arial,sans-serif}canvas{display:block;width:100%;height:100%}
+    #hud{position:fixed;left:18px;bottom:18px;z-index:20;min-width:350px;max-width:calc(100vw - 36px);padding:14px 17px;border:1px solid rgba(84,185,255,.72);border-radius:15px;background:rgba(2,10,18,.86);color:#fff;box-shadow:0 12px 40px rgba(0,0,0,.4);pointer-events:none}
+    #hud strong{display:block;color:#54b9ff;letter-spacing:.15em;font-size:15px}#status{display:block;margin-top:7px;font-size:13px}#help{display:block;margin-top:5px;color:#b7c7d6;font-size:11px}
+    #progress{height:4px;margin-top:10px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden}#progress>i{display:block;width:12%;height:100%;background:#54b9ff;transition:width .3s ease}
+    #return-city{position:fixed;right:18px;bottom:18px;z-index:40;padding:12px 18px;border:1px solid #5bddff;border-radius:10px;background:rgba(3,14,24,.9);color:#fff;font:900 13px Arial,sans-serif;letter-spacing:.08em;cursor:pointer}#return-city:hover{background:#0d4760}#error{position:fixed;right:15px;top:15px;z-index:30;display:none;max-width:420px;padding:10px 13px;border:1px solid #ff6b6b;border-radius:10px;background:rgba(40,5,8,.88);color:#fff;font-size:12px}
+  </style>
+</head>
+<body>
+  <div id="hud"><strong>GTA MANUCHO · MUNDO BARCO</strong><span id="status">Iniciando océano, barco y personaje…</span><small id="help">WASD caminar · Shift correr · F subir al barco · arrastra el ratón para mover la cámara</small><div id="progress"><i></i></div></div>
+  <div id="error"></div>
+  <button id="return-city" type="button">VOLVER A GTA MANUCHO</button>
+  <script>
+    document.getElementById('return-city').addEventListener('click', function () {
+      location.href = '../index.html?from=mundo-barco';
+    });
+    addEventListener('keydown', function (event) {
+      if (event.code === 'Escape') location.href = '../index.html?from=mundo-barco';
+    });
+  </script>
+  <script>
+    window.addEventListener('error', function (event) {
+      var status = document.getElementById('status');
+      var error = document.getElementById('error');
+      if (status) status.textContent = 'Error al iniciar el motor 3D.';
+      if (error) { error.textContent = event.message || 'No se pudo iniciar Mundo Barco.'; error.style.display = 'block'; }
+    });
+  </script>
+  <script defer src="./assets/gta-ventara-mar-v11.js?v=11"></script>
+</body>
+</html>

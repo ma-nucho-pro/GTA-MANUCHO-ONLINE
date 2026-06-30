@@ -1,0 +1,14 @@
+V47 - Modo ligero sin congelacion, Fog City y caballos
+
+- Se eliminaron los 27 NPC GLB pesados de GTA MANUCHO.
+- Los peatones ahora usan InstancedMesh y geometria compartida: 29 personajes con solo 8 mallas de renderizado.
+- Los peatones aparecen aleatoriamente por rutas firmes, sin depender de la cercania del jugador.
+- Se eliminaron los Ferrari GLB del trafico.
+- Ahora hay 22 coches ligeros, creados en pequeños lotes despues de mostrar la ciudad.
+- Los coches siguen siendo conducibles y mantienen las tres camaras.
+- Se quito el precalentamiento completo de NPC y coches durante la pantalla de carga.
+- La ciudad se muestra primero y los sistemas ligeros se agregan escalonadamente en tiempo libre.
+- Se integro una nueva Fog City basada en el proyecto adjunto: plataforma firme, puente, carreteras, plaza, edificios instanciados y niebla ligera.
+- Dentro de Fog City se intentan cargar 4 caballos del Horse.glb oficial de Three.js.
+- Si no hay Internet, se muestran caballos ligeros de respaldo para que la zona no quede vacia.
+- Las aves, el salon de juegos y el coliseo se conservan.

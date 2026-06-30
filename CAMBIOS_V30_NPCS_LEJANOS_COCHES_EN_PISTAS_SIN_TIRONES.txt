@@ -1,0 +1,11 @@
+VERSIÓN V30
+
+- Los 10 NPC aparecen aproximadamente diez veces más alejados y separados por sectores.
+- Sus rutas son largas y persistentes; no se agrupan alrededor del jugador.
+- Los modelos y shaders de NPC se precalientan durante la pantalla inicial para evitar congelamientos al acercarse.
+- Se eliminaron las limpiezas tardías que podían ejecutarse mientras el jugador caminaba.
+- Solo hay 4 Ferrari Three.js para reducir carga: uno estacionado y tres circulando.
+- Todos los Ferrari aparecen y circulan únicamente por rutas viales de Vice Point Ave, Ocean Drive y Mall Lane.
+- Los coches ya no usan rutas circulares sobre parques o césped.
+- El tráfico se actualiza a 30 Hz y utiliza alturas de carretera precalculadas, sin raycasts repetidos.
+- Se mantiene la calidad gráfica, conducción, robo de coches y cámaras con V.

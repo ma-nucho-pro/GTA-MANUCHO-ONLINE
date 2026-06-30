@@ -1,0 +1,11 @@
+VERSIÓN V22
+
+- Corregido el bucle de movimiento de los peatones y aliados.
+- Los civiles caminan lentamente por sus rutas sin quedar bloqueados por la colisión global del mapa.
+- Los civiles son un poco más bajos que el jugador.
+- Las bandas enemigas y la banda naranja son un poco más altas.
+- Eliminado completamente el chaleco/cubo naranja de la versión V21.
+- La banda naranja usa el personaje Ogro MD2 del ejemplo oficial de Three.js, teñido de naranja y con animación de movimiento.
+- Si no existe conexión para cargar el pequeño archivo MD2 oficial, se usa un personaje humano local de respaldo, también naranja y sin cubos.
+- F permite reclutar o liberar miembros de la banda naranja.
+- Los reclutados siguen al jugador y lo defienden de atacantes.

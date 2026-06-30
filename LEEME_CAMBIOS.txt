@@ -1,0 +1,41 @@
+VERSIÓN BOSQUE 4 GRANDE Y ESTABLE
+
+- El bosque visible al final del puente ahora ocupa una zona de aproximadamente 1400 x 840 unidades.
+- Se puede caminar por su suelo físico antes de entrar al mundo completo.
+- Los árboles y rocas usan instancias para reducir drásticamente las llamadas de dibujo.
+- Se eliminó la precarga oculta del bosque, que ejecutaba dos juegos al mismo tiempo y congelaba la ciudad.
+- Al atravesar la puerta del fondo, la ciudad se descarga primero y luego abre bosque(4) completo.
+- Al salir del bosque se regresa sobre el suelo físico, sin reingreso inmediato.
+- Se conservan museo, tutorial, atajo Shift + I + L y eliminación de coleccionables.
+
+V34 — CORRECCIÓN PROFUNDA DE CONGELACIONES
+- Eliminadas cargas pesadas tardías y sistemas duplicados.
+- NPC humanos locales más ligeros: 5 civiles y 2 miembros de banda naranja.
+- Comprobaciones de suelo, radar, HUD, luces y culling repartidos para evitar picos.
+- Eliminadas asignaciones de memoria que se repetían en cada fotograma.
+- Se mantienen los coches en las pistas y las tres cámaras solicitadas.
+- La discoteca permanece eliminada.
+
+
+VERSIÓN 67
+- Vehículos policiales y de bandas robables con E.
+- Policía Collada corregida para caminar de pie.
+- Armas flotantes al derrotar bandas e integración de Cerberus.
+- Nuevo modo GAME OF CREW en Sponza, en primera persona y con puntuación por equipos.
+
+VERSIÓN 68
+- Radar de la ciudad reconstruido y sincronizado con jugador y vehículos.
+- El destino marcado desde TAB se conserva en el radar al caminar y conducir.
+- GAME OF CREW ahora es un edificio físico de GTA MANUCHO; se entra con E.
+- Movimiento frontal corregido en Game of Crew.
+- Disparos corregidos en primera y tercera persona; cámara intercambiable con V.
+- Inicio sobre tejado con escalera física hasta el suelo.
+- Policía erguida y orientada hacia delante, incluso durante el arresto.
+
+V69: ambulancia orientada correctamente; patrullas fuera de la comisaría; personaje Soldier visible en tercera persona en Game of Crew; optimización de FPS; barbería y gimnasio accesibles añadidos al radar y al mapa TAB.
+
+V73 - PUBLICIDAD URBANA
+- 10 carteles con imágenes locales.
+- 1 pantalla de video Vimeo con carga por proximidad.
+- 6 carteles ANÚNCIATE con PayPal.Me.
+- Carga escalonada para evitar congelamientos.

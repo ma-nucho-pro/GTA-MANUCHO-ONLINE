@@ -1,0 +1,9 @@
+V56 - Aeronaves avanzan hacia el lado correcto
+
+- Se corrigió el eje real de avance de JET, HELICOPTER, PLANE y FLY.
+- Ahora las aeronaves avanzan hacia el morro y no hacia la cola.
+- Se invirtieron también las cámaras para quedar detrás de la cola real.
+- La primera persona mira hacia el morro correcto.
+- Los disparos salen desde la parte delantera y viajan hacia donde apunta la aeronave.
+- La posición del piloto se ajustó al lado delantero correcto de la cabina.
+- La misma corrección se aplicó en GTA MANUCHO y en DESERT.

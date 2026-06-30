@@ -1,0 +1,10 @@
+V41 - Coches fuera del agua y retorno correcto al salon
+
+- Se aplico la escala real del mapa (16x) a todas las rutas del trafico.
+- Los coches ahora aparecen y circulan sobre las islas asfaltadas y puentes reales.
+- Las comprobaciones de superficies y del Parque del Retiro usan la misma escala real.
+- Las diez rutas fueron comprobadas por segmentos y ninguna sale de una superficie permitida.
+- Al entrar a un juego del salon se guarda la posicion, altura y orientacion del jugador.
+- Al pulsar volver, el jugador regresa al mismo lugar dentro del salon de juegos.
+- La posicion se reaplica durante el arranque para evitar que el juego base mande al jugador al inicio.
+- Se bloquea temporalmente la entrada automatica para evitar que el ordenador vuelva a abrir el juego al regresar.

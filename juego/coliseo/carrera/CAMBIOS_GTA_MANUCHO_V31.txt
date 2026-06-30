@@ -1,0 +1,7 @@
+GTA MANUCHO OFFLINE V31
+
+- Las rampas de Sandbox Mega Saltos ahora tienen una base física mucho más gruesa para evitar que el coche las atraviese al caer a gran velocidad.
+- Se añadió recuperación automática cuando el coche penetra la pista o queda invertido contra una rampa.
+- La recuperación conserva la posición lateral y alinea el coche con la subida o bajada de la pista.
+- Se eliminó completamente el mapa en vivo del modo Sandbox Mega Saltos.
+- Los mapas de Vuelta Rápida y Carrera Internacional se conservan.

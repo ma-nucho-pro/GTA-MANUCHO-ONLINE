@@ -1,0 +1,33 @@
+GTA MANUCHO V81 — MAR, NUBES, ISLAS, BARCOS Y CIUDAD CON MÁS VIDA
+
+CAMBIOS PRINCIPALES
+- Se añadió población visual optimizada: hasta 34 coches de fondo y 72 peatones de fondo.
+- Los coches y peatones adicionales usan InstancedMesh y se actualizan a baja frecuencia.
+- La cantidad visible se adapta a la calidad gráfica seleccionada.
+- Se añadió un mar animado con la textura waternormals del ZIP texturamar.zip.
+- Se añadieron nubes ligeras inspiradas en el ejemplo incluido en nubes.zip.
+- El jugador puede nadar y sumergirse usando la animación de natación del personaje.
+- Se añadió fondo submarino, peces animados, tiburones y plantas marinas.
+- Se añadieron dos islas físicas y el barco del ZIP islabarcos.zip.
+- Se añadió un barco conducible y otro barco NPC con ruta automática.
+- El NPC del barco usa el modelo animado de npcbarco.zip; si falla, usa el navegante de islabarcos.zip.
+- Barcos e islas aparecen en el radar y en el mapa de TAB.
+- Policías, bandas, ladrones, acompañantes y civiles no pueden caminar sobre el agua.
+- Los NPC que caen al mar se ahogan y desaparecen.
+- Los coches que caen al mar se hunden y dejan de funcionar.
+- Si el jugador conduce un coche al agua, sale del coche y pasa al modo natación.
+- Los sistemas marinos y la población se cargan de manera escalonada después de entrar en la ciudad.
+
+CONTROLES DEL MAR Y EL BARCO
+- E: subir o bajar del barco.
+- W / S: acelerar o retroceder.
+- A / D: girar.
+- V: cambiar la cámara del barco.
+- En el agua: WASD para nadar, Espacio para subir y clic para descender.
+
+RENDIMIENTO
+- Calidad baja: menos coches, peatones y distancia visible.
+- Calidad media: equilibrio recomendado.
+- Calidad alta/máxima: mayor densidad y distancia visible.
+- Los peces, tiburones y vegetación submarina solo se actualizan cerca del mar.
+- Las cargas GLB se reparten entre turnos ociosos para evitar congelamientos de entrada.

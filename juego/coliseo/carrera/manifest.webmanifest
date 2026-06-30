@@ -1,0 +1,23 @@
+{
+  "name": "GTA Ventara Offline V39",
+  "short_name": "GTA Ventara V39",
+  "description": "Juego offline con cámara estable, carreras de una vuelta con posiciones reales y Sandbox Mega Saltos optimizado.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090713",
+  "theme_color": "#7657ff",
+  "lang": "es",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "./gta-ventara-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "games",
+    "entertainment"
+  ]
+}

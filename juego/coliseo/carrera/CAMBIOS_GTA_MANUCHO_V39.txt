@@ -1,0 +1,7 @@
+V39
+- Solo Sandbox Mega Saltos.
+- Se eliminaron los bloques rectangulares inclinados que quedaban suspendidos.
+- Todas las rampas usan geometría triangular real: empiezan en el suelo, suben al pico y vuelven al suelo.
+- El coche aparece en una recta plana frente a la primera subida.
+- Se añadieron 79 pirámides conectadas a lo largo de todo el mapa.
+- Se mantiene el sistema de colisiones cercanas para conservar el rendimiento.

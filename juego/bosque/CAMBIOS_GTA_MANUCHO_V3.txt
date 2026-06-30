@@ -1,0 +1,6 @@
+GTA MANUCHO V3
+- El personaje se fija a la altura física real del terreno.
+- Se corrige la aparición debajo del mapa.
+- El personaje camina y salta sobre la superficie.
+- La cámara de tercera persona evita quedar bajo las montañas.
+- La cámara de primera persona permanece a la altura de los ojos.

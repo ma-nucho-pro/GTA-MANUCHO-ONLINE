@@ -1,0 +1,20 @@
+VERSIÓN 26 — FPS Y COCHES MANEJABLES
+
+OPTIMIZACIÓN SIN BAJAR GRÁFICOS
+- Se conserva la resolución completa del juego.
+- Se desactivó el segundo sistema interno que intentaba cargar 100 NPC adicionales.
+- Se eliminó el tráfico remoto que descargaba modelos durante la partida.
+- Los 10 NPC visibles usan una animación local ligera, sin IK ni cálculos mundiales costosos.
+- Las consultas de suelo, separación y amenazas se ejecutan de forma escalonada.
+- Los modelos y texturas se cargan una sola vez.
+
+COCHES
+- 8 coches colocados alrededor del inicio, incluidos Ferrari locales y variantes ligeras.
+- Algunos coches circulan lentamente; todos pueden robarse.
+- E: subir o bajar del coche.
+- W/S: acelerar y retroceder.
+- A/D: girar.
+- V: cambiar entre cámara normal, cerca detrás, lejos, desde arriba y primera persona.
+
+INICIO
+Ejecuta INICIAR_TUTORIAL_Y_JUEGO.cmd.

@@ -1,0 +1,6 @@
+GTA MANUCHO OFFLINE V33
+
+- Se corrigió el bloqueo que impedía avanzar en Carrera Internacional y Sandbox Mega Saltos.
+- La protección de rampas ya no eleva el coche continuamente ni deja las ruedas sin contacto.
+- La recuperación solo actúa cuando el coche realmente atraviesa profundamente la pista o aterriza invertido.
+- Se mantienen las rampas gruesas, los NPC que siguen las rampas y las colisiones locales optimizadas del Sandbox.

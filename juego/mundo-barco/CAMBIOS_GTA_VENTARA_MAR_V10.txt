@@ -1,0 +1,6 @@
+GTA MANUCHO Mar V10
+
+- Three.js, GLTFLoader, DRACOLoader y la lógica del juego están empaquetados en un único archivo local.
+- Se eliminó el importmap y la cadena de módulos que dejaba la pantalla de inicio bloqueada.
+- El océano, barco provisional y personaje aparecen antes de cargar los modelos originales.
+- Se conservan isla, barco, boyas, rocas, vegetación y peces originales.

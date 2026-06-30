@@ -1,0 +1,9 @@
+GTA MANUCHO MAR - V6
+
+- Se conservó el proyecto original del océano y todos sus archivos.
+- Se integró PlayerCharacter mediante imports nativos de Three.js y GLTFLoader.
+- Se añadió un personaje GLB local para que sea visible inmediatamente.
+- Se añadió movimiento a pie, carrera, subida a la cubierta y manejo del barco.
+- Se añadió un embarcadero junto al barco sin eliminar la isla ni ningún elemento original.
+- Se incluyeron localmente todos los módulos auxiliares requeridos por Three.js.
+- Se corrigió la carga del decodificador Draco para usar archivos locales.

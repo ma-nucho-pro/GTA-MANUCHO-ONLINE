@@ -1,0 +1,9 @@
+CORRECCIÓN DEL SENTIDO DE AVANCE DEL TUTORIAL
+
+- Se invirtió el desplazamiento REAL del tutorial.
+- W ahora mueve al personaje hacia el lado contrario al de la versión anterior.
+- La misma inversión se aplica al montar la bicicleta.
+- S realiza el desplazamiento opuesto.
+- Se invirtió el giro visual de las ruedas para coincidir con el nuevo avance.
+- La postura del ciclista ahora se inclina hacia la nueva parte delantera.
+- El bosque no fue modificado.

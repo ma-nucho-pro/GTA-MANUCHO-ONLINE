@@ -1,0 +1,39 @@
+# GTA MANUCHO V84 — despliegue oficial de GitHub Pages.
+# Creado por Roberto Manuel Jara Peche · GitHub: ma-nucho-pro · ARKEA AI.
+name: Publicar GTA MANUCHO en GitHub Pages
+
+on:
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v7.0.0
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v6.0.0
+
+      - name: Empaquetar el sitio estático
+        uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: .
+
+      - name: Publicar el juego
+        id: deployment
+        uses: actions/deploy-pages@v5.0.0

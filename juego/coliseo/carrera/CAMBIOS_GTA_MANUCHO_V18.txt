@@ -1,0 +1,8 @@
+GTA MANUCHO OFFLINE V18
+
+- Se desactiva la cámara cinemática automática en Sandbox al detener el coche.
+- El sistema de puntuación se actualiza a 30 Hz para reducir carga.
+- La salida del coche usa velocidad vertical y tolerancia de contacto para rampas personalizadas.
+- El botón y la tecla X permiten bajar cuando el coche está detenido y estable.
+- Se intenta instalar/cargar el Soldier.glb original usado por GLTFLoader.
+- El personaje de respaldo solo se usa cuando Soldier.glb no está disponible.

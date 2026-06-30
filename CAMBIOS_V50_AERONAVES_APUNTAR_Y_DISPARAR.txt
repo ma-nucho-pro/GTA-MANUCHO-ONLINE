@@ -1,0 +1,11 @@
+V50 - Aeronaves con movimiento 3D, punteria y disparo
+
+- Los cuatro modelos de aeronaves ahora pueden inclinar el morro hacia arriba y abajo.
+- El movimiento hacia adelante sigue la direccion completa del avion o helicoptero.
+- A/D gira, flechas arriba/abajo apuntan, Q/R inclinan las alas.
+- El raton tambien permite apuntar cuando el cursor esta bloqueado.
+- F o clic izquierdo dispara proyectiles ligeros desde la parte delantera.
+- Se agrego una mira central al pilotar.
+- Los proyectiles usan un conjunto reutilizable limitado para evitar lag.
+- La misma logica funciona en GTA MANUCHO y en el mundo DESERT.
+- Se conservan Espacio/Ctrl-C para subir o bajar y V para cambiar camara.

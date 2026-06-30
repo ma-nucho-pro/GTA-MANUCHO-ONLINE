@@ -1,0 +1,15 @@
+PERSONAJE Y COCHE - VERSIÓN OFFLINE
+
+- El personaje aparece junto al Porsche.
+- Puede caminar, correr, acercarse al vehículo, subir y bajar.
+- El coche queda frenado mientras el jugador está caminando.
+- El personaje está incluido en el código y no descarga Soldier.glb ni otros modelos externos.
+
+CONTROLES
+- W, A, S, D o flechas: caminar o conducir.
+- Shift: correr cuando estás fuera del coche.
+- X: subir o bajar del coche.
+- Espacio: salto del personaje o freno de mano del coche.
+- C: cambiar la cámara del coche.
+
+Para ejecutar el juego usa INICIAR_JUEGO.cmd o ejecuta node server.js.

@@ -1,0 +1,10 @@
+V42 - NPC en zonas firmes y coliseo de carreras
+
+- Los NPC ya no crean rutas aleatorias que crucen el fondo azul.
+- Los peatones usan diez circuitos cerrados dentro de pistas, aceras e interior del Parque del Retiro.
+- Cada movimiento comprueba que el siguiente punto siga dentro de una superficie permitida.
+- Si un NPC quedara fuera de una superficie firme, vuelve automáticamente a su ruta asignada.
+- Se añadió un coliseo de carreras fuera del Parque del Retiro.
+- Al entrar al centro del coliseo se abre el juego GTA MANUCHO Offline V41 adjuntado.
+- El juego de carreras quedó integrado de forma local dentro del ZIP.
+- El botón VOLVER AL COLISEO devuelve al jugador al mismo punto guardado dentro del coliseo.

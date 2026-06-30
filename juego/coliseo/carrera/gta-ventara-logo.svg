@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="180" viewBox="0 0 780 180">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00e5ff"/><stop offset="0.5" stop-color="#a4ff43"/><stop offset="1" stop-color="#ff2d95"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <path d="M34 132 L104 42 H190 L222 82 H148 L132 62 L80 132 Z" fill="url(#g)" opacity=".95" filter="url(#glow)"/>
+  <text x="238" y="105" font-family="Arial Black, Impact, sans-serif" font-size="72" font-style="italic" font-weight="900" letter-spacing="2" fill="#f6f2ff">GTA</text>
+  <text x="410" y="105" font-family="Arial Black, Impact, sans-serif" font-size="63" font-style="italic" font-weight="900" letter-spacing="1" fill="url(#g)" filter="url(#glow)">VENTARA</text>
+  <rect x="240" y="124" width="500" height="5" rx="2.5" fill="url(#g)"/>
+  <text x="242" y="155" font-family="Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="8" fill="#aca4c8">OPEN ROAD EXPERIENCE</text>
+</svg>

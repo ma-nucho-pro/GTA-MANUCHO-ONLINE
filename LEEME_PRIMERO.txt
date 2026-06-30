@@ -1,0 +1,102 @@
+TUTORIAL PRIMERO + JUEGO PRINCIPAL + MUSEO + BOSQUE
+VERSIÓN CORREGIDA: CÁMARA, MOVIMIENTO, ATAJO Y RENDIMIENTO
+
+1. Extrae TODO el archivo ZIP en una carpeta nueva.
+2. Ejecuta INICIAR_TUTORIAL_Y_JUEGO.cmd.
+3. Completa el tutorial y pulsa EMPEZAR JUEGO.
+4. Para omitir el tutorial, mantén pulsadas a la vez SHIFT + I + L.
+5. En la ciudad, atraviesa la puerta de la iglesia del Parque del Retiro: entrarás automáticamente al museo.
+6. Sigue el camino y el puente hacia el sur para llegar al bosque insular exacto.
+7. Dentro del museo o bosque, pulsa ESC o el botón superior para volver a la ciudad.
+
+CORRECCIONES DE ESTA VERSIÓN:
+- Cámara inicial del tutorial más alejada del personaje.
+- Animación del Soldier actualizada una sola vez por fotograma.
+- A y D giran al personaje sin hacerlo desplazarse lateralmente al mismo tiempo.
+- Atajo SHIFT + I + L restaurado y reforzado mediante un controlador independiente.
+- El juego principal mantiene la resolución completa; la optimización se realiza eliminando trabajo duplicado, sin bajar los gráficos.
+- Las tareas pesadas del mapa se pausan durante el movimiento.
+- El tráfico se actualiza con menor frecuencia mientras caminas.
+- El sistema de visibilidad continúa ocultando objetos lejanos para evitar congelamientos.
+- Museo y bosque se mantienen como zonas separadas para no cargarlos junto con toda la ciudad.
+
+
+ZONAS UNIDAS EN ESTA VERSION:
+- El portal de la iglesia abre automaticamente el mundo exacto de MUSEO(3).zip.
+- Para salir del museo, cruza la puerta luminosa SALIDA A GTA MANUCHO.
+- El puente del sur abre el mundo exacto de bosque(4).zip.
+- En el bosque puedes volver con ESC o el boton VOLVER A GTA MANUCHO.
+
+
+CAMBIOS DE ESTA VERSIÓN
+- Se eliminaron del HUD y de la carga los conejos de oro y las pistas doradas.
+- El suelo frente a la iglesia es sólido y el regreso del museo aparece encima del pavimento.
+- bosque(4) está integrado en el mismo juego mediante carga continua: se prepara al acercarse al puente y se abre sin cambiar la página principal.
+- Para volver desde el bosque, camina hasta la puerta SALIDA A GTA MANUCHO o pulsa Esc.
+
+BICICLETA CARBON FRAME CORREGIDA
+- Tutorial y bosque: acércate y pulsa E para montar o bajar.
+- W/S avanza o retrocede, A/D gira, Shift acelera y V cambia la cámara.
+- Al montar, la frase cambia automáticamente entre español e inglés según el idioma del tutorial.
+
+ENTER: bajarse de la bicicleta (también funciona la tecla E).
+
+VERSIÓN 27 — COCHES GRANDES, EN MOVIMIENTO Y PRECARGADOS
+E: subir/robar o bajar del coche.
+W/S: acelerar o retroceder.
+A/D: girar.
+V: cambiar vista (normal, cerca, lejos, arriba y primera persona).
+
+
+MEJORAS V27
+- Los coches se precargan y compilan durante la pantalla inicial para evitar congelamientos al acercarte.
+- Se elimina el tráfico duplicado del juego base y permanecen solo los coches locales optimizados.
+- Hay 8 coches grandes; 7 circulan de forma continua y uno queda estacionado para poder robarlo fácilmente.
+- El Ferrari conserva su detalle completo, pero se carga una sola vez y se prepara antes de mostrar la ciudad.
+- Al conducir, suelo y colisiones se revisan de forma escalonada para aumentar los FPS.
+
+VERSIÓN 65 — BANDAS, POLICÍA, VEHÍCULOS Y EDIFICIOS INTERIORES
+- G: reclutar hasta 4 aliados de la banda naranja.
+- E: entrar o salir del hospital y de la comisaría.
+- TAB: mapa completo de territorios.
+- Las bandas enemigas atacan solo dentro de su territorio.
+- La policía puede arrestar, disparar, eliminar al jugador o llevarlo a la comisaría.
+- Al conquistar una zona enemiga, el territorio pasa a ser naranja.
+
+VERSIÓN 66 — MAPA SVG, RADAR SINCRONIZADO Y NUEVAS SKINS
+- Se eliminaron los carteles gigantes de colores que indicaban las zonas de las bandas dentro del mundo 3D.
+- El radar inferior izquierdo se reemplazó por un radar estable que sigue al jugador a pie y dentro de vehículos.
+- TAB abre el nuevo mapa SVG de toda GTA MANUCHO.
+- Clic izquierdo sobre el mapa: colocar destino.
+- Clic derecho o botón BORRAR DESTINO: quitar destino.
+- La ruta, flecha y distancia al destino aparecen en el radar mientras caminas o conduces.
+- Las skins de bandas de bandas.zip y la skin de policía de police.zip están integradas localmente.
+
+
+VERSIÓN 67 — COCHES ROBABLES, ARMAS DE BANDAS Y GAME OF CREW
+- E permite robar y conducir los coches de la policía, de las bandas y los vehículos de servicio cercanos.
+- Robar una patrulla policial aumenta el nivel de búsqueda.
+- La skin de policía conserva la corrección Z-UP y ahora camina erguida con animación de brazos y piernas.
+- Al eliminar una banda enemiga, suelta un arma flotante que puede recogerse con E y queda guardada en el inventario de armas.
+- Se integró la skin Cerberus incluida en arma skin.zip para verla al recogerla y al apuntar en primera persona.
+- Nuevo modo GAME OF CREW integrado en la ciudad (en V68 se accede desde un edificio físico).
+- GAME OF CREW abre el mundo Sponza con combate en primera persona, banda naranja aliada, bandas rivales, puntuación, salud, munición, recarga y armas flotantes.
+- Controles en GAME OF CREW: WASD mover, Shift correr, Espacio saltar, clic disparar, R recargar, E recoger arma y 1/2/3 cambiar arma.
+- SALIR A GTA MANUCHO permite abandonar la partida y volver a la posición guardada de la ciudad.
+- El mapa Sponza oficial se descarga al entrar; si no hay conexión, se activa automáticamente un escenario físico local de respaldo.
+
+VERSIÓN 68 — RADAR ACTIVO, EDIFICIO GAME OF CREW Y POLICÍA ERGUIDA
+- El radar inferior izquierdo dibuja las calles, superficies, territorios, bandas, policías, vehículos, hospital, comisaría y el edificio Game of Crew.
+- El radar sigue la posición correcta tanto a pie como al conducir un coche policial, un coche de banda u otro vehículo.
+- TAB mantiene el mapa SVG sincronizado. Haz clic para marcar un destino; la ruta y la distancia aparecen también mientras conduces.
+- Se eliminó el botón superior GAME OF CREW. Ahora debes ir al edificio negro y naranja marcado con C en el mapa/radar y pulsar E en su entrada.
+- Game of Crew comienza en un tejado con una escalera física para bajar al patio y caminar por el escenario.
+- W avanza hacia donde mira la cámara; S retrocede. V alterna entre primera y tercera persona.
+- Clic izquierdo dispara. F o Ctrl izquierdo sirven como disparo alternativo cuando el navegador bloquea el ratón.
+- La policía Collada conserva la orientación Z-UP correcta: permanece de pie, con los pies abajo, y mira en el sentido de la marcha durante persecuciones y arrestos.
+
+NOVEDADES V70
+- Propiedades: busca el icono de disquete azul/negro en el mapa y acércate para comprar con E.
+- Una propiedad comprada permite entrar y guardar la partida en un archivo .vcsave.
+- F9 o el botón CARGAR PARTIDA permite seleccionar un guardado desde la computadora.
+- Dentro de una propiedad: WASD, SHIFT, V y E.

@@ -1,0 +1,14 @@
+GTA MANUCHO — CONTROLES
+
+W / A / S / D: caminar
+Shift: correr
+Espacio: saltar
+V: alternar primera y tercera persona
+Ratón: mirar alrededor
+
+CORRECCIÓN DE ALTURA
+- El personaje detecta la altura física del terreno.
+- Sus pies permanecen sobre la superficie.
+- La cámara no puede quedar debajo de las montañas.
+
+ENTER: bajarse de la bicicleta (también funciona la tecla E).

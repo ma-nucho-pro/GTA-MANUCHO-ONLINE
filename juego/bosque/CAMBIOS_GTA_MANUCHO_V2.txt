@@ -1,0 +1,7 @@
+GTA MANUCHO - CORRECCIÓN DE MOVIMIENTO Y CÁMARA
+
+- Se corrigió la orientación invertida del personaje Soldier.
+- El personaje ahora mira hacia la dirección real de desplazamiento.
+- La cámara de primera persona se actualiza cada fotograma desde la posición de los ojos.
+- La tecla V ya no deja la cámara en la posición anterior ni congela la vista.
+- Se mantiene tercera persona detrás del personaje, WASD, Shift y salto.

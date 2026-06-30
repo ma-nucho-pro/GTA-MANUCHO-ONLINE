@@ -1,0 +1,33 @@
+GTA MANUCHO V76 · AJUSTES Y RENDIMIENTO
+
+CAMBIOS PRINCIPALES
+- Se eliminó el botón permanente "CARGAR PARTIDA" de la esquina superior izquierda.
+- Cargar partida ahora está únicamente dentro de ESC > AJUSTES > CARGAR PARTIDA.
+- Nuevo menú de pausa inspirado en los menús clásicos de juegos de mundo abierto, completamente en español.
+- ESC abre/cierra el menú. Dentro de AJUSTES se puede cambiar:
+  * Calidad gráfica: Baja, Media, Alta o Máxima.
+  * Formato: Automático, 16:9, 4:3 o 1:1.
+  * Tamaño de ventana: 55%, 70%, 85% o 100%.
+  * Brillo.
+  * Sombras.
+  * Volumen general.
+  * Pantalla completa.
+  * Cargar una partida .vcsave.
+  * Restablecer los ajustes.
+- Los ajustes se guardan automáticamente en el navegador.
+- Nueva pantalla de carga animada con fondo urbano y textos en español.
+- El sistema de audio queda preparado para la música/radio que se añadirá posteriormente.
+
+OPTIMIZACIÓN CERCA DE LOS COCHES
+- Los Ferrari ahora precalientan materiales y shaders antes de aparecer.
+- Se redujo la cantidad total de tráfico pesado de 24 a 18 coches.
+- Solo se dibujan los coches cercanos y la cantidad visible depende de la calidad seleccionada.
+- Los vehículos lejanos actualizan su ruta a menor frecuencia.
+- Las ruedas solo se animan cuando el coche está cerca.
+- Los NPC lejanos dejan de dibujarse y animarse.
+- La calidad MEDIA y el tamaño 85% se usan como configuración inicial recomendada.
+
+CONTROLES DEL MENÚ
+- ESC: abrir, volver o cerrar.
+- Ratón: seleccionar opciones.
+- PANTALLA COMPLETA: usa la API de pantalla completa del navegador.

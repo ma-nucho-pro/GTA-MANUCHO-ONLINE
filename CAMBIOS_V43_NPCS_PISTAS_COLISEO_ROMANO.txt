@@ -1,0 +1,11 @@
+V43 - NPC en superficies firmes y coliseo romano
+
+- Los NPC usan WORLD_SCALE=16 y ya no caminan sobre el fondo azul.
+- Todas las rutas peatonales fueron verificadas dentro de pistas, aceras, islas firmes o parque.
+- Se corrigio la orientacion visual de los NPC para que caminen mirando hacia adelante.
+- El coliseo fue movido fuera del Parque del Retiro sobre una isla firme.
+- Se agrego un camino firme de acceso al coliseo.
+- Se agregaron gradas/escalones circulares, columnas, arcadas y cornisa estilo coliseo romano.
+- El coliseo usa la textura brick_diffuse de los ejemplos oficiales de Three.js.
+- El juego de carreras ya no se abre al acercarse: solo se abre al pulsar E dentro del centro.
+- Se mantiene el regreso al mismo punto del coliseo.

@@ -1,0 +1,19 @@
+CORRECCIÓN DE BICICLETA
+
+TUTORIAL
+- La bicicleta Carbon Frame fue aumentada de tamaño.
+- Al caminar o pasar por encima de la bicicleta, el personaje sube automáticamente.
+- La tecla E sigue permitiendo bajar y volver a montar.
+- La frase se reproduce al montar según el idioma seleccionado.
+
+BOSQUE
+- Al acercarse hasta tocar/pasar por encima de la bicicleta, el personaje monta automáticamente.
+- La tecla E también puede usarse para montar o bajar.
+- Para evitar que vuelva a montar apenas baja, debe alejarse un poco y acercarse otra vez.
+
+CONTROLES MONTADO
+W/S: avanzar y retroceder
+A/D: girar
+Shift: acelerar
+E: bajar
+V: cambiar cámara cuando esté disponible

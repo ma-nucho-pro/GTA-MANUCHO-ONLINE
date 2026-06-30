@@ -1,0 +1,8 @@
+CORRECCIÓN DEFINITIVA DEL SENTIDO DE W EN EL TUTORIAL
+
+- Se invirtió el vector de desplazamiento real, no el modelo visual.
+- A pie: W ahora suma movimiento hacia el frente visible.
+- En bicicleta: W usa exactamente el mismo sentido hacia delante.
+- S realiza el desplazamiento contrario.
+- Se invirtió también el giro de las ruedas para coincidir con el avance.
+- El bosque no fue modificado.

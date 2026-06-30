@@ -1,0 +1,7 @@
+V57 - Corrección exclusiva del avión FM2
+
+- Se corrigió únicamente el avión azul FM2 número 54.
+- El morro del FM2 ahora coincide con la dirección real de avance.
+- La cámara, los disparos y el asiento siguen la parte delantera correcta del FM2.
+- Los modelos JET, HELICOPTER y FLY no fueron modificados.
+- La corrección funciona en GTA MANUCHO y en DESERT.

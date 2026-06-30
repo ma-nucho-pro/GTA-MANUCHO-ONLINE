@@ -1,0 +1,9 @@
+CORRECCIONES REALIZADAS
+
+- Quitado el cartel ZONAS INTEGRADAS.
+- Shift + I + L vuelve a saltar el tutorial, incluso con el cursor bloqueado.
+- W/S corregidos y la animación de caminar ya no se activa al girar solo con A/D.
+- Piso sólido ampliado frente a la iglesia y retorno del museo colocado sobre el suelo.
+- Carga progresiva de LOD desactivada y tareas pesadas aplazadas hasta 10 segundos sin movimiento.
+- Eliminados los modulepreload del bosque que competían con la ciudad.
+- Bosque exterior mantiene su tamaño, pero usa menos instancias para reducir tirones.

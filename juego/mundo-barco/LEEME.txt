@@ -1,0 +1,15 @@
+GTA MANUCHO — MAR V11
+
+INICIO
+1. Extrae todo el ZIP en una carpeta.
+2. Abre INICIAR_GTA_VENTARA.cmd.
+3. La primera vez se descargará automáticamente Soldier.glb desde el sitio oficial de Three.js.
+4. Después el modelo queda guardado localmente en models\Soldier.glb.
+
+CONTROLES
+- W/A/S/D: caminar o navegar.
+- Shift: correr.
+- F: subir al barco, manejarlo o bajar.
+- Ratón: mover la cámara.
+
+Se conservan el océano, las islas, el barco, las boyas, las rocas, la vegetación y los peces del proyecto original.

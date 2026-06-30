@@ -1,0 +1,10 @@
+GTA MANUCHO OFFLINE V17
+
+- Sandbox Mega Saltos optimizado: menos objetos físicos simultáneos y carga por bloques.
+- Mantiene un mapa gigante de 12 000 x 16 000 unidades.
+- 224 tramos sólidos y conectados con subidas, descensos, aterrizajes y puentes.
+- El personaje principal vuelve a responder a W, A, S, D, flechas y Shift en todos los niveles.
+- Se eliminaron límites que devolvían al personaje junto al coche al alejarse.
+- El personaje puede caminar por todo el mapa antes de subir al vehículo.
+- La Carrera Internacional abre su mapa propio en lugar de redirigir a Vuelta Rápida.
+- En modo offline no se espera una descarga externa del personaje.

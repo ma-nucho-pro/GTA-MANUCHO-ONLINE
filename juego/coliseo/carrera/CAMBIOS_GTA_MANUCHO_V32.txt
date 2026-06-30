@@ -1,0 +1,9 @@
+GTA MANUCHO OFFLINE V32
+
+- Sandbox Mega Saltos usa colisiones locales por sectores para evitar congelamientos al avanzar.
+- Las rampas y pistas del Sandbox son más gruesas y poseen recuperación anti-traspaso.
+- El coche aterriza sobre la superficie y se endereza cuando cae invertido cerca de la pista.
+- Carrera Internacional tiene carretera y base física más gruesas.
+- El coche del jugador no atraviesa la carretera al aterrizar después de una rampa.
+- Los NPC detectan la altura e inclinación de cada rampa y suben por encima de ella.
+- El Sandbox continúa sin minimapa.

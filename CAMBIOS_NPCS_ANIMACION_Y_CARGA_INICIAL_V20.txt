@@ -1,0 +1,8 @@
+VERSIÓN V20
+
+- Los peatones Michelle y Ready Player Me usan una animación real de caminar tomada del Soldier.glb.
+- Se eliminó el IK artificial de brazos y manos que deformaba la postura.
+- La ciudad permanece cubierta por una pantalla breve de preparación hasta que los 10 NPC ya están cargados y colocados.
+- Los NPC se distribuyen en distancias y sectores diferentes; solo dos quedan relativamente cerca del inicio.
+- El reciclaje solo sucede a más de 720 unidades, fuera de cámara y con un intervalo amplio, evitando desapariciones visibles.
+- Se aumentó levemente el tamaño de los peatones.

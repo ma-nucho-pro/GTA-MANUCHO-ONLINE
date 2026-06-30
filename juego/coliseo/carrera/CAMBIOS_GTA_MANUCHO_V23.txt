@@ -1,0 +1,14 @@
+GTA MANUCHO OFFLINE V23
+
+SANDBOX MEGA SALTOS
+- Todas las rampas y plataformas son colliders físicos gruesos de 32 unidades.
+- El suelo de seguridad queda por debajo de la pista y ya no se superpone con la superficie de conducción.
+- Se eliminó el ruido físico de superficie en Sandbox para reducir el temblor inicial.
+- Se aumentó el alcance de contacto de la suspensión y la tolerancia entre rampas.
+- El personaje aparece estable junto al coche y puede subir con X o con el botón.
+- La tecla V recorre tres cámaras: normal, amplia y cercana.
+
+CARRERA INTERNACIONAL
+- Nuevo mapa de 2400 x 1900 unidades.
+- Circuito completo con grandes rectas, sectores diagonales, chicanas, boxes, graderías, edificios, iluminación y seis puntos de control.
+- Nuevo punto de salida dentro de la pista ampliada.
