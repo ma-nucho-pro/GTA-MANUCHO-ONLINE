@@ -1,0 +1,18 @@
+GTA MANUCHO V91 — CORRECCIÓN ONLINE ESPECÍFICA
+
+1. PERSONAJE REMOTO
+- Se eliminó el cálculo invertido que hacía caminar al otro jugador de espaldas.
+- Se transmite la rotación mundial real del Soldier.glb.
+- El remoto usa Idle, Walk y Run sin un segundo giro de 180 grados.
+
+2. VEHÍCULOS REMOTOS
+- Coches, jets y tanques se cargan aunque el modelo todavía no exista en la escena local.
+- Se reutilizan los archivos originales del juego:
+  * aircraft-assets/*.glb
+  * tank-assets/scene.gltf
+  * car-assets/ferrari.glb
+- Se sincronizan posición, rotación, escala y dimensiones reales.
+- Se desactiva el culling de los clones online para que no desaparezcan a distancia.
+- Los vehículos creados con trucos se ven tanto estacionados como cuando el otro jugador los conduce.
+
+No se modificó el resto del juego.

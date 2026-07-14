@@ -1,5 +1,5 @@
 /**
- * GTA MANUCHO V84 — presentación web aleatoria.
+ * GTA MANUCHO V88 — intro cinematográfica estilo GTA.
  * Creado por Roberto Manuel Jara Peche (GitHub: ma-nucho-pro) y ARKEA AI.
  * Conserva estos créditos al reutilizar el código. Consulta LICENSE y NOTICE.md.
  */
@@ -9,27 +9,29 @@
   const cover = {
     src: './docs/media/Portada.png',
     alt: 'Portada de GTA MANUCHO',
-    caption: 'GTA MANUCHO · MUNDO ABIERTO'
+    zone: 'Ciudad Manucho',
+    brief: 'Año presente. Una ciudad abierta, sin reglas.\nTú decides cómo empezar tu historia.'
   };
   const suppliedMedia = [
-    { src: './docs/media/GTA-MANUCHO-1.png', alt: 'Captura 1 de GTA MANUCHO', caption: 'CIUDAD · ACCIÓN · EXPLORACIÓN' },
-    { src: './docs/media/GTA-MANUCHO-2.png', alt: 'Captura 2 de GTA MANUCHO', caption: 'COCHES · CARRERAS · MISIONES' },
-    { src: './docs/media/GTA-MANUCHO-3.png', alt: 'Captura 3 de GTA MANUCHO', caption: 'POLICÍA · BANDAS · COMBATE' },
-    { src: './docs/media/GTA-MANUCHO-4.png', alt: 'Captura 4 de GTA MANUCHO', caption: 'MAR · NATACIÓN · BARCOS' },
-    { src: './docs/media/GTA-MANUCHO-5.png', alt: 'Captura 5 de GTA MANUCHO', caption: 'AERONAVES · HELICÓPTEROS · TANQUES' },
-    { src: './docs/media/GTA-MANUCHO-6.png', alt: 'Captura 6 de GTA MANUCHO', caption: 'PRIMERA Y TERCERA PERSONA' },
-    { src: './docs/media/GTA-MANUCHO-7.png', alt: 'Captura 7 de GTA MANUCHO', caption: 'MAPA ABIERTO · DESCUBRE EL MUNDO' },
-    { src: './docs/media/GTA-MANUCHO-8.png', alt: 'Captura 8 de GTA MANUCHO', caption: 'ARKEA AI PRESENTA' },
-    { src: './docs/media/GTA-MANUCHO-9.png', alt: 'Captura 9 de GTA MANUCHO', caption: 'GTA MANUCHO · V84' },
-    { src: './docs/media/GTA-MANUCHO-10.png', alt: 'Captura 10 de GTA MANUCHO', caption: 'CREADO POR ROBERTO MANUEL JARA PECHE' },
-    { src: './docs/media/GTA-MANUCHO-VIDEO-1.webp', alt: 'Video animado 1 de GTA MANUCHO', caption: 'SECUENCIA CINEMATOGRÁFICA' },
-    { src: './docs/media/GTA-MANUCHO-VIDEO-2.webp', alt: 'Video animado 2 de GTA MANUCHO', caption: 'ACCIÓN EN MOVIMIENTO' },
-    { src: './docs/media/GTA-MANUCHO-VIDEO-3.webp', alt: 'Video animado 3 de GTA MANUCHO', caption: 'ENTRA AL MUNDO DE MANUCHO' }
+    { src: './docs/media/GTA-MANUCHO-1.png', alt: 'Captura 1', zone: 'Centro de la ciudad', brief: 'Explora cada calle. Cada esquina esconde algo.' },
+    { src: './docs/media/GTA-MANUCHO-2.png', alt: 'Captura 2', zone: 'Avenida principal', brief: 'Roba un coche. Pisa el acelerador.\nLa policía no perdona.' },
+    { src: './docs/media/GTA-MANUCHO-3.png', alt: 'Captura 3', zone: 'Territorio en disputa', brief: 'Bandas, estrellas de búsqueda y la VCPD tras tus pasos.' },
+    { src: './docs/media/GTA-MANUCHO-4.png', alt: 'Captura 4', zone: 'Costa del Pacífico', brief: 'Nada mar adentro. Roba un barco.\nCuidado con lo que nada debajo.' },
+    { src: './docs/media/GTA-MANUCHO-5.png', alt: 'Captura 5', zone: 'Espacio aéreo restringido', brief: 'Helicópteros, aeronaves y tanques.\nEl cielo también es tuyo.' },
+    { src: './docs/media/GTA-MANUCHO-6.png', alt: 'Captura 6', zone: 'Modo cámara libre', brief: 'Primera o tercera persona. Tú eliges cómo ver el caos.' },
+    { src: './docs/media/GTA-MANUCHO-7.png', alt: 'Captura 7', zone: 'Mapa abierto', brief: 'Museo, bosque, coliseo, castillo, desierto…\nMundos dentro del mundo.' },
+    { src: './docs/media/GTA-MANUCHO-8.png', alt: 'Captura 8', zone: 'ARKEA AI presenta', brief: 'Un mundo creado por una sola persona y mucha ambición.' },
+    { src: './docs/media/GTA-MANUCHO-9.png', alt: 'Captura 9', zone: 'GTA MANUCHO · V88', brief: 'Ahora con MODO ONLINE.\nJuega con tus amigos en el mismo servidor.' },
+    { src: './docs/media/GTA-MANUCHO-10.png', alt: 'Captura 10', zone: 'Roberto Manuel Jara Peche', brief: 'Historia, código y mundo por ma-nucho-pro.' },
+    { src: './docs/media/GTA-MANUCHO-VIDEO-1.webp', alt: 'Video 1', zone: 'Secuencia cinematográfica', brief: 'Todo empieza con un tutorial.\nDespués, la ciudad es tuya.' },
+    { src: './docs/media/GTA-MANUCHO-VIDEO-2.webp', alt: 'Video 2', zone: 'Acción en movimiento', brief: 'Corre. Conduce. Dispara. Sobrevive.' },
+    { src: './docs/media/GTA-MANUCHO-VIDEO-3.webp', alt: 'Video 3', zone: 'Bienvenido a Manucho', brief: 'Pulsa ENTER cuando estés listo.' }
   ];
   const fallbackMedia = Array.from({ length: 7 }, (_, index) => ({
     src: `./menu-animations/${index + 1}.webp`,
-    alt: `Animación ${index + 1} de GTA MANUCHO`,
-    caption: 'PREPARANDO GTA MANUCHO…'
+    alt: `Animación ${index + 1}`,
+    zone: 'Preparando GTA MANUCHO…',
+    brief: 'Cargando el mundo…'
   }));
 
   function shuffled(items) {
@@ -41,9 +43,30 @@
     return copy;
   }
 
-  // La portada abre la presentación; las imágenes y los WebP entregados aparecen
-  // después en un orden distinto en cada carga para dar una intro dinámica.
-  const media = [cover, ...shuffled(suppliedMedia).slice(0, 10), ...shuffled(fallbackMedia).slice(0, 1)];
+  const media = [cover, ...shuffled(suppliedMedia).slice(0, 9), ...shuffled(fallbackMedia).slice(0, 1)];
+
+  // V87: descarga anticipadamente solo la entrada ligera del juego mientras el
+  // usuario ve la introducción y el tutorial. No crea una segunda escena WebGL.
+  function warmGameEntry() {
+    const resources = [
+      { rel: 'modulepreload', href: './juego/assets/index-CXrFrkSv.js' },
+      { rel: 'modulepreload', href: './juego/performance-boost.js?v=88' },
+      { rel: 'preload', href: './juego/assets/index-Bm4n6MBW.css', as: 'style' },
+      { rel: 'preload', href: './juego/game-loading-v88.css', as: 'style' },
+      { rel: 'prefetch', href: './juego/index.html?noprogressive=1&v=88', as: 'document' }
+    ];
+    for (const resource of resources) {
+      if (document.head.querySelector(`link[href="${resource.href}"]`)) continue;
+      const link = document.createElement('link');
+      link.rel = resource.rel;
+      link.href = resource.href;
+      if (resource.as) link.as = resource.as;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
+  }
+  warmGameEntry();
+
   const body = document.body;
   const root = document.getElementById('root');
   body.classList.add('gta-intro-active');
@@ -53,23 +76,43 @@
   intro.innerHTML = `
     <img class="gta-intro-image" src="${media[0].src}" alt="${media[0].alt}" decoding="async" fetchpriority="high">
     <div class="gta-intro-vignette"></div>
+    <div class="gta-intro-grain"></div>
+    <div class="gta-intro-bar top"></div>
+    <div class="gta-intro-bar bottom"></div>
     <div class="gta-intro-brand">
       <div class="gta-intro-kicker">ARKEA AI PRESENTA</div>
-      <div class="gta-intro-title">GTA<br>MANUCHO</div>
-      <div class="gta-intro-status" id="gta-intro-status">${media[0].caption}</div>
+      <div class="gta-intro-title">GTA<br><em>MANUCHO</em></div>
+      <div class="gta-intro-brief" id="gta-intro-brief"></div>
       <div class="gta-intro-progress"><span id="gta-intro-progress"></span></div>
-      <div class="gta-intro-credit">CREADO POR ROBERTO MANUEL JARA PECHE · ma-nucho-pro</div>
+      <div class="gta-intro-status" id="gta-intro-status"></div>
+      <div class="gta-intro-credit">CREADO POR ROBERTO MANUEL JARA PECHE · ma-nucho-pro · V88 ONLINE</div>
     </div>
-    <div class="gta-intro-skip">CLIC, ENTER O ESPACIO · OMITIR</div>`;
+    <div class="gta-intro-zone" id="gta-intro-zone">${media[0].zone}</div>
+    <div class="gta-intro-skip">ENTER / CLIC · SALTAR CINEMÁTICA</div>`;
   body.appendChild(intro);
 
   let index = 0;
   let finishedSequence = false;
   let tutorialRequested = false;
   let interval = 0;
+  let typeTimer = 0;
   const image = intro.querySelector('.gta-intro-image');
   const status = intro.querySelector('#gta-intro-status');
   const progress = intro.querySelector('#gta-intro-progress');
+  const zone = intro.querySelector('#gta-intro-zone');
+  const brief = intro.querySelector('#gta-intro-brief');
+
+  // Efecto máquina de escribir para el briefing de misión.
+  function typeBrief(text) {
+    clearInterval(typeTimer);
+    brief.textContent = '';
+    let position = 0;
+    typeTimer = window.setInterval(() => {
+      position += 2;
+      brief.textContent = text.slice(0, position);
+      if (position >= text.length) clearInterval(typeTimer);
+    }, 22);
+  }
 
   function preload(nextIndex) {
     const item = media[nextIndex % media.length];
@@ -88,9 +131,14 @@
       image.alt = item.alt;
       image.classList.remove('gta-intro-switching');
       preload(index + 1);
-    }, 160);
+    }, 200);
     progress.style.width = `${Math.round(((index + 1) / media.length) * 82)}%`;
-    status.textContent = index < media.length - 1 ? item.caption : 'PREPARANDO LA SECUENCIA INICIAL…';
+    zone.style.animation = 'none';
+    void zone.offsetWidth;
+    zone.style.animation = '';
+    zone.textContent = item.zone;
+    typeBrief(index < media.length - 1 ? item.brief : 'Preparando el tutorial de inicio…');
+    status.textContent = '';
   }
 
   image.addEventListener('error', () => {
@@ -110,6 +158,13 @@
     });
   }
 
+  function appendStyle(href) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+  }
+
   function waitForTutorialReady(timeout = 15000) {
     const started = performance.now();
     return new Promise(resolve => {
@@ -122,26 +177,31 @@
     });
   }
 
+  // gta-v86-root-safety: evita que el tutorial quede invisible por un recurso lento.
+  setTimeout(() => body.classList.remove('gta-intro-active'), 22000);
+
   async function startTutorial() {
     if (tutorialRequested) return;
     tutorialRequested = true;
     clearInterval(interval);
-    status.textContent = 'CARGANDO LA SECUENCIA INICIAL…';
+    status.textContent = 'PREPARANDO EL TUTORIAL…';
     progress.style.width = '88%';
     try {
-      await appendScript('./assets/index-BSql1GU8-PIE-INVERTIDO-BICI-IGUAL-V14.js?v=84', { module: true });
-      await appendScript('./tutorial-fixes.js?v=84');
-      appendScript('./tutorial-rider-fix.js?v=84', { module: true }).catch(() => {});
+      // Reskin GTA del tutorial: elimina la paleta azul/cian del interfaz.
+      appendStyle('./tutorial-gta-reskin.css?v=88');
+      await appendScript('./assets/index-BSql1GU8-PIE-INVERTIDO-BICI-IGUAL-V14.js?v=88', { module: true });
+      await appendScript('./tutorial-fixes.js?v=88');
+      appendScript('./tutorial-rider-fix.js?v=88', { module: true }).catch(() => {});
       await waitForTutorialReady();
       progress.style.width = '100%';
-      status.textContent = 'GTA MANUCHO V84';
+      status.textContent = 'GTA MANUCHO V88';
       setTimeout(() => {
         body.classList.remove('gta-intro-active');
         intro.classList.add('gta-intro-hidden');
-        setTimeout(() => intro.remove(), 800);
+        setTimeout(() => intro.remove(), 900);
       }, 500);
     } catch (error) {
-      console.error('[GTA MANUCHO V84] No se pudo iniciar la secuencia.', error);
+      console.error('[GTA MANUCHO V88] No se pudo iniciar la secuencia.', error);
       status.textContent = 'NO SE PUDO INICIAR. RECARGA LA PÁGINA.';
       status.classList.add('gta-intro-error');
     }
@@ -152,15 +212,16 @@
     finishedSequence = true;
     window.removeEventListener('keydown', skip, true);
     showIndex(media.length - 1);
-    setTimeout(startTutorial, 850);
+    setTimeout(startTutorial, 900);
   }
 
   preload(1);
   progress.style.width = '8%';
+  typeBrief(media[0].brief);
   interval = window.setInterval(() => {
     if (index >= media.length - 1) return finishSequence();
     showIndex(index + 1);
-  }, 1180);
+  }, 2400);
 
   function skip(event) {
     if (event?.type === 'keydown' && !['Enter', 'Space'].includes(event.code)) return;

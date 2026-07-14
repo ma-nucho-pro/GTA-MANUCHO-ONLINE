@@ -75,6 +75,7 @@ let originalBackground = null;
 let originalUpdateActiveBoat = null;
 let originalGetGroundY = null;
 const tempA = new THREE.Vector3();
+const tempBoatBox = new THREE.Box3();
 const tempB = new THREE.Vector3();
 const tempC = new THREE.Vector3();
 const dummy = new THREE.Object3D();
@@ -667,9 +668,22 @@ function exitBoat(){
 }
 
 function nearestBoat(){
-  if(!mainBoat?.root||!game?.playerContainer)return null;
-  const d=mainBoat.root.position.distanceTo(game.playerContainer.position);
-  return d<240?{entry:mainBoat,distance:d}:null;
+  if(!game?.playerContainer)return null;
+  // V85: la distancia se mide a la caja del barco (no a su origen, que en un
+  // modelo grande queda lejos de la cubierta) y el radio de interacción sube
+  // para que subirse sea posible nadando junto al casco.
+  const playerPos=game.playerContainer.position;
+  let best=null;
+  for(const entry of [mainBoat]){
+    if(!entry?.root)continue;
+    tempBoatBox.setFromObject(entry.root);
+    tempBoatBox.expandByScalar(60);
+    tempA.copy(playerPos);
+    tempBoatBox.clampPoint(playerPos,tempA);
+    const d=tempA.distanceTo(playerPos);
+    if(d<520&&(!best||d<best.distance))best={entry,distance:d};
+  }
+  return best;
 }
 
 function onKeyDown(event){
@@ -894,7 +908,27 @@ function patchPlayerSwimRender(){
   game.renderer.__gtaManuchoSwimRenderPatched=true;
   const originalRender=game.renderer.render.bind(game.renderer);
   game.renderer.render=function gtaManuchoRenderWithSwimming(scene,camera){
-    enforcePlayerSwimming(lastFrameDt,performance.now()/1000);
+    const swimming=enforcePlayerSwimming(lastFrameDt,performance.now()/1000);
+    // V85: cámara de natación estable. Mientras nadas, la cámara se coloca
+    // detrás y por encima del jugador mirándolo, en vez de quedar hundida o
+    // pegada al agua sin dejar ver.
+    if(swimming&&game?.playerContainer&&camera?.isPerspectiveCamera){
+      // V92: cámara de natación a ras de agua. Se coloca baja, justo detrás del
+      // nadador y mirando hacia adelante (al horizonte), en vez de la vista alta
+      // tipo dron que miraba al jugador desde arriba.
+      const p=game.playerContainer.position;
+      const yaw=game.playerContainer.rotation.y||0;
+      const back=7.5*WORLD_SCALE;
+      const height=2.4*WORLD_SCALE;
+      tempC.set(p.x+Math.sin(yaw)*back,Math.max(WATER_LEVEL+1.6*WORLD_SCALE,p.y+height),p.z+Math.cos(yaw)*back);
+      if(game.state.isSubmerged)tempC.y=p.y+1.8*WORLD_SCALE;
+      camera.position.lerp(tempC,.22);
+      camera.up.set(0,1,0);
+      const lookAhead=6*WORLD_SCALE;
+      const lookY=game.state.isSubmerged?p.y+.6*WORLD_SCALE:WATER_LEVEL+.9*WORLD_SCALE;
+      camera.lookAt(p.x-Math.sin(yaw)*lookAhead,lookY,p.z-Math.cos(yaw)*lookAhead);
+      camera.updateMatrixWorld(true);
+    }
     return originalRender(scene,camera);
   };
 }

@@ -1,0 +1,51 @@
+GTA MANUCHO V85 · ONLINE + CORRECCIONES MAYORES
+================================================
+
+POLICÍA
+- Corregidos los agentes acostados y gigantes: la orientación del modelo se
+  detecta automáticamente (bounding box) y la escala se normaliza de pie.
+- Los policías ya no vuelan: respawn y anclaje siempre a nivel del suelo.
+  Si vuelas, te esperan en tierra bajo tu vertical.
+- Separación física: mantienen distancia mínima, ya no se pegan ni caminan
+  encima del jugador.
+- Defensa mejorada: el puñetazo conecta a corta distancia aunque el ángulo
+  no sea exacto y hace más daño (30).
+
+VEHÍCULOS
+- Coches con velocidad real: máx. 1180 (1550 con Shift), aceleración fuerte,
+  giro suavizado a alta velocidad.
+- Cámara del coche corregida: eliminado el zoom óptico x4 que la mostraba
+  "al revés"; chase cam clásica de GTA + snap instantáneo al subir.
+- Barcos: ahora sí puedes subirte (radio de interacción 520 medido a la caja
+  del barco, no a su origen). E para subir/bajar.
+
+NATACIÓN
+- Cámara de natación estable: detrás y arriba del jugador, siempre con
+  visión clara, también bajo el agua.
+
+POBLACIÓN (SIN LAG)
+- Tráfico y peatones instanciados: 90 coches y 220 peatones (antes 34/72).
+  Límites por calidad: low 32/75 · medium 55/130 · high 72/175 · max 90/220.
+- NPCs interactivos: 32 civiles (antes 20) con animación de caminata a 24 Hz
+  (antes 8 Hz) — mucho más fluida y natural.
+
+MODO ONLINE (NUEVO)
+- Multijugador vía Supabase Realtime (proyecto: gta-manucho-online, región
+  São Paulo). Sin servidor propio: funciona directo desde Netlify.
+- Pulsa O en el juego: pon tu nombre, elige el color de tu personaje y crea
+  o únete a un servidor con un código (por defecto MANUCHO).
+- Los jugadores se ven con su nombre sobre la cabeza, color propio,
+  animación de caminar y posición sincronizada 10 veces por segundo.
+- Los mini-mundos (museo, bosque, salón, coliseo, mar…) comparten el mismo
+  mundo de coordenadas, así que también te encuentras con otros ahí dentro.
+
+INTRO Y TUTORIAL
+- Nueva intro cinematográfica estilo GTA: barras de cine, grano de película,
+  paneo Ken Burns, nombres de zona en serif dorada, briefing con efecto
+  máquina de escribir. Paleta negro/ámbar/arena — nada de azul.
+- Reskin GTA del tutorial (tutorial-gta-reskin.css): toda la interfaz azul y
+  cian del tutorial pasa a ámbar/dorado/negro cálido sin tocar su código.
+
+CONTROLES ONLINE
+- O: abrir/cerrar panel online · Botón JUGAR ONLINE: conectar.
+- Comparte el código del servidor con tus amigos para jugar juntos.

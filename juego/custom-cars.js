@@ -72,6 +72,7 @@ const ferrariBodyMaterialVariants = new Map();
 let game = null;
 let active = null;
 let cameraMode = 0;
+let cameraSnapFrames = 0;
 let rendererPatched = false;
 let drivePatched = false;
 let installed = false;
@@ -302,10 +303,14 @@ function enterCar(car) {
   game.state.inWater = false;
   cameraMode = 0;
   game.boatCamMode = 0;
-  game.camera.fov = 58;
-  game.camera.near = 0.08;
-  game.camera.zoom = 4;
+  // V85: cámara normal al entrar. El zoom óptico x4 con la cámara pegada al
+  // coche hacía que la vista se viera "al revés" / dentro de la carrocería.
+  game.camera.fov = 62;
+  game.camera.near = 0.1;
+  game.camera.zoom = 1;
+  game.camera.up.set(0, 1, 0);
   game.camera.updateProjectionMatrix();
+  cameraSnapFrames = 6;
   if (game.playerModel) game.playerModel.visible = false;
   prompt.style.display = 'none';
   notice('VEHÍCULO AHORA ES TUYO · V CÁMARA · W/S ACELERAR · A/D GIRAR · E BAJAR · Y MISIÓN', 4200);
@@ -344,13 +349,13 @@ function exitCar() {
 function cycleCamera() {
   if (!active) return;
   cameraMode = (cameraMode + 1) % CAMERA_NAMES.length;
-  game.camera.fov = cameraMode === 1 ? 72 : 58;
-  // V62: las dos vistas exteriores usan zoom óptico x4. La primera persona
-  // conserva zoom normal para mantener un campo de visión amplio.
-  game.camera.zoom = cameraMode === 1 ? 1 : 4;
-  game.camera.near = cameraMode === 1 ? 0.32 : 0.08;
+  // V85: todas las vistas usan zoom 1 y FOV natural; el zoom x4 rompía la cámara.
+  game.camera.fov = cameraMode === 1 ? 74 : 62;
+  game.camera.zoom = 1;
+  game.camera.near = cameraMode === 1 ? 0.32 : 0.1;
   game.camera.up.set(0, 1, 0);
   game.camera.updateProjectionMatrix();
+  cameraSnapFrames = 6;
   notice(`CÁMARA: ${CAMERA_NAMES[cameraMode]}`, 1500);
 }
 
@@ -366,29 +371,32 @@ function applyCamera(camera) {
   let smoothFactor = .24;
 
   // Solo existen tres vistas al conducir:
-  // 0) cerca detrás, 1) desde la ventana en primera persona, 2) dron arriba-detrás.
+  // 0) chase cam detrás, 1) primera persona, 2) dron arriba-detrás.
   switch (cameraMode) {
     case 1:
-      // Primera persona V45: cámara delante del parabrisas, no dentro del habitáculo.
-      // Mantiene la sensación de conductor pero evita cristales/interior negros.
+      // Primera persona: cámara delante del parabrisas, mirando lejos al frente.
       carLocalToWorld(car, -width * .08, height * .80, -length * .50, tempA);
       carLocalToWorld(car, -width * .05, height * .72, -length * 6.0, tempB);
       smoothFactor = 1;
       break;
     case 2:
-      // V60: dron trasero cuatro veces más cercano que la vista anterior.
-      carLocalToWorld(car, 0, height * 1.70, length * .78, tempA);
-      carLocalToWorld(car, 0, height * .42, -length * .18, tempB);
-      smoothFactor = .34;
+      // Dron: más alto y atrás para ver el tráfico.
+      carLocalToWorld(car, 0, height * 2.6, length * 1.55, tempA);
+      carLocalToWorld(car, 0, height * .45, -length * .35, tempB);
+      smoothFactor = .3;
       break;
     default:
-      // V60: cámara trasera muy próxima, sin alejarse del coche.
-      carLocalToWorld(car, 0, height * .82, length * .62, tempA);
-      carLocalToWorld(car, 0, height * .42, -length * .34, tempB);
-      smoothFactor = .48;
+      // V85: chase cam clásica de GTA, separada del coche y mirando al frente.
+      carLocalToWorld(car, 0, height * 1.35, length * 1.28, tempA);
+      carLocalToWorld(car, 0, height * .48, -length * .85, tempB);
+      smoothFactor = .38;
       break;
   }
 
+  if (cameraSnapFrames > 0) {
+    cameraSnapFrames--;
+    smoothFactor = 1;
+  }
   if (smoothFactor >= 1) camera.position.copy(tempA);
   else camera.position.lerp(tempA, smoothFactor);
   camera.lookAt(tempB);
@@ -433,20 +441,26 @@ function patchDriveController() {
     const reversePressed = this.keys.KeyS || this.keys.s || this.keys.ArrowDown;
     const leftPressed = this.keys.KeyA || this.keys.a || this.keys.ArrowLeft;
     const rightPressed = this.keys.KeyD || this.keys.d || this.keys.ArrowRight;
-    // V45: velocidad adaptada a la escala grande de GTA MANUCHO.
-    const maxSpeed = 720;
-    const acceleration = 520;
-    const braking = 560;
-    const drag = 54;
+    // V85: velocidad de coche real. Antes el máximo era 720 y se sentía lento
+    // para la escala del mundo; ahora acelera fuerte y alcanza velocidad de GTA.
+    const boostPressed = this.keys.ShiftLeft || this.keys.ShiftRight || this.keys.Shift;
+    const maxSpeed = boostPressed ? 1550 : 1180;
+    const acceleration = boostPressed ? 980 : 760;
+    const braking = 840;
+    const drag = 62;
 
     if (forwardPressed) speed = Math.min(maxSpeed, speed + acceleration * dt);
-    else if (reversePressed) speed = Math.max(-maxSpeed * .42, speed - braking * dt);
+    else if (reversePressed) speed = Math.max(-maxSpeed * .38, speed - braking * dt);
     else if (speed > 0) speed = Math.max(0, speed - drag * dt);
     else if (speed < 0) speed = Math.min(0, speed + drag * dt);
     root.carSpeed = speed;
 
     const steerInput = (leftPressed ? 1 : 0) - (rightPressed ? 1 : 0);
-    if (Math.abs(speed) > .15) root.rotation.y += steerInput * Math.sign(speed) * 1.28 * dt * Math.min(1, .22 + Math.abs(speed) / 70);
+    if (Math.abs(speed) > .15) {
+      // El giro se suaviza a alta velocidad para que el coche no derrape raro.
+      const grip = Math.min(1, .30 + Math.abs(speed) / 110) * (1 - Math.min(.45, Math.abs(speed) / 3800));
+      root.rotation.y += steerInput * Math.sign(speed) * 1.45 * dt * grip;
+    }
 
     tempA.set(0, 0, -1).applyQuaternion(root.quaternion);
     const moveDistance = speed * dt;

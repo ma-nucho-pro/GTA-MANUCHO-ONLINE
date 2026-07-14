@@ -1,66 +1,28 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <!-- GTA MANUCHO V84 · Creado e integrado por Roberto Manuel Jara Peche.
-         GitHub: ma-nucho-pro · Somos ARKEA AI / Manucho.
-         Instagram: https://www.instagram.com/robertmanuchojp/
-         YouTube: https://www.youtube.com/@ManuchoAI
-         LinkedIn: https://www.linkedin.com/in/roberto-manuel-jara-peche-10867240b/
-         Código abierto: conserva los créditos y el aviso LICENSE al reutilizar. -->
+    <!-- GTA MANUCHO V92 · Creado e integrado por Roberto Manuel Jara Peche.
+         GitHub: ma-nucho-pro · Somos ARKEA AI / Manucho. -->
     <meta charset="UTF-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b101a" />
+    <meta name="theme-color" content="#120b05" />
     <meta name="application-name" content="GTA MANUCHO" />
     <link rel="icon" type="image/png" href="./assets/gta-manucho-icon.png" />
     <link rel="apple-touch-icon" href="./assets/gta-manucho-icon.png" />
     <script>
       (function() {
-        var targets = [
-          typeof window !== 'undefined' ? window : null,
-          typeof globalThis !== 'undefined' ? globalThis : null,
-          typeof self !== 'undefined' ? self : null
-        ];
+        var targets = [typeof window !== 'undefined' ? window : null, typeof globalThis !== 'undefined' ? globalThis : null, typeof self !== 'undefined' ? self : null];
         targets.forEach(function(target) {
-          if (target) {
-            try {
-              var currentFetch = target.fetch;
-              Object.defineProperty(target, 'fetch', {
-                get: function() {
-                  return currentFetch;
-                },
-                set: function(value) {
-                  currentFetch = value;
-                },
-                configurable: true,
-                enumerable: true
-              });
-            } catch (e) {
-              try {
-                var proto = Object.getPrototypeOf(target);
-                if (proto) {
-                  var currentFetchProto = target.fetch;
-                  Object.defineProperty(proto, 'fetch', {
-                    get: function() {
-                      return currentFetchProto;
-                    },
-                    set: function(value) {
-                      currentFetchProto = value;
-                    },
-                    configurable: true,
-                    enumerable: true
-                  });
-                }
-              } catch (protoError) {
-                console.warn("Could not patch fetch on target or prototype:", e, protoError);
-              }
-            }
-          }
+          if (!target) return;
+          try {
+            var currentFetch = target.fetch;
+            Object.defineProperty(target, 'fetch', { get:function(){return currentFetch;}, set:function(value){currentFetch=value;}, configurable:true, enumerable:true });
+          } catch (error) { console.warn('No se pudo preparar fetch.', error); }
         });
       })();
     </script>
     <script>
-      // Desactiva la carga progresiva de LOD durante el movimiento. Evita tirones
-      // cuando una textura o un modelo remoto termina de descargarse en plena marcha.
       (function () {
         const url = new URL(window.location.href);
         if (!url.searchParams.has('noprogressive')) {
@@ -68,21 +30,41 @@
           history.replaceState(history.state, '', url.pathname + url.search + url.hash);
         }
         window.__VICE_LOW_STALL_MODE__ = true;
+        window.__VICE_TERRITORY_LOADING_REQUIRED__ = true;
+        window.__VICE_ONLINE_LOADING_REQUIRED__ = true;
       })();
     </script>
     <title>GTA MANUCHO · Juego Principal</title>
-    <link rel="stylesheet" href="./vice-menu-settings.css?v=84">
-    <script defer src="./vice-menu-settings.js?v=84"></script>
+    <link rel="stylesheet" href="./game-loading-v88.css">
+    <script defer src="./game-loading-v88.js?v=90"></script>
+    <link rel="stylesheet" href="./vice-menu-settings.css?v=86">
+    <script defer src="./vice-menu-settings.js?v=86"></script>
     <script type="importmap">{"imports":{"three":"./bosque/libs/three.module.js"}}</script>
-    <script type="module" src="./performance-boost.js?v=84"></script>
-        <script type="module" crossorigin src="./assets/index-CXrFrkSv.js?v=84"></script>
+    <script type="module" src="./performance-boost.js?v=90"></script>
+    <script type="module" src="./main-loader-v88.js?v=90"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Bm4n6MBW.css">
-</head>
+  </head>
   <body class="bg-black text-white selection:bg-[#ff00cc] selection:text-white overflow-hidden">
-    <script src="../project-credits.js?v=84"></script>
-    <div id="gta-manucho-easter-egg" hidden aria-hidden="true">GTA MANUCHO V84 · Creado por Roberto Manuel Jara Peche · ARKEA AI · GitHub ma-nucho-pro · Instagram @robertmanuchojp · YouTube @ManuchoAI</div>
+    <script src="../project-credits.js?v=85"></script>
+    <div id="gta-manucho-easter-egg" hidden aria-hidden="true">GTA MANUCHO V92 · Creado por Roberto Manuel Jara Peche · ARKEA AI · GitHub ma-nucho-pro</div>
+    <div id="npc-city-loading-overlay" role="status" aria-live="polite">
+      <img class="npc-loading-media" src="../docs/media/Portada.png" alt="Cargando GTA MANUCHO" decoding="async" fetchpriority="high">
+      <div class="npc-loading-shade"></div>
+      <div class="npc-loading-card">
+        <h1 class="npc-loading-title">GTA <span>MANUCHO</span></h1>
+        <div class="npc-loading-subtitle">Iniciando la ciudad…</div>
+        <div class="npc-loading-track"><div class="npc-loading-bar"></div></div>
+        <div class="npc-loading-tip">El mapa entra primero. Las funciones secundarias se completan sin bloquear la partida.</div>
+      </div>
+      <div class="npc-loading-zone">Ciudad Manucho</div>
+    </div>
     <div id="root"></div>
-<script type="module" src="./city-extras-loader.js?v=84"></script>
-<script type="module" src="./post-city-loader.js?v=84"></script>
+    <script type="module" src="./world-recovery-v90.js?v=90"></script>
+    <script type="module" src="./city-extras-loader.js?v=90"></script>
+    <script type="module" src="./post-city-loader.js?v=90"></script>
+    <script type="module" src="./gameplay-fixes-v86.js?v=90"></script>
+    <script type="module" src="./mejoras-v92.js?v=92"></script>
+    <script src="./supabase-config.local.js?v=92"></script>
+    <script type="module" src="./gta-manucho-online.js?v=92"></script>
   </body>
 </html>

@@ -1,0 +1,60 @@
+GTA MANUCHO V86 ONLINE — CAMBIOS APLICADOS
+Fecha: 13 de julio de 2026
+
+1. TUTORIAL E INTERFAZ
+- Tutorial rediseñado con estética GTA: negro, naranja, alto contraste y textos visibles.
+- Eliminado el texto de inicio "INICIAR SECUENCIA" y reemplazado por "COMENZAR TUTORIAL".
+- Corregidas las pantallas oscuras o transparentes de información.
+- Añadida una pantalla de carga visible con progreso y mensajes de estado.
+- Salvaguarda para que el tutorial no quede oculto si un recurso tarda demasiado.
+
+2. NPC Y COCHES ORIGINALES
+- Eliminada la carga de city-npcs.js y custom-cars.js del arranque.
+- No se generan peatones ni coches sustitutos.
+- Se aumentó la población nativa de 100 a 150 NPC.
+- Se aumentaron los coches estacionados nativos de 150 a 200.
+- Se aumentaron las rutas de tráfico nativas de 4 a 8.
+- Se evitó la doble creación simultánea de población y tráfico.
+
+3. MODO ONLINE
+- El jugador local no recibe un segundo avatar encima.
+- Los jugadores remotos usan Soldier.glb local con Idle, Walk y Run.
+- Corregida la orientación para evitar caminar hacia atrás o aparecer en pose rígida.
+- Sincronización interpolada de posición, giro, movimiento, nombre, color, vida y búsqueda.
+- Negro y naranja se aplican exactamente según la selección.
+- Los jugadores conectados aparecen en el radar y en el mapa completo con nombre y color.
+- Sincronización visual de coches, barcos, aviones, jets y tanques a su escala real.
+- Los vehículos creados con trucos se comparten visualmente entre jugadores.
+- Sincronización de policía visible y estado de entidades de combate por sala.
+- Los disparos remotos muestran trayectoria, postura de disparo y reducen vida/armadura.
+- El host de la sala comparte el estado de bandas y policías para una partida cooperativa coherente.
+
+4. POLICÍA Y BÚSQUEDA
+- La primera estrella requiere tres disparos en un intervalo corto.
+- Las estrellas no pueden subir varias veces de forma instantánea.
+- Mayor intervalo entre aumentos de búsqueda y reacciones por disparos.
+- Policía y vehículos policiales aparecen a mayor distancia.
+- Menor presión policial con una sola estrella.
+- Separación física para impedir que los coches policiales atraviesen o se monten sobre el jugador.
+
+5. RENDIMIENTO Y CARGA
+- Se preservan los sistemas nativos en lugar de destruirlos y reconstruirlos.
+- Carga progresiva de sistemas pesados después de mostrar la ciudad.
+- Precalentamiento de modelos y shaders principales.
+- Ajuste dinámico de resolución y presupuestos de actualización.
+- Límite de anisotropía y reducción de trabajo lejano para mantener FPS.
+- Precarga local de Soldier.glb y ferrari.glb.
+- Protección contra tirones al cargar el suelo y la ciudad.
+
+VALIDACIÓN
+- Los 172 archivos JavaScript del proyecto pasan node --check sin errores.
+- Las importaciones locales de los módulos modificados existen.
+- Las referencias HTML principales existen.
+- El ZIP final fue comprobado con unzip -t.
+- El navegador del entorno de trabajo bloquea localhost y file:// por política administrativa,
+  por lo que la prueba visual multijugador final debe realizarse desde un servidor web normal.
+
+USO ONLINE
+- Abrir el panel con la tecla O.
+- Ambos jugadores deben escribir exactamente el mismo código de servidor.
+- Cada jugador puede elegir nombre y color antes de conectarse.

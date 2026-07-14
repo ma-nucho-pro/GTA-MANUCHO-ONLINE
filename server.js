@@ -15,6 +15,16 @@ const types = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.svg': 'image/svg+xml',
+  '.webp': 'image/webp',
+  '.webm': 'video/webm',
+  '.mp4': 'video/mp4',
+  '.mp3': 'audio/mpeg',
+  '.ogg': 'audio/ogg',
+  '.wav': 'audio/wav',
+  '.m4a': 'audio/mp4',
+  '.bin': 'application/octet-stream',
+  '.hdr': 'application/octet-stream',
+  '.ktx2': 'image/ktx2',
 };
 
 function safeFile(urlPath) {
@@ -38,11 +48,13 @@ const server = http.createServer((req, res) => {
       res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       return res.end('Archivo no encontrado');
     }
+    const ext = path.extname(file).toLowerCase();
+    const cacheableMedia = new Set(['.png','.jpg','.jpeg','.webp','.webm','.mp4','.mp3','.ogg','.wav','.m4a','.glb','.gltf','.bin','.hdr','.ktx2','.wasm']);
     res.writeHead(200, {
-      'Content-Type': types[path.extname(file).toLowerCase()] || 'application/octet-stream',
-      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-      'Pragma': 'no-cache',
-      'Expires': '0',
+      'Content-Type': types[ext] || 'application/octet-stream',
+      'Cache-Control': cacheableMedia.has(ext)
+        ? 'public, max-age=86400'
+        : 'no-cache, must-revalidate',
       'Cross-Origin-Resource-Policy': 'cross-origin',
       'X-Content-Type-Options': 'nosniff',
     });

@@ -1,21 +1,61 @@
-# Sistema operativo y editores
+# =========================================================
+# GTA MANUCHO ONLINE - ARCHIVOS PRIVADOS / CREDENCIALES
+# =========================================================
+
+# Configuración local real de Supabase (NO SUBIR)
+juego/supabase-config.local.js
+supabase-config.local.js
+
+# Variables de entorno y variantes locales
+.env
+.env.*
+*.env
+*.env.*
+!.env.example
+!*.env.example
+
+# Credenciales, claves y certificados
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+*.keystore
+*credentials*.json
+*secrets*.json
+*service-account*.json
+
+# Configuraciones locales habituales
+config.local.js
+config.local.json
+secrets.local.js
+secrets.local.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node / herramientas
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editores y sistema operativo
+.vscode/
+.idea/
 .DS_Store
 Thumbs.db
 desktop.ini
-.vscode/
-.idea/
-*.swp
 
-# Cachés y archivos temporales
-__pycache__/
-*.pyc
-*.log
+# Temporales
 *.tmp
 *.temp
-.cache/
-
-# Dependencias opcionales de desarrollo
-node_modules/
-
-# Paquetes generados localmente
-*.zip
+*.log
+*.bak
+*.swp
+~$*

@@ -19,12 +19,26 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         '.mjs': 'text/javascript',
         '.wasm': 'application/wasm',
         '.glb': 'model/gltf-binary',
+        '.webp': 'image/webp',
+        '.webm': 'video/webm',
+        '.mp4': 'video/mp4',
+        '.mp3': 'audio/mpeg',
+        '.ogg': 'audio/ogg',
+        '.wav': 'audio/wav',
+        '.m4a': 'audio/mp4',
+        '.ktx2': 'image/ktx2',
+        '.hdr': 'application/octet-stream',
+        '.bin': 'application/octet-stream',
     }
 
     def end_headers(self) -> None:
-        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
-        self.send_header('Pragma', 'no-cache')
-        self.send_header('Expires', '0')
+        clean_path = self.path.split('?', 1)[0]
+        extension = Path(clean_path).suffix.lower()
+        cacheable_media = {'.png', '.jpg', '.jpeg', '.webp', '.webm', '.mp4', '.mp3', '.ogg', '.wav', '.m4a', '.glb', '.gltf', '.bin', '.hdr', '.ktx2', '.wasm'}
+        if extension in cacheable_media:
+            self.send_header('Cache-Control', 'public, max-age=86400')
+        else:
+            self.send_header('Cache-Control', 'no-cache, must-revalidate')
         self.send_header('Cross-Origin-Resource-Policy', 'cross-origin')
         self.send_header('X-Content-Type-Options', 'nosniff')
         super().end_headers()

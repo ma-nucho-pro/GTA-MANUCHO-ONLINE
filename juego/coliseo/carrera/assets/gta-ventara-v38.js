@@ -1087,7 +1087,7 @@ function n4() {
 }
 T2.preload(Ws);
 const Li = "https://offline.invalid",
-    _i = "sb_publishable_azRX5PypnagjfUMPA_HAAg_RPsSxFdr",
+    _i = "offline-public-placeholder",
     A3 = (() => {
         const e = {
                 data: [],
@@ -4741,7 +4741,7 @@ function eo(e) {
     }
 }
 const qo = "https://offline.invalid",
-    bp = "sb_publishable_azRX5PypnagjfUMPA_HAAg_RPsSxFdr";
+    bp = "offline-public-placeholder";
 async function po() {
     const {
         data: e,

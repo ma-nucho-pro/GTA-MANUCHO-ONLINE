@@ -610,10 +610,34 @@ function makeMaterial(color, texture = null) {
 // En vez de asumir un giro fijo, se prueban las orientaciones razonables y se
 // conserva la que deja la mayor dimensión del personaje en el eje vertical.
 function choosePoliceUprightOrientation(visual) {
-  // El archivo Stormtrooper declara Z_UP, pero sus vértices reales ya están en
-  // Y_UP. Aplicar la rotación automática del metadato lo deja de cabeza. Se
-  // fuerza una postura vertical estable y solo se gira sobre Y para mirar al frente.
-  return { x:0, y:Math.PI, z:0, score:1 };
+  // V85: se prueban las orientaciones razonables y se conserva la que deja al
+  // personaje de pie (mayor extensión en Y frente a X/Z). Esto corrige a los
+  // policías que aparecían acostados y gigantes cuando el Collada llega Z_UP.
+  const candidates = [
+    { x:0, y:Math.PI, z:0 },
+    { x:-Math.PI/2, y:0, z:Math.PI },
+    { x:Math.PI/2, y:Math.PI, z:0 },
+    { x:-Math.PI/2, y:Math.PI, z:0 }
+  ];
+  let best = candidates[0];
+  let bestScore = -Infinity;
+  const box = new THREE.Box3();
+  const size = new THREE.Vector3();
+  for (const candidate of candidates) {
+    visual.position.set(0, 0, 0);
+    visual.rotation.set(candidate.x, candidate.y, candidate.z);
+    visual.scale.set(1, 1, 1);
+    visual.updateMatrixWorld(true);
+    box.setFromObject(visual);
+    box.getSize(size);
+    const footprint = Math.max(0.001, Math.max(size.x, size.z));
+    const score = size.y / footprint;
+    if (score > bestScore) {
+      bestScore = score;
+      best = candidate;
+    }
+  }
+  return { x:best.x, y:best.y, z:best.z, score:bestScore };
 }
 
 function makeHumanoid(faction, material, labelText = null) {
@@ -860,7 +884,9 @@ function setActorAction(entity, desired) {
 function applyWalkAnimation(entity, elapsed, moving) {
   if (entity.faction === 'police' && entity.model?.userData?.v66PoliceSkin) {
     const base = entity.model.userData.v74PoliceBaseRotation || { x:0, y:Math.PI, z:0 };
-    entity.model.rotation.set(0, base.y, 0);
+    // V85: se restablece la rotación base COMPLETA (x, y, z). Antes se forzaba
+    // x=0 y z=0 y los agentes con orientación Z_UP quedaban acostados.
+    entity.model.rotation.set(base.x || 0, base.y || 0, base.z || 0);
     entity.model.updateMatrixWorld?.(false);
   }
   const fast = entity.state === 'chase' || entity.state === 'attack' || entity.state === 'follow' || entity.state === 'defend';
@@ -1262,11 +1288,13 @@ function meleeAttack() {
     tempVec.y = 0;
     tempVec.normalize();
     const facing = tempDir.dot(tempVec);
-    if (facing < .15) continue;
+    // V85: a corta distancia el golpe conecta aunque el ángulo no sea exacto.
+    // Antes, con un agente encima del jugador, el puñetazo fallaba siempre.
+    if (facing < .15 && distance > 42) continue;
     const score = distance - facing * 20;
     if (score < bestScore) { best = entity; bestScore = score; }
   }
-  if (best) damageEntity(best, 24, 'player');
+  if (best) damageEntity(best, 30, 'player');
 }
 
 function ensureCivilianEntities() {
@@ -1411,17 +1439,19 @@ function updateGangAndPolice(dt, elapsed) {
     .sort((a,b) => a.root.position.distanceToSquared(player) - b.root.position.distanceToSquared(player));
   const policeLimit = wanted >= 4 ? 2 : 1;
   const activePolice = availablePolice.slice(0, policeLimit);
-  if (wanted > 0 && now - (updateGangAndPolice._lastResponseAt || 0) > 5200) {
+  if (wanted > 0 && now - (updateGangAndPolice._lastResponseAt || 0) > 8000) {
     updateGangAndPolice._lastResponseAt = now;
     for (let i=0;i<activePolice.length;i++) {
       const officer=activePolice[i];
       if (officer.root.position.distanceToSquared(player) > 1500*1500) {
         const angle=(i/Math.max(1,activePolice.length))*Math.PI*2 + (now*.00021);
-        const radius=620+i*120;
+        const radius=950+i*170;
         const px=player.x+Math.cos(angle)*radius;
         const pz=player.z+Math.sin(angle)*radius;
         if(onSafeSurfaceWorld(px,pz)){
-          officer.root.position.set(px,groundAt(px,pz,player.y)+.1,pz);
+          // V85: el respawn usa 0 como altura de respaldo, nunca player.y.
+          // Antes, si el jugador volaba, los agentes aparecían flotando a su altitud.
+          officer.root.position.set(px,groundAt(px,pz,0)+.1,pz);
           officer.target=null;
         }
       }
@@ -1452,12 +1482,45 @@ function updateGangAndPolice(dt, elapsed) {
 
     if (isPolice && wanted > 0) {
       entity.state = 'chase';
-      if (distance > 76) moving = moveToward(entity, player, entity.speed + wanted * 9, dt);
+      // V85: los agentes NUNCA vuelan. Si el jugador está en el aire (aeronave,
+      // jetpack o salto largo), esperan bajo su vertical en el suelo.
+      const playerAirborne = Boolean(game?.state?.isFlying) || Boolean(window.__ACTIVE_AIRCRAFT__) ||
+        (player.y - groundAt(player.x, player.z, 0)) > 90;
+      if (distance > 76) {
+        if (playerAirborne) {
+          tempVec2.set(player.x, 0, player.z);
+          const groundDistance = Math.hypot(entity.root.position.x - player.x, entity.root.position.z - player.z);
+          if (groundDistance > 140) moving = moveToward(entity, tempVec2, entity.speed + wanted * 6, dt);
+        } else {
+          moving = moveToward(entity, player, entity.speed + wanted * 9, dt);
+        }
+      }
+      // V85: separación física. El agente mantiene una distancia mínima con el
+      // jugador; antes se pegaban, empujaban y caminaban por encima.
+      const MIN_POLICE_GAP = 34;
+      const gapDx = entity.root.position.x - player.x;
+      const gapDz = entity.root.position.z - player.z;
+      const gapDistance = Math.hypot(gapDx, gapDz);
+      if (gapDistance > .001 && gapDistance < MIN_POLICE_GAP && !playerAirborne) {
+        const push = (MIN_POLICE_GAP - gapDistance);
+        const nx = entity.root.position.x + (gapDx / gapDistance) * push;
+        const nz = entity.root.position.z + (gapDz / gapDistance) * push;
+        if (onSafeSurfaceWorld(nx, nz)) {
+          entity.root.position.x = nx;
+          entity.root.position.z = nz;
+          entity.root._cx = nx; entity.root._cz = nz;
+        }
+      }
+      // V85: anclaje al suelo en cada actualización (excepto persecución en el mar).
+      if (!game?.state?.inWater) {
+        const groundY = groundAt(entity.root.position.x, entity.root.position.z, 0);
+        if (Number.isFinite(groundY)) entity.root.position.y = groundY + .1;
+      }
 
       // A niveles bajos intentan detener; a partir de dos estrellas también disparan.
       if (distance < 58 && wanted <= 2 && !playerVehicle) {
         entity.arrestProgress = (entity.arrestProgress || 0) + dt;
-        if (entity.arrestProgress >= 4.8) arrestPlayer('ARRESTADO POR UN AGENTE');
+        if (entity.arrestProgress >= (wanted === 1 ? 7.5 : 5.5)) arrestPlayer('ARRESTADO POR UN AGENTE');
       } else {
         entity.arrestProgress = Math.max(0, (entity.arrestProgress || 0) - dt * 1.4);
       }
@@ -1780,11 +1843,11 @@ function updatePoliceCars(dt, elapsed) {
       continue;
     }
     if (!onSafeSurfaceWorld(car.root.position.x,car.root.position.z) || car.root.position.distanceToSquared(player) > Math.pow(1500,2)) {
-      car.root.position.copy(findSafePointNear(player,420+i*90,i*2.1));
+      car.root.position.copy(findSafePointNear(player,760+i*120,i*2.1));
     }
     const distance = driveServiceVehicleToward(car, player, car.speed + wanted * 12, dt);
     if (car.blockedSince && performance.now() - car.blockedSince > 900) {
-      car.root.position.copy(findSafePointNear(player,360+i*80,i*1.7));
+      car.root.position.copy(findSafePointNear(player,680+i*110,i*1.7));
       car.blockedSince=0;
     }
     if(car.root.userData.lights){
@@ -1792,10 +1855,25 @@ function updatePoliceCars(dt, elapsed) {
       car.root.userData.lights.red.visible=blink;
       car.root.userData.lights.blue.visible=!blink;
     }
-    if(distance<82 && performance.now()-car.lastImpact>900){
+    // V86: la patrulla frena y mantiene un colchón físico; nunca atraviesa ni
+    // aparece encima del jugador. El impacto solo ocurre si aún existe contacto.
+    if (!playerVehicle && distance < 105) {
+      const dx = car.root.position.x - player.x;
+      const dz = car.root.position.z - player.z;
+      const length = Math.max(.001, Math.hypot(dx,dz));
+      const push = 105 - length;
+      const nx = car.root.position.x + dx / length * push;
+      const nz = car.root.position.z + dz / length * push;
+      if (onSafeSurfaceWorld(nx,nz)) {
+        car.root.position.x = nx; car.root.position.z = nz;
+        car.root._cx = nx; car.root._cz = nz;
+      }
+      car.root.carSpeed = 0;
+    }
+    if(distance<76 && performance.now()-car.lastImpact>1200){
       car.lastImpact=performance.now();
-      if(playerVehicle) damageEntity(playerVehicle,wanted>=4?8:4.5,'police');
-      else damagePlayer(wanted>=4?3.2:1.4, wanted>=4?'ATROPELLO VCPD':'VCPD TE BLOQUEA');
+      if(playerVehicle) damageEntity(playerVehicle,wanted>=4?7:3.5,'police');
+      else damagePlayer(wanted>=4?2.8:1.0, wanted>=4?'ATROPELLO VCPD':'VCPD TE BLOQUEA');
     }
   }
 }
@@ -2073,25 +2151,11 @@ function buildServices(){
   gymBuilding=createVenueBuilding('GIMNASIO_V69',1250,3200,0x28201b,0xff4d2e,'GIMNASIO','gym','./gimnasio/index.html');
   hospital=createBuilding('HOSPITAL_V66',-2050,-4700,0xe8e8e8,'HOSPITAL','hospital');
   station=createBuilding('COMISARIA_V66',-1850,-3200,0x9ca8b8,'COMISARÍA VCPD','station');
-  ambulance=createServiceVehicle('AMBULANCIA',0xf4f4f4,hospital.door.x+240,hospital.door.z+135,false,{kind:'ambulance'});
-  ambulance.root.rotation.y=Math.PI;
-  const redCrossMat=new THREE.MeshBasicMaterial({color:0xff2222});
-  const cross1=new THREE.Mesh(new THREE.BoxGeometry(5,24,3),redCrossMat);const cross2=new THREE.Mesh(new THREE.BoxGeometry(24,5,3),redCrossMat);
-  cross1.position.set(0,37,64);cross2.position.copy(cross1.position);ambulance.root.add(cross1,cross2);
-  const patrol1=createServiceVehicle('VCPD',0x1f4f86,station.door.x+105,station.door.z+145,true,{kind:'police'});
-  const patrol2=createServiceVehicle('VCPD',0x1f4f86,station.door.x-105,station.door.z+145,true,{kind:'police'});
-  const patrol3=createServiceVehicle('VCPD',0x1f4f86,station.door.x,station.door.z+285,true,{kind:'police'});
-  patrol1.root.rotation.y=patrol2.root.rotation.y=patrol3.root.rotation.y=Math.PI;
-
-  // Cada banda dispone de un vehículo que patrulla su propio territorio.
-  for (const def of TERRITORY_DEFS) {
-    const faction = territoryOwner(def);
-    const point = randomPointInTerritory(def, 155);
-    createServiceVehicle(FACTIONS[faction].name, FACTIONS[faction].color, point.x, point.z, false, {
-      kind:'gang', faction, territory:def
-    });
-  }
+  // V89: sin coches creados manualmente. Se conservan edificios y combate,
+  // pero la población adicional se obtiene solo del sistema nativo del juego.
+  ambulance = null;
 }
+
 
 function nearestServiceDoor(){
   const p=game.playerContainer.position;
@@ -2235,11 +2299,12 @@ function buildSatelliteSvg() {
   const boatWorldMarker = makeIconMarker('boat',30);
   const islandMarkerGroup = svgNode('g');
   marineMarkerGroup.append(islandMarkerGroup, mainBoatMarker, npcBoatMarker, boatWorldMarker);
+  const onlineMarkerGroup = svgNode('g');
   const playerMarker = makeIconMarker('player',31);
-  markerGroup.append(routeLine,hospitalMarker,stationMarker,crewMarker,barberMarker,gymMarker,houseMarker,girlfriend2Marker,propertyMarkerGroup,marineMarkerGroup,waypointMarker,playerMarker);
+  markerGroup.append(routeLine,hospitalMarker,stationMarker,crewMarker,barberMarker,gymMarker,houseMarker,girlfriend2Marker,propertyMarkerGroup,marineMarkerGroup,waypointMarker,onlineMarkerGroup,playerMarker);
   fullSvg.append(markerGroup);
 
-  mapSvgRefs={territoryNodes,routeLine,hospitalMarker,stationMarker,crewMarker,barberMarker,gymMarker,houseMarker,girlfriend2Marker,propertyMarkerGroup,propertyMarkers:new Map(),marineMarkerGroup,mainBoatMarker,npcBoatMarker,boatWorldMarker,islandMarkerGroup,islandMarkers:new Map(),waypointMarker,playerMarker};
+  mapSvgRefs={territoryNodes,routeLine,hospitalMarker,stationMarker,crewMarker,barberMarker,gymMarker,houseMarker,girlfriend2Marker,propertyMarkerGroup,propertyMarkers:new Map(),marineMarkerGroup,mainBoatMarker,npcBoatMarker,boatWorldMarker,islandMarkerGroup,islandMarkers:new Map(),waypointMarker,onlineMarkerGroup,onlineMarkers:new Map(),playerMarker};
 }
 
 function setSvgTransform(node, x, y, rotation = 0) {
@@ -2355,6 +2420,31 @@ function updateFullMapSvg() {
     setSvgTransform(mapSvgRefs.boatWorldMarker,p[0],p[1]);
     mapSvgRefs.boatWorldMarker.style.display='';
   } else if (mapSvgRefs.boatWorldMarker) mapSvgRefs.boatWorldMarker.style.display='none';
+
+  const onlineStates = window.__GTA_ONLINE__?.getRemoteMapStates?.() || [];
+  const visibleOnlineIds = new Set();
+  for (const state of onlineStates) {
+    if (!state?.position || !mapSvgRefs.onlineMarkerGroup) continue;
+    visibleOnlineIds.add(state.id);
+    let marker = mapSvgRefs.onlineMarkers.get(state.id);
+    if (!marker) {
+      marker = svgNode('g');
+      const halo = svgNode('circle',{r:14,fill:'rgba(0,0,0,.82)',stroke:state.color||'#ff8a00','stroke-width':3});
+      const arrow = svgNode('path',{d:'M 0 -11 L 8 8 L 0 4 L -8 8 Z',fill:state.color||'#ff8a00',stroke:'#ffffff','stroke-width':1.2});
+      const label = svgNode('text',{x:0,y:27,'text-anchor':'middle',fill:'#ffffff','font-size':11,'font-weight':900,stroke:'#000000','stroke-width':3,'paint-order':'stroke'});
+      label.textContent = state.name || 'JUGADOR';
+      marker.append(halo,arrow,label);
+      mapSvgRefs.onlineMarkerGroup.append(marker);
+      mapSvgRefs.onlineMarkers.set(state.id,marker);
+    }
+    marker.children[0]?.setAttribute('stroke',state.color||'#ff8a00');
+    marker.children[1]?.setAttribute('fill',state.color||'#ff8a00');
+    if (marker.children[2]) marker.children[2].textContent=state.name||'JUGADOR';
+    const point=mapPoint(worldToLogical(state.position.x),worldToLogical(state.position.z));
+    setSvgTransform(marker,point[0],point[1],0);
+    marker.style.display='';
+  }
+  for (const [id,marker] of mapSvgRefs.onlineMarkers || []) if (!visibleOnlineIds.has(id)) marker.style.display='none';
 
   if (waypoint) {
     const [wx,wy]=mapPoint(worldToLogical(waypoint.x),worldToLogical(waypoint.z));
@@ -2482,6 +2572,14 @@ function drawRadar(canvas) {
     const position=island?.position;if(!position)continue;
     const p=radarPoint(position.x,position.z,player,radius);
     if(Math.hypot(p[0]-cx,p[1]-cy)<=radius-12)drawMapIcon(ctx,'island',p[0],p[1],17);
+  }
+  for(const onlinePlayer of window.__GTA_ONLINE__?.getRemoteMapStates?.()||[]){
+    if(!onlinePlayer?.position)continue;
+    const p=radarPoint(onlinePlayer.position.x,onlinePlayer.position.z,player,radius);
+    if(Math.hypot(p[0]-cx,p[1]-cy)>radius-10)continue;
+    ctx.fillStyle=onlinePlayer.color||'#ff8a00';ctx.strokeStyle='#ffffff';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(p[0],p[1],onlinePlayer.vehicle?6:5,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#ffffff';ctx.font='900 8px Arial';ctx.textAlign='center';ctx.fillText(onlinePlayer.name||'JUGADOR',p[0],p[1]-9);
   }
   }
 
@@ -2648,18 +2746,21 @@ async function install(){
   for(const def of TERRITORY_DEFS)createTerritoryMarker(def);
   for(const def of TERRITORY_DEFS){
     const count=def.id==='orange_home'?5:4;
-    for(let i=0;i<count;i++){spawnGangMember(def,i,textures);await idleTurn(160);}
+    for(let i=0;i<count;i++){spawnGangMember(def,i,textures);await idleTurn(60);}
   }
-  for(let i=0;i<3;i++){spawnAmbientPolice(i,textures);await idleTurn(140);}
+  for(let i=0;i<3;i++){spawnAmbientPolice(i,textures);await idleTurn(50);}
   buildServices();
   setTimeout(applySavedHairToCityPlayer,700);
-  try { await loadServiceAssetTemplates(); }
-  catch(error){ console.warn('[territory-combat] Modelos de servicio opcionales incompletos.',error); }
+  if (serviceVehicles.length) {
+    try { await loadServiceAssetTemplates(); }
+    catch(error){ console.warn('[territory-combat] Modelos de servicio opcionales incompletos.',error); }
+  }
   window.addEventListener('keydown',onKeyDown,true);window.addEventListener('keyup',onKeyUp,true);window.addEventListener('mousedown',onMouseDown,true);
   window.__CITY_LIFE_SYSTEM__={
     hospitalize, arrest:arrestPlayer, damagePlayer, damageEntity, registerEntity,
     handleRayShot, meleeAttack, addWanted, territories:TERRITORY_DEFS, entities,
-    recruitedGang, serviceVehicles, hospital, station, ambulance, barberBuilding,
+    gangs, ambientPolice, recruitedGang, serviceVehicles, hospital, station, ambulance, barberBuilding,
+    updateMap,
     gymBuilding, crewBuilding, get waypoint(){return waypoint;},
     setWaypoint:(x,z)=>{waypoint={x,z};window.__VICE_LAST_WAYPOINT__=waypoint;saveWaypoint();updateMap();},
     clearWaypoint:()=>{waypoint=null;window.__VICE_LAST_WAYPOINT__=null;saveWaypoint();updateMap();},

@@ -1,52 +1,57 @@
 /**
- * GTA MANUCHO V84 — código del proyecto.
- * Creado e integrado por Roberto Manuel Jara Peche (GitHub: ma-nucho-pro).
- * ARKEA AI / Manucho · conserva LICENSE, NOTICE.md y estos créditos al reutilizar.
+ * GTA MANUCHO V89 — carga secundaria escalonada sin bloquear la entrada.
+ * Elimina extras de NPC/coches creados a mano y refuerza solo población nativa.
  */
-// GTA MANUCHO V82: los sistemas secundarios se cargan de forma escalonada para
-// que la entrada a la ciudad no decodifique todos los modelos en el mismo frame.
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-const idle = timeout => new Promise(resolve => {
-  if ('requestIdleCallback' in window) requestIdleCallback(() => resolve(), { timeout });
-  else setTimeout(resolve, Math.min(timeout, 350));
-});
+
+function idleRun(task, timeout = 1600) {
+  return new Promise(resolve => {
+    const run = async () => {
+      try { await task(); } finally { resolve(); }
+    };
+    if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout });
+    else setTimeout(run, 40);
+  });
+}
 
 async function importFeature(path, label) {
   try {
-    await idle(1200);
     await import(path);
+    return true;
   } catch (error) {
     console.error(`[GTA MANUCHO] No se pudo cargar ${label}.`, error);
+    return false;
   }
 }
 
 async function waitForCity() {
-  if (window.__VICE_CITY_REVEALED__ || window.__VICE_BASE_CITY_READY__) return;
+  if (window.__VICE_CITY_REVEALED__) return;
   await Promise.race([
     new Promise(resolve => window.addEventListener('vice-city-revealed', resolve, { once: true })),
-    new Promise(resolve => window.addEventListener('vice-base-city-ready', resolve, { once: true })),
     delay(12000)
   ]);
 }
 
+function scheduleFeature(delayMs, path, label) {
+  setTimeout(() => {
+    void idleRun(() => importFeature(path, label));
+  }, delayMs);
+}
+
 (async () => {
   await waitForCity();
-  await delay(500);
-  await importFeature('./property-save-system.js?v=81', 'el sistema de partidas');
-  await delay(450);
-  await importFeature('./starter-house.js?v=81', 'la casa inicial');
-  await delay(650);
-  await importFeature('./v71-city-features.js?v=81', 'las misiones y personajes de ciudad');
-  await delay(700);
-  await importFeature('./second-girlfriend-house.js?v=81', 'la casa de la segunda novia');
-  await delay(900);
-  await importFeature('./city-billboards.js?v=81', 'los carteles publicitarios');
 
-  // V82: se retiraron los coches cúbicos y peatones procedurales. La ciudad usa
-  // únicamente los Ferrari y los NPC adjuntados, con distancia de dibujado.
-  await delay(550);
-  void importFeature('./boat-world-portal.js?v=82', 'la entrada a Mundo Barco');
+  setTimeout(() => {
+    void idleRun(async () => {
+      await importFeature('./property-save-system.js?v=89', 'el sistema de partidas');
+      await delay(120);
+      await importFeature('./starter-house.js?v=89', 'la casa inicial');
+    }, 1100);
+  }, 350);
 
-  // V84: el mar, los barcos, el tanque y las aeronaves ya se prepararon detrás
-  // de la pantalla de carga para evitar tirones al acercarse por primera vez.
+  // En vez de crear NPC/coches con Three.js, reforzamos únicamente la población nativa ya existente.
+  scheduleFeature(4300, './native-population-boost.js?v=89', 'el refuerzo de población nativa');
+  scheduleFeature(7100, './second-girlfriend-house.js?v=87', 'la casa de la segunda novia');
+  scheduleFeature(9600, './city-billboards.js?v=87', 'los carteles publicitarios');
+  scheduleFeature(12100, './boat-world-portal.js?v=87', 'la entrada a Mundo Barco');
 })();

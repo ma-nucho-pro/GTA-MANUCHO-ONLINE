@@ -11,8 +11,10 @@ import * as THREE from './bosque/libs/three.module.js';
 // InstancedMesh y actualizaciones a baja frecuencia para evitar congelamientos.
 
 const WORLD_SCALE = 16;
-const CAR_COUNT = 34;
-const PED_COUNT = 72;
+// V85: población mucho más abundante. Al ser InstancedMesh, subir los contadores
+// no añade draw calls; solo crece el muestreo a 9 Hz, que es muy barato.
+const CAR_COUNT = 135; // V92: más coches por toda la ciudad
+const PED_COUNT = 330; // V92: muchos más peatones
 const UPDATE_STEP = 1 / 9;
 
 const ROAD_ROUTES_LOGICAL = [
@@ -158,10 +160,11 @@ function createMeshes() {
 
 function qualityLimits() {
   const q = window.__VICE_VIDEO_SETTINGS__?.quality || 'medium';
-  if (q === 'low') return { cars:14, peds:26, carDistance:3000, pedDistance:2500 };
-  if (q === 'high') return { cars:29, peds:58, carDistance:6500, pedDistance:5600 };
-  if (q === 'max') return { cars:34, peds:72, carDistance:7900, pedDistance:7000 };
-  return { cars:23, peds:44, carDistance:4700, pedDistance:4100 };
+  // V85: límites visibles mucho más altos manteniendo fluidez (instanciado).
+  if (q === 'low') return { cars:42, peds:100, carDistance:3400, pedDistance:2900 };
+  if (q === 'high') return { cars:100, peds:245, carDistance:6800, pedDistance:5900 };
+  if (q === 'max') return { cars:135, peds:330, carDistance:8200, pedDistance:7300 };
+  return { cars:75, peds:180, carDistance:5200, pedDistance:4500 };
 }
 
 function fillCarMatrices(states, limits, player) {
@@ -263,4 +266,4 @@ const wait = setInterval(() => {
   clearInterval(wait);
   install();
 },120);
-setTimeout(() => clearInterval(wait),30000);
+setTimeout(() => clearInterval(wait),180000); // V85: más margen en equipos lentos

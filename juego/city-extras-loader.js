@@ -27,20 +27,33 @@ function idle(timeout = 1000) {
 
 function setStatus(text) {
   if (subtitle) subtitle.textContent = text;
+  window.__GTA_LOADING__?.setStatus?.(text);
 }
 
 async function waitForBaseCity() {
   const started = performance.now();
-  while (performance.now() - started < 18000) {
+  while (performance.now() - started < 30000) {
     const game = window.__VICE_CITY_GAME__;
-    if (game?.renderer && game?.scene && game?.camera && game?.playerContainer) {
+    const canvas = game?.renderer?.domElement;
+    if (game?.renderer && game?.scene && game?.camera && game?.playerContainer && canvas) {
       await nextFrame();
       await nextFrame();
       window.__VICE_BASE_CITY_READY__ = true;
+      window.__GTA_LOADING__?.setProgress?.(72);
       window.dispatchEvent(new CustomEvent('vice-base-city-ready'));
       return game;
     }
-    await delay(50);
+    await delay(32);
+  }
+  return window.__VICE_CITY_GAME__;
+}
+
+async function waitForCoreWorld(timeout = 12000) {
+  const started = performance.now();
+  while (performance.now() - started < timeout) {
+    const game = window.__VICE_CITY_GAME__;
+    if (game?.coreWorldReady) return game;
+    await delay(80);
   }
   return window.__VICE_CITY_GAME__;
 }
@@ -82,21 +95,10 @@ async function preparePoliceBeforeReveal() {
     const world = game.crimeWorld;
     if (!world) return;
 
-    // Se conserva la policía procedural ya construida y se bloquea la descarga
-    // tardía del Stormtrooper remoto, que era el tirón al aparecer el VCPD.
+    // V86: precalienta la policía sin borrar bandas, aves ni funciones del mundo.
+    // Los modelos y materiales existentes quedan disponibles para el modo online.
     world.policeModelRequested = true;
-    world.loadPoliceModel = () => {};
-    world.loadGangModel = () => {};
-    world.requestNearbyModels = () => {};
-
-    // Elimina simulaciones secundarias del mismo sistema y deja solo los policías.
-    for (const agent of world.gangAgents || []) agent?.root?.parent?.remove(agent.root);
-    world.gangAgents = [];
-    world.agents = [...(world.policeAgents || [])];
-    world.clouds?.parent?.remove(world.clouds);
-    world.birdFlock?.parent?.remove(world.birdFlock);
-    world.updateClouds = () => {};
-    world.updateBirds = () => {};
+    world.requestNearbyModels?.();
 
     world.wantedLevel = hadCrimeWorld ? previousWanted : 0;
     world.wantedAge = hadCrimeWorld ? previousWantedAge : 0;
@@ -123,6 +125,49 @@ async function preparePoliceBeforeReveal() {
 }
 
 
+async function prepareNativePopulation() {
+  const game = window.__VICE_CITY_GAME__;
+  if (!game) return;
+  const removeQueued = id => {
+    try { game.heavyTasks = (game.heavyTasks || []).filter(task => task?.id !== id); } catch {}
+    try { game.loadedHeavyTasks?.add?.(id); } catch {}
+  };
+
+  // Solo se usan los peatones y coches originales. Cada fase obtiene su propio
+  // turno libre para que no se creen NPC, tráfico y coches en el mismo fotograma.
+  removeQueued('npc-assets');
+  removeQueued('traffic');
+  removeQueued('scattered-cars');
+
+  if ((!game.npcModelsData || game.npcModelsData.length === 0) && typeof game.loadNPCAssets === 'function') {
+    await idle(1800);
+    await game.loadNPCAssets();
+  }
+
+  await nextFrame();
+  await idle(1200);
+  if ((!game.npcs || game.npcs.length === 0) && typeof game.spawnNPCs === 'function') {
+    game.spawnNPCs();
+  }
+  removeQueued('npc-assets');
+
+  await nextFrame();
+  await idle(1200);
+  if ((!game.trafficCars || game.trafficCars.length === 0) && typeof game.initTraffic === 'function') {
+    game.initTraffic();
+  }
+  removeQueued('traffic');
+
+  await nextFrame();
+  await idle(1500);
+  if ((!game.scatteredCarData || game.scatteredCarData.length === 0) && typeof game.spawnScatteredCars === 'function') {
+    game.spawnScatteredCars();
+  }
+  removeQueued('scattered-cars');
+  window.__NATIVE_CITY_POPULATION_READY__ = true;
+}
+
+
 async function prewarmActualCityScene() {
   const game = window.__VICE_CITY_GAME__;
   const renderer = game?.renderer;
@@ -131,11 +176,14 @@ async function prewarmActualCityScene() {
   if (!renderer || !scene || !camera) return;
 
   const roots = [
-    ...(window.__CITY_NPCS__ || []).map(entry => entry?.root),
+    ...((window.__VICE_CITY_GAME__?.npcs) || []).slice(0, 24).map(entry => entry?.mesh || entry?.root),
     window.__ARCADE_HALL__?.hall,
     window.__CITY_BIRDS__,
-    ...(window.__CUSTOM_CARS__ || []).map(entry => entry?.root),
+    ...((window.__VICE_CITY_GAME__?.trafficCars) || []).map(entry => entry?.mesh),
+    window.__VICE_CITY_GAME__?.baseScatteredCar,
     ...((window.__VICE_CITY_GAME__?.crimeWorld?.policeAgents) || []).map(entry => entry?.root),
+    ...((window.__CITY_LIFE_SYSTEM__?.gangs) || []).map(entry => entry?.root),
+    ...((window.__CITY_LIFE_SYSTEM__?.ambientPolice) || []).map(entry => entry?.root),
     ...((window.__AIRCRAFT_SYSTEM__?.aircraft) || []).map(entry => entry?.root),
     ...((window.__POLICE_RESPONSE__?.tanks) || []).map(entry => entry?.root),
     window.__V81_MARINE_WORLD__?.ocean,
@@ -186,100 +234,126 @@ async function prewarmActualCityScene() {
 
 async function revealCity() {
   if (overlayHidden) return;
-  // Dos fotogramas con todos los sistemas preparados estabilizan matrices y shaders.
+  const game = window.__VICE_CITY_GAME__;
+  if (!game?.renderer?.domElement || !game?.scene || !game?.camera) return;
   await nextFrame();
   await nextFrame();
   window.__VICE_CITY_REVEALED__ = true;
   window.dispatchEvent(new CustomEvent('vice-city-revealed'));
+  window.__GTA_LOADING__?.reveal?.('base-city-ready');
   overlay?.classList.add('ready');
   setTimeout(() => overlay?.remove(), 650);
   overlayHidden = true;
 }
 
-function scheduleIdle(task, timeout = 1500) {
-  if ('requestIdleCallback' in window) requestIdleCallback(() => task(), { timeout });
-  else setTimeout(() => task(), Math.min(timeout, 600));
+function markCityExtrasReady() {
+  if (window.__VICE_CITY_EXTRAS_READY__) return;
+  window.__VICE_CITY_EXTRAS_READY__ = true;
+  window.dispatchEvent(new CustomEvent('vice-city-extras-ready'));
+}
+
+function scheduleIdle(task, delayMs = 1500) {
+  const run = () => Promise.resolve().then(task).catch(error => console.warn('[city-extras] Tarea secundaria incompleta.', error));
+  setTimeout(() => {
+    if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 1800 });
+    else setTimeout(run, 40);
+  }, Math.max(0, delayMs));
 }
 
 async function bootExtras() {
   setStatus('Cargando la ciudad base…');
-  await waitForBaseCity();
+  window.__GTA_LOADING__?.setProgress?.(18);
+  const game = await waitForBaseCity();
+  if (!game?.renderer || !game?.scene || !game?.camera) {
+    setStatus('El motor 3D sigue iniciándose…');
+    console.error('[city-extras] El núcleo no estuvo disponible dentro del tiempo de espera.');
+    return;
+  }
 
-  setStatus('Activando modo fluido…');
-  await waitForFlag('__VICE_PERFORMANCE_READY__', 'vice-performance-ready', 3500);
+  setStatus('Preparando el render principal…');
+  window.__GTA_LOADING__?.setProgress?.(52);
+  await Promise.race([
+    waitForFlag('__VICE_PERFORMANCE_READY__', 'vice-performance-ready', 1200),
+    delay(280)
+  ]);
 
-  // Solo las correcciones físicas principales se aplican antes de mostrar el juego.
-  // Ya no se cargan decenas de GLB ni se compilan coches durante la transición.
-  setStatus('Preparando el terreno principal…');
+  setStatus('Cargando pistas y zonas del mapa…');
+  window.__GTA_LOADING__?.setProgress?.(72);
+  await waitForCoreWorld(12000);
+  if (!game.coreWorldReady || !window.__VICE_WORLD_VISIBILITY_READY__) {
+    try { await window.__VICE_RECOVER_WORLD__?.(); } catch {}
+    await waitForFlag('__VICE_WORLD_VISIBILITY_READY__', 'vice-world-visibility-ready', 10000);
+  }
   await importSafely('./integrated-zones.js?v=49', 'las zonas del mapa');
 
-  setStatus('Preparando respuesta policial fluida…');
+  setStatus('Activando población y tráfico nativos…');
+  window.__GTA_LOADING__?.setProgress?.(82);
+  await idle(900);
+  await prepareNativePopulation();
+
+  setStatus('Preparando policía y bandas…');
+  window.__GTA_LOADING__?.setProgress?.(90);
+  await idle(700);
   await preparePoliceBeforeReveal();
+  await importSafely('./territory-combat.js?v=90', 'la policía, las bandas y los servicios');
+  await waitForFlag('__TERRITORY_COMBAT_READY__', 'territory-combat-ready', 11000);
 
-  // Los modelos que más pesan se decodifican detrás de la pantalla animada. Así
-  // no aparecen congelamientos varios segundos después de comenzar a caminar.
-  setStatus('Preparando vehículos sin congelamientos…');
-  await importSafely('./custom-cars.js?v=82', 'los Ferrari de Three.js');
-  await waitForFlag('__CUSTOM_CARS_READY__', 'custom-cars-ready', 10000);
-
-  setStatus('Preparando personajes de la ciudad…');
-  await importSafely('./city-npcs.js?v=84', 'los NPC adjuntados de Three.js');
-  await waitForFlag('__CITY_NPCS_READY__', 'city-npcs-ready', 9000);
-
-  setStatus('Preparando policía, bandas y vehículos de servicio…');
-  await importSafely('./territory-combat.js?v=84', 'la policía, las bandas y los servicios');
-  await waitForFlag('__TERRITORY_COMBAT_READY__', 'territory-combat-ready', 26000);
-
-  // V84: el mar, los barcos y los vehículos especiales se decodifican detrás
-  // de la pantalla de carga. Así no aparecen congelamientos al acercarse por
-  // primera vez al océano, al tanque o al hangar de aeronaves.
-  setStatus('Preparando el mar y los barcos…');
-  await importSafely('./marine-world-v84.js?v=84', 'el mar Water, las islas y los barcos');
-  await waitForFlag('__GTA_MARINE_READY__', 'gta-manucho-marine-ready', 32000);
-
-  setStatus('Preparando helicópteros y aeronaves…');
-  await importSafely('./aircraft-system.js?v=84', 'las aeronaves y el helicóptero');
-  await waitForFlag('__AIRCRAFT_SYSTEM_READY__', 'aircraft-system-ready', 6000);
-  try { await window.__AIRCRAFT_SYSTEM__?.ensureExhibit?.(); } catch {}
-  await waitForFlag('__ARKEA_AIRCRAFT_EXHIBIT_READY__', 'arkea-aircraft-exhibit-ready', 24000);
-
-  setStatus('Preparando el tanque…');
-  await importSafely('./police-response.js?v=84', 'el tanque y la respuesta policial');
-  await waitForFlag('__POLICE_RESPONSE_READY__', 'police-response-ready', 7000);
-  try { await window.__POLICE_RESPONSE__?.ensureParkedTank?.(); } catch {}
-  await waitForFlag('__ARKEA_TANK_READY__', 'arkea-tank-ready', 12000);
-
-  setStatus('Optimizando la primera escena…');
+  setStatus('Precalentando animaciones cercanas…');
+  window.__GTA_LOADING__?.setProgress?.(94);
   await prewarmActualCityScene();
 
-  setStatus('Entrando a GTA MANUCHO…');
+  markCityExtrasReady();
+  window.__GTA_LOADING__?.setProgress?.(96);
+  setStatus('Entrando a Ciudad Manucho…');
   await revealCity();
 
-  // Sistemas ligeros escalonados después de mostrar la ciudad. No dependen de la
-  // cercanía del jugador y se reparten en varios fotogramas para evitar congelar.
-  // V48: los modelos Three.js aparecen gradualmente después de mostrar la ciudad.
-  // Se carga una sola Michelle y un solo Ferrari; los clones se reparten entre
-  // turnos libres para evitar una pausa grande de decodificación o clonación.
-  scheduleIdle(() => importSafely('./castle-world.js?v=49', 'el castillo y su mundo'), 400);
-  scheduleIdle(() => importSafely('./desert-world.js?v=49', 'el iglú DESERT y su portal'), 800);
-  scheduleIdle(() => importSafely('./city-birds.js?v=49', 'las aves'), 1400);
-  scheduleIdle(() => importSafely('./wanted-stars.js?v=65', 'las estrellas de reducción de búsqueda'), 1600);
-  scheduleIdle(() => importSafely('./police-foot-behavior.js?v=84', 'el comportamiento terrestre de la policía'), 2200);
-  scheduleIdle(() => importSafely('./weapon-crates.js?v=82', 'las cajas y armas del inventario Q'), 6800);
-  scheduleIdle(() => importSafely('./fog-city-horses.js?v=82', 'Fog City y sus caballos'), 8200);
-  scheduleIdle(() => importSafely('./fog-city-jetpack.js?v=82', 'el jetpack físico de Fog City'), 8700);
-  scheduleIdle(() => importSafely('./girlfriend-house.js?v=61', 'la casa de la novia y las estadísticas'), 9400);
-  scheduleIdle(() => importSafely('./arcade-hall.js?v=49', 'el salón de juegos'), 11200);
-  scheduleIdle(() => importSafely('./coliseum.js?v=49', 'el coliseo de carreras'), 14200);
+  // Resto de mundos y extras realmente secundarios.
+  scheduleIdle(async () => {
+    await waitForCoreWorld(12000);
+    await importSafely('./marine-world-v84.js?v=87', 'el mar, las islas y los barcos');
+  }, 1800);
 
-  // La respuesta policial ya se preparó detrás de la transición. No se programa
-  // una segunda inicialización tardía que pueda congelar la partida.
+  scheduleIdle(async () => {
+    await waitForCoreWorld(12000);
+    await importSafely('./aircraft-system.js?v=87', 'las aeronaves y el helicóptero');
+    await waitForFlag('__AIRCRAFT_SYSTEM_READY__', 'aircraft-system-ready', 9000);
+    try { await window.__AIRCRAFT_SYSTEM__?.ensureExhibit?.(); } catch {}
+  }, 3600);
+
+  scheduleIdle(async () => {
+    await waitForFlag('__AIRCRAFT_SYSTEM_READY__', 'aircraft-system-ready', 12000);
+    await importSafely('./police-response.js?v=87', 'el tanque y la respuesta policial');
+    await waitForFlag('__POLICE_RESPONSE_READY__', 'police-response-ready', 9000);
+    try { await window.__POLICE_RESPONSE__?.ensureParkedTank?.(); } catch {}
+  }, 6200);
+
+  scheduleIdle(() => importSafely('./castle-world.js?v=49', 'el castillo y su mundo'), 1300);
+  scheduleIdle(() => importSafely('./desert-world.js?v=49', 'el iglú DESERT y su portal'), 2100);
+  scheduleIdle(() => importSafely('./city-birds.js?v=49', 'las aves'), 3000);
+  scheduleIdle(() => importSafely('./wanted-stars.js?v=65', 'las estrellas de reducción de búsqueda'), 3900);
+  scheduleIdle(() => importSafely('./police-foot-behavior.js?v=87', 'el comportamiento terrestre de la policía'), 5200);
+  scheduleIdle(() => importSafely('./weapon-crates.js?v=82', 'las cajas y armas del inventario Q'), 7600);
+  scheduleIdle(() => importSafely('./fog-city-horses.js?v=82', 'Fog City y sus caballos'), 9400);
+  scheduleIdle(() => importSafely('./fog-city-jetpack.js?v=82', 'el jetpack físico de Fog City'), 10100);
+  scheduleIdle(() => importSafely('./girlfriend-house.js?v=61', 'la casa de la novia y las estadísticas'), 11200);
+  scheduleIdle(() => importSafely('./arcade-hall.js?v=49', 'el salón de juegos'), 13200);
+  scheduleIdle(() => importSafely('./coliseum.js?v=49', 'el coliseo de carreras'), 15800);
 }
 
-bootExtras().catch(error => {
+bootExtras().catch(async error => {
   console.error('[city-extras] Error de arranque.', error);
-  revealCity();
+  try { await window.__VICE_RECOVER_WORLD__?.(); } catch {}
+  await waitForFlag('__VICE_WORLD_VISIBILITY_READY__', 'vice-world-visibility-ready', 9000);
+  markCityExtrasReady();
+  if (window.__VICE_CITY_GAME__?.renderer && window.__VICE_WORLD_VISIBILITY_READY__) revealCity();
 });
 
-// Salvaguarda: aunque falle un recurso, la transición nunca queda bloqueada.
-setTimeout(() => revealCity(), 62000);
+// Salvaguarda: no muestra una ciudad negra. Primero intenta recuperar el mundo
+// y solo después permite retirar la transición.
+setTimeout(async () => {
+  try { await window.__VICE_RECOVER_WORLD__?.(); } catch {}
+  await waitForFlag('__VICE_WORLD_VISIBILITY_READY__', 'vice-world-visibility-ready', 8000);
+  if (!window.__VICE_WORLD_VISIBILITY_READY__) return;
+  markCityExtrasReady();
+  if (window.__VICE_CITY_GAME__?.renderer) revealCity();
+}, 28000);

@@ -1,0 +1,21 @@
+GTA MANUCHO V87 — TRANSICIÓN RÁPIDA DESPUÉS DEL TUTORIAL
+
+Correcciones aplicadas:
+
+1. Se corrigió la pantalla negra al terminar o saltar el tutorial.
+2. El juego principal se muestra apenas el motor 3D tiene una escena y un lienzo renderizable.
+3. Ya no se espera a que terminen policía, bandas, peatones, tráfico, mar, aeronaves y tanques para entrar.
+4. Las funciones secundarias se cargan en segundo plano mediante intervalos reales separados.
+5. Se corrigió el falso escalonamiento anterior: varias tareas podían comenzar simultáneamente y congelar la pantalla.
+6. La segunda pantalla de carga vuelve a mostrar la portada, capturas y animaciones WebP de GTA MANUCHO.
+7. Se añadió una barra de progreso visible, textos legibles y un botón de reintento si el motor 3D falla.
+8. Se precarga la entrada ligera del juego durante la introducción y el tutorial para reducir el cambio de página.
+9. Se eliminó la precarga inicial del Ferrari ajeno a la estética y la precarga obligatoria del avatar online.
+10. Los peatones, tráfico y coches originales se preparan en fases distintas para evitar tirones.
+11. Los servidores Node.js y Python ahora envían correctamente WebP, WebM, MP4 y formatos de audio.
+12. Los recursos estáticos usan caché versionada para acelerar cargas posteriores; los HTML se mantienen actualizables.
+13. Se conservan las correcciones online, policía, colisiones, mapa, nombres, colores, vehículos y animaciones de V86.
+
+Inicio recomendado:
+- Ejecuta server.py o server.js.
+- No abras index.html directamente con file:// porque los módulos 3D requieren un servidor local.

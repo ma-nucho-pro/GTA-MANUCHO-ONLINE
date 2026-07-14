@@ -1,0 +1,86 @@
+/* GTA MANUCHO V85 · Reskin GTA del tutorial (elimina la paleta azul/cian).
+   Se aplica por encima de las clases Tailwind del bundle del tutorial sin
+   modificar su código. Paleta: negro cálido, ámbar #ff8a00, arena, dorado.
+   Creado por Roberto Manuel Jara Peche · ARKEA AI. */
+
+#root { color-scheme: dark; }
+
+/* --- Textos azules/cian → ámbar/dorado --- */
+#root .text-cyan-400, #root .text-cyan-300, #root .text-cyan-500,
+#root .text-sky-400, #root .text-blue-400, #root .text-blue-450,
+#root .text-indigo-400, #root .text-violet-400, #root .text-purple-400,
+#root .text-teal-400 { color:#ffb340 !important; }
+#root .text-pink-400, #root .text-rose-400, #root .text-fuchsia-400 { color:#ff8a5c !important; }
+#root .text-emerald-400, #root .text-emerald-450, #root .text-green-400 { color:#ffd23f !important; }
+#root .text-slate-100, #root .text-slate-200 { color:#f5e7cd !important; }
+#root .text-slate-300 { color:#e3cba0 !important; }
+#root .text-slate-400 { color:#c9a06a !important; }
+#root .text-slate-500 { color:#9c7a4e !important; }
+
+/* --- Fondos azulados → negros cálidos --- */
+#root .bg-slate-950\/75, #root .bg-slate-950\/80, #root .bg-slate-950\/85,
+#root .bg-slate-950\/90, #root .bg-slate-950\/70, #root .bg-slate-950 {
+  background-color:rgba(14,9,4,.9) !important;
+}
+#root .bg-slate-900\/50, #root .bg-slate-900\/60, #root .bg-slate-900\/40,
+#root .bg-slate-900\/35, #root .bg-slate-900\/20, #root .bg-slate-900 {
+  background-color:rgba(26,17,7,.6) !important;
+}
+#root .bg-cyan-950\/50, #root .bg-cyan-950\/40, #root .bg-cyan-950\/30, #root .bg-cyan-950\/20,
+#root .bg-blue-950\/50, #root .bg-blue-955\/20, #root .bg-blue-950\/20,
+#root .bg-indigo-950\/50, #root .bg-purple-950\/50, #root .bg-purple-950\/40,
+#root .bg-purple-950\/30, #root .bg-purple-950\/20, #root .bg-violet-950\/20,
+#root .bg-pink-950\/20, #root .bg-rose-950\/50, #root .bg-emerald-950\/50,
+#root .bg-emerald-950\/20, #root .bg-emerald-955\/20, #root .bg-teal-950\/20 {
+  background-color:rgba(66,36,4,.4) !important;
+}
+#root .bg-cyan-500, #root .bg-blue-500, #root .bg-indigo-500,
+#root .bg-purple-500, #root .bg-violet-500, #root .bg-teal-500 { background-color:#ff8a00 !important; }
+
+/* --- Bordes --- */
+#root .border-slate-800, #root .border-slate-800\/80, #root .border-slate-800\/45,
+#root .border-slate-800\/40, #root .border-slate-900, #root .border-slate-900\/60 {
+  border-color:rgba(122,74,18,.55) !important;
+}
+#root .border-cyan-400, #root .border-cyan-500\/60, #root .border-cyan-800\/40,
+#root .border-blue-400, #root .border-blue-800\/40, #root .border-indigo-400,
+#root .border-indigo-500\/60, #root .border-purple-400, #root .border-purple-500\/60,
+#root .border-purple-800\/40, #root .border-purple-500\/10, #root .border-violet-400,
+#root .border-pink-400, #root .border-teal-400,
+#root .border-b-cyan-400, #root .border-b-blue-400, #root .border-b-indigo-400,
+#root .border-b-purple-400, #root .border-b-violet-400, #root .border-b-pink-400 {
+  border-color:#ff8a00 !important;
+}
+#root .border-emerald-400, #root .border-emerald-500\/40, #root .border-amber-500\/30,
+#root .border-amber-500\/40 { border-color:#ffd23f !important; }
+
+/* --- Acentos de sliders y controles --- */
+#root input[type="range"] { accent-color:#ff8a00 !important; }
+#root input[type="text"], #root input { caret-color:#ff8a00; }
+
+/* --- Degradados y brillos azulados → cálidos --- */
+#root [class*="from-slate-950"] { --tw-gradient-from:rgba(12,8,3,.92) !important; }
+#root [class*="to-slate-950"] { --tw-gradient-to:rgba(12,8,3,.92) !important; }
+#root [class*="shadow-"][class*="cyan"], #root [class*="shadow-"][class*="blue"],
+#root [class*="shadow-"][class*="purple"], #root [class*="shadow-"][class*="violet"] {
+  box-shadow:0 0 22px rgba(255,138,0,.28) !important;
+}
+
+/* Botones activos tipo GTA */
+#root button.bg-gradient-to-r { filter:hue-rotate(-18deg) saturate(1.15); }
+
+/* V86 — legibilidad total y estilo GTA clásico. */
+html,body,#root{background:#070503!important;color:#f8ead2!important}
+#root{font-family:Arial,Helvetica,sans-serif!important}
+#root h1,#root h2,#root h3,#root h4,#root button{font-family:Impact,"Arial Black",Arial,sans-serif!important;letter-spacing:.045em!important;text-transform:uppercase}
+#root p,#root span,#root label,#root li,#root div{opacity:1}
+#root [class*="text-transparent"]{-webkit-text-fill-color:#ffb24a!important;color:#ffb24a!important;background-image:none!important}
+#root [class*="backdrop-blur"],#root [class*="bg-black"],#root [class*="bg-slate"]{color:#f8ead2!important}
+#root [class*="rounded-2xl"],#root [class*="rounded-3xl"]{border-radius:5px!important}
+#root button{color:#fff!important;border:2px solid #ff8a00!important;background:linear-gradient(180deg,#4a2709,#160d04)!important;box-shadow:0 6px 0 #050301,0 12px 28px rgba(0,0,0,.65)!important;text-shadow:0 2px 2px #000!important}
+#root button:hover,#root button:focus{background:linear-gradient(180deg,#ff9e25,#d45b00)!important;color:#130800!important;outline:2px solid #ffe0a6!important;outline-offset:2px}
+#root input,#root select{background:#0b0805!important;color:#fff4df!important;border:1px solid #a9661e!important}
+#root [role="dialog"],#root [class*="fixed"][class*="inset-0"]>div{color:#f8ead2!important}
+#root [class*="shadow-"]{text-shadow:0 2px 4px rgba(0,0,0,.95)}
+#root canvas{filter:saturate(.9) contrast(1.03)}
+@media(max-width:700px){#root h1{font-size:clamp(30px,10vw,58px)!important}}

@@ -1,0 +1,32 @@
+GTA MANUCHO V90 — MUNDO VISIBLE Y ONLINE ESTABLE
+
+CORRECCIÓN PRINCIPAL
+- El juego ya no retira la pantalla de carga únicamente porque exista el canvas.
+- Verifica que coreWorldReady esté activo y que haya suelo/pistas reales bajo el jugador.
+- Si el mundo procedural no terminó, vuelve a ejecutar loadCoreWorldNow de forma controlada.
+- Si Parque del Retiro falla después de crear la ciudad, conserva la ciudad procedural y no deja el bootstrap negro.
+- Se fuerza la visibilidad de las superficies grandes después del traslado inicial a la casa.
+- Se reinicia el culling tras teletransportes para que edificios y pistas cercanos no permanezcan ocultos.
+- Se ajustó la iluminación mínima y la exposición para evitar un mundo casi negro.
+
+RENDIMIENTO
+- Las bandas terminan de preparar sus modelos y animaciones detrás de la transición.
+- Se precalientan shaders de bandas, policía, peatones y tráfico antes de entrar.
+- Se redujo el tiempo entre creación de miembros de bandas sin hacerlo todo en un mismo fotograma.
+- Los mundos realmente secundarios siguen cargándose escalonados.
+
+NPC Y COCHES
+- No se cargan city-npcs.js, custom-cars.js ni v71-city-features.js.
+- La población adicional utiliza loadNPCAssets/spawnNPCs/initTraffic/spawnScatteredCars del juego original.
+- Se limpian extras manuales heredados si alguna versión antigua llegó a cargarlos.
+
+ONLINE
+- Soldier.glb mantiene Idle, Walk y Run.
+- La orientación remota se obtiene también del desplazamiento real para evitar caminar de espaldas.
+- Se mantienen nombres, colores, PVP, vehículos, policía y marcadores online del radar/mapa.
+- Los estados se envían a 16 Hz y el mundo compartido a 4 Hz.
+
+PRUEBA
+1. Sube todo el contenido del ZIP reemplazando la versión anterior.
+2. En Netlify usa un despliegue nuevo, no solo archivos sueltos.
+3. Haz Ctrl+F5 la primera vez para descartar JavaScript antiguo en caché.

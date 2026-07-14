@@ -1,0 +1,16 @@
+GTA MANUCHO V88 — ARRANQUE ESTABLE DESPUÉS DEL TUTORIAL
+
+Correcciones:
+- Eliminado el botón "Reintentar carga" y el estado que podía quedar bloqueado.
+- Restaurado el núcleo estable de creación de la ciudad de V85.
+- Restaurado el archivo central original y configurado el servidor para revalidarlo, evitando caché dañada de V87.
+- Añadido un cargador automático con una única recuperación segura, sin duplicar la ciudad.
+- La pantalla con imágenes y animaciones desaparece cuando aparece la primera interfaz o el primer canvas.
+- La transición no espera a policía, NPC, tráfico, shaders ni mundos secundarios.
+- Si falla una descarga puntual, el sistema hace una única recuperación automática.
+- JavaScript y CSS se revalidan siempre; imágenes, videos, audio y modelos conservan caché de 24 horas.
+- Se mantienen las mejoras online, animaciones, sincronización, policía y optimización de V86/V87.
+
+IMPORTANTE:
+Ejecuta el proyecto con server.py o server.js. No abras juego/index.html directamente con file://,
+porque los módulos JavaScript y modelos 3D necesitan un servidor web.

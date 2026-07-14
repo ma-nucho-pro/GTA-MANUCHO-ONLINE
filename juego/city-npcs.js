@@ -16,11 +16,13 @@ window.__CITY_NPCS_READY__ = false;
 // distintos. Se carga una sola fuente, se clona de forma escalonada y se actualiza
 // a frecuencia limitada para mantener la ciudad fluida.
 const WORLD_SCALE = 16;
-const CIVILIAN_COUNT = 20;
+// V85: más NPCs interactivos y animación de caminata más fluida (24 Hz en vez
+// de 8 Hz; solo se animan los visibles, así que el costo sigue siendo mínimo).
+const CIVILIAN_COUNT = 46; // V92: más NPCs interactivos
 const GANG_COUNT = 4;
 const TOTAL = CIVILIAN_COUNT + GANG_COUNT;
 const SIM_STEP = 1 / 12;
-const ANIM_STEP = 1 / 8;
+const ANIM_STEP = 1 / 24;
 const NPC_HEIGHT = 48;
 
 const NPC_SURFACES = [

@@ -43,7 +43,7 @@ function keepOfficersGrounded(world) {
         const angle = index * 2.399963229728653;
         root.position.x = player.x + Math.cos(angle) * 9 * WORLD_SCALE;
         root.position.z = player.z + Math.sin(angle) * 9 * WORLD_SCALE;
-        y = groundAt(root.position.x, root.position.z, player.y);
+        y = groundAt(root.position.x, root.position.z, 0);
       }
     }
     root.position.y = y + .08;
@@ -54,7 +54,9 @@ function keepOfficersGrounded(world) {
     // para que los pies permanezcan abajo y el agente mire hacia delante.
     if (officer.visual?.userData?.v66PoliceSkin) {
       const base = officer.visual.userData.v74PoliceBaseRotation || { x:0, y:Math.PI, z:0 };
-      officer.visual.rotation.set(0, base.y, 0);
+      // V85: se aplica la rotación base completa; forzar x=0/z=0 acostaba a los
+      // agentes cuyo modelo requiere corrección de eje Z_UP.
+      officer.visual.rotation.set(base.x || 0, base.y || 0, base.z || 0);
       officer.visual.updateMatrixWorld?.(true);
     }
     if (officer.velocity?.isVector3) officer.velocity.y = 0;

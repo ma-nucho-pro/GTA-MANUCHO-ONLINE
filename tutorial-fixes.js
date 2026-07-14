@@ -20,7 +20,7 @@
     const node = document.createElement('div');
     node.id = 'tutorial-skip-notice';
     node.textContent = 'TUTORIAL COMPLETADO — INICIANDO JUEGO…';
-    node.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2147483647;padding:18px 26px;border-radius:12px;border:1px solid #22d3ee;background:rgba(2,6,23,.97);color:#67e8f9;font:700 15px/1.4 monospace;letter-spacing:.08em;pointer-events:none';
+    node.style.cssText = 'position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2147483647;padding:18px 26px;border-radius:4px;border:2px solid #ff8a00;background:rgba(12,8,3,.97);color:#ffe1b5;font:700 15px/1.4 monospace;letter-spacing:.08em;pointer-events:none';
     document.body.appendChild(node);
   }
   function skip(event) {
@@ -34,7 +34,7 @@
     try { window.speechSynthesis?.cancel(); } catch {}
     try { localStorage.setItem('exodo_tutorial_completed', '1'); localStorage.removeItem('vice_city_v72_started'); } catch {}
     notice();
-    setTimeout(() => location.replace('./juego/index.html?noprogressive=1'), 140);
+    setTimeout(() => location.replace('./juego/index.html?noprogressive=1&v=88'), 140);
   }
   function down(event) {
     const code = event.code || '';

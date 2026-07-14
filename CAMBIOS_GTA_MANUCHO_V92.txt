@@ -1,0 +1,70 @@
+GTA MANUCHO V92 — NADO, RETIRO, POBLACIÓN Y FLUIDEZ
+(basado en V91, sin quitar nada de lo que ya tenías)
+
+1. CÁMARA DE NADO REAL (ya no vista de dron)
+- En el mar abierto la cámara ahora se coloca baja, a ras del agua, justo
+  detrás del nadador y mirando hacia adelante (al horizonte), no desde arriba.
+- Al bucear la cámara baja contigo, cerca del personaje.
+- En el lago del Retiro y el agua del núcleo, la cámara al nadar también es
+  baja y cercana en lugar de subir y alejarse.
+
+2. LOS COCHES NO PUEDEN CIRCULAR POR EL AGUA
+- El mar abierto ya lo bloqueaba marine-world (V84). Ahora también el lago
+  del Parque del Retiro: si entras al lago con un vehículo, se devuelve a la
+  última posición segura en tierra y se detiene, con el aviso
+  "LOS VEHÍCULOS NO PUEDEN ENTRAR AL AGUA".
+
+3. PARQUE DEL RETIRO GARANTIZADO
+- Se detectó la causa de que desapareciera: si su construcción fallaba
+  durante la carga, el sistema de recuperación conservaba la ciudad pero SIN
+  el parque.
+- Ahora, si la carga del Retiro falla, el juego sigue jugable y el módulo
+  mejoras-v92.js reconstruye el parque automáticamente (hasta 3 intentos)
+  usando el constructor original del núcleo.
+- El grupo del parque queda marcado como siempre visible para que el sistema
+  de culling nunca lo oculte.
+
+4. MUCHOS MÁS NPCS Y COCHES (sin costo de FPS)
+- NPCs interactivos (city-npcs): 32 → 46.
+- Población instanciada (city-population): peatones 220 → 330,
+  coches 90 → 135. Presupuestos por calidad también aumentados
+  (low 42/100, medium 75/180, high 100/245, max 135/330).
+- Al ser InstancedMesh, subir estos números no añade draw calls.
+
+5. MODO ONLINE SIN CONGELACIONES
+- Al conectarte, el juego descarga y prepara por adelantado (en momentos
+  libres, uno por uno) los modelos que el otro jugador puede usar:
+  jet, helicóptero, avión, tanque y coche (ferrari.glb), más el Soldier.glb.
+- Después compila sus shaders. Resultado: cuando el otro jugador pone un
+  tanque o jet con truco, o se sube a un vehículo, lo ves aparecer a tamaño
+  real y conduciéndolo SIN que la pantalla se congele.
+- Se mantiene todo lo de V91: rotación correcta del personaje remoto,
+  vehículos a escala real, sin culling de clones online.
+
+6. ANTI-TIRONES GENERAL
+- Cada vez que un sistema secundario termina de cargar (mar/islas/barcos,
+  aeronaves, tanque policial, territorios/bandas), sus shaders se compilan
+  en un momento libre para que no congelen la pantalla al aparecer por
+  primera vez.
+- Resolución adaptativa más agresiva: tope inicial 1.15 de pixel ratio y
+  puede bajar hasta 0.64 si los FPS caen de 45, recuperándose sola cuando
+  vuelven a subir. Esto permite jugar fluido en computadoras modestas.
+
+7. BARCOS E ISLAS (aclaración)
+- V91 ya incluía la corrección de V85: la distancia para subir al barco se
+  mide contra el casco (caja del modelo, radio 520) y no contra su origen,
+  así que ya puedes subirte nadando junto al casco y manejarlo.
+- Todos los mundos de V91 se conservan: mar, islas, barcos, Mundo Barco,
+  castillo, desierto, coliseo, bosque, museo, arcade, casas, etc.
+
+ARCHIVOS TOCADOS
+- juego/assets/index-CXrFrkSv.js (4 parches quirúrgicos: cámara en agua,
+  export del constructor del Retiro, marca de éxito, fallo no bloqueante)
+- juego/marine-world-v84.js (cámara de nado baja)
+- juego/city-npcs.js, juego/city-population-v81.js (población)
+- juego/performance-boost.js (resolución adaptativa)
+- juego/gta-manucho-online.js (precalentamiento online)
+- juego/mejoras-v92.js (NUEVO)
+- juego/index.html (carga mejoras-v92.js)
+
+No se modificó nada más del juego.
