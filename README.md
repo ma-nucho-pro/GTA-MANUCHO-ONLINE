@@ -1,10 +1,13 @@
 <div align="center">
 
-<img src="docs/media/Portada.png" alt="Portada de GTA MANUCHO" width="100%">
+<img src="docs/media/Portada.png" alt="Portada de GTA MANUCHO ONLINE" width="100%">
 
-# GTA MANUCHO V84
+# GTA MANUCHO ONLINE V92
 
-### Mundo abierto 3D para navegador · ARKEA AI
+### Mundo abierto 3D multijugador para navegador · ARKEA AI
+
+**Online GTA-style open-world game generated with AI from a single prompt.**  
+**Built with ChatGPT 5.6, Gemini 3.5 Pro, Mythos, and Fable 5.**
 
 **Creado e integrado por Roberto Manuel Jara Peche**  
 GitHub: **[ma-nucho-pro](https://github.com/ma-nucho-pro)**
@@ -15,21 +18,54 @@ GitHub: **[ma-nucho-pro](https://github.com/ma-nucho-pro)**
 
 ## Sobre el juego
 
-GTA MANUCHO es un juego 3D de mundo abierto creado para ejecutarse directamente en el navegador. Incluye ciudad, personajes, NPC, tráfico, policía, bandas, coches, bicicletas, barcos, aeronaves, helicópteros, tanques, propiedades, cámaras en primera y tercera persona, mar, islas y vida submarina.
+**GTA MANUCHO ONLINE** es un juego 3D de mundo abierto que funciona directamente en el navegador. Incluye una ciudad explorable, personajes, NPC, tráfico, policía, bandas, coches, bicicletas, barcos, jets, aviones, helicópteros, tanques, propiedades, combate, cámaras en primera y tercera persona, mar, islas y diferentes mundos secundarios.
 
-La versión V84 corrige el comportamiento del agua: el jugador entra en modo natación en mar abierto, mientras que los NPC, policías, coches, patrullas y tanques permanecen en tierra. El océano usa el addon `Water` de Three.js y las nubes utilizan una textura local ligera inspirada en el enfoque del ejemplo oficial de nubes volumétricas de Three.js.
+La versión **V92** convierte la experiencia en un mundo multijugador conectado mediante **Supabase Realtime**. Los jugadores pueden crear o compartir un código de sala, entrar al mismo servidor y encontrarse dentro del juego sin instalar un cliente adicional.
 
-> Este repositorio no necesita un archivo `.bat` ni `.cmd` para publicarse. Es un sitio web estático preparado para GitHub Pages o un hosting convencional.
+> Pulsa **O** durante la partida para abrir el panel de **GTA MANUCHO ONLINE**.
+
+## Ahora es online
+
+El modo online permite:
+
+- Crear o unirse a una sala mediante un código compartido.
+- Elegir el nombre y el color del personaje.
+- Ver a los demás jugadores con su nombre sobre la cabeza.
+- Sincronizar posición, movimiento, rotación y animaciones `Idle`, `Walk` y `Run`.
+- Ver a otros jugadores caminando en la dirección correcta.
+- Mostrar jugadores online en el radar y en el mapa.
+- Sincronizar coches, jets, aviones, helicópteros, tanques y barcos.
+- Ver vehículos generados mediante trucos a escala real.
+- Compartir policía, disparos, combate y estados del mundo.
+- Encontrarse en la ciudad, el mar, las islas, el bosque, el museo, el coliseo, el castillo, el desierto, el salón arcade y otros mundos del juego.
+
+La comunicación multijugador utiliza canales de **Supabase Realtime**, presencia para detectar jugadores conectados y eventos de difusión para compartir los estados de la partida.
+
+## Cómo jugar online
+
+1. Abre el juego desde GitHub Pages o desde un servidor local.
+2. Inicia la partida normalmente.
+3. Pulsa la tecla **O**.
+4. Escribe tu nombre.
+5. Selecciona el color de tu personaje.
+6. Introduce un código de servidor, por ejemplo:
+
+```text
+MANUCHO
+```
+
+7. Pulsa **JUGAR ONLINE**.
+8. Comparte el mismo código con tus amigos.
+
+Los jugadores que usen el mismo código entrarán en la misma sala.
 
 ## Clips del juego
 
 <p align="center">
-  <img src="docs/media/GTA-MANUCHO-VIDEO-1.webp" alt="Clip animado 1 de GTA MANUCHO" width="31%">
-  <img src="docs/media/GTA-MANUCHO-VIDEO-2.webp" alt="Clip animado 2 de GTA MANUCHO" width="31%">
-  <img src="docs/media/GTA-MANUCHO-VIDEO-3.webp" alt="Clip animado 3 de GTA MANUCHO" width="31%">
+  <img src="docs/media/GTA-MANUCHO-VIDEO-1.webp" alt="Clip animado 1 de GTA MANUCHO ONLINE" width="31%">
+  <img src="docs/media/GTA-MANUCHO-VIDEO-2.webp" alt="Clip animado 2 de GTA MANUCHO ONLINE" width="31%">
+  <img src="docs/media/GTA-MANUCHO-VIDEO-3.webp" alt="Clip animado 3 de GTA MANUCHO ONLINE" width="31%">
 </p>
-
-La presentación inicial selecciona aleatoriamente las capturas y clips animados proporcionados, acompañándolos con textos sobre coches, policía, mar, aeronaves y exploración.
 
 ## Capturas
 
@@ -60,33 +96,64 @@ La presentación inicial selecciona aleatoriamente las capturas y clips animados
 
 </details>
 
-## Cambios principales de la V84
+## Cambios principales de la V92
 
-- Natación automática y animación reforzada de brazos, piernas y cuerpo en mar abierto.
-- El agua visual queda fuera de las colisiones y de los raycasts usados para detectar el suelo.
-- Los NPC y policías que intenten entrar al mar regresan a su última posición segura.
-- Los coches, patrullas y tanques no pueden circular por el agua.
-- Reflejos del océano con actualización adaptativa para reducir congelaciones y tirones.
-- Nubes texturizadas realistas y ligeras, sin depender de una imagen externa durante la partida.
-- Presentación aleatoria con imágenes y clips WebP del juego.
-- Proyecto preparado para GitHub Pages y hosting web, sin lanzadores CMD/BAT.
-- Créditos, licencia de código abierto y documentación incorporados.
+### Multijugador
 
-## Jugar desde GitHub Pages
+- Personajes remotos con el modelo original `Soldier.glb`.
+- Animaciones remotas de reposo, caminata y carrera.
+- Corrección del giro que hacía caminar al otro jugador de espaldas.
+- Posición y rotación online actualizadas con alta frecuencia.
+- Nombres y colores personalizados para cada jugador.
+- Salas privadas mediante códigos compartidos.
+- Sincronización de jugadores, disparos, policía y combate.
+- Marcadores de otros jugadores en el radar y el mapa.
 
-### 1. Crear el repositorio
+### Vehículos online
 
-En GitHub, crea un repositorio nuevo. Un nombre recomendado es:
+- Coches, jets, aviones, helicópteros, tanques y barcos visibles para todos los jugadores.
+- Vehículos remotos con tamaño y escala reales.
+- Sincronización de posición, rotación y conducción.
+- Vehículos generados mediante trucos visibles para los demás jugadores.
+- Precarga de modelos y shaders para evitar congelaciones al aparecer.
+
+### Mundo y rendimiento
+
+- Cámara de natación baja y cercana al personaje.
+- Vehículos bloqueados al intentar entrar al agua.
+- Recuperación automática del Parque del Retiro si falla durante la carga.
+- Mayor cantidad de NPC y coches mediante sistemas instanciados.
+- Resolución adaptativa para mantener una experiencia fluida.
+- Carga escalonada de sistemas secundarios y compilación anticipada de shaders.
+
+## Tecnologías
+
+- **Three.js** para el mundo 3D y la renderización en el navegador.
+- **JavaScript ES Modules** para los sistemas del juego.
+- **GLTF / GLB** para personajes, vehículos y escenarios.
+- **Supabase Realtime** para presencia, salas y sincronización multijugador.
+- **GitHub Actions** para generar la configuración de despliegue.
+- **GitHub Pages** o cualquier hosting web compatible con HTTPS.
+
+## Publicar en GitHub Pages
+
+### 1. Repositorio
+
+El repositorio recomendado es:
 
 ```text
-GTA-MANUCHO
+GTA-MANUCHO-ONLINE
 ```
 
-No marques la opción de crear otro README, porque este proyecto ya lo incluye.
+Dirección del proyecto:
+
+```text
+https://github.com/ma-nucho-pro/GTA-MANUCHO-ONLINE
+```
 
 ### 2. Subir el proyecto completo
 
-Sube **todo el contenido de esta carpeta**, no solamente `index.html`. Debes conservar exactamente carpetas como:
+Debes subir todo el contenido del proyecto, conservando la estructura:
 
 ```text
 assets/
@@ -100,63 +167,92 @@ LICENSE
 NOTICE.md
 ```
 
-El archivo principal del sitio es `index.html`. El juego principal también puede abrirse directamente desde `juego/index.html?noprogressive=1`.
+El archivo principal es `index.html`. El juego también puede abrirse directamente desde:
 
-### 3. Activar GitHub Pages
+```text
+juego/index.html?noprogressive=1
+```
 
-En el repositorio, abre:
+### 3. Configurar Supabase de forma segura
+
+No subas tu configuración local real de Supabase.
+
+El archivo privado es:
+
+```text
+juego/supabase-config.local.js
+```
+
+Este archivo está incluido en `.gitignore` y no debe aparecer en GitHub.
+
+En el repositorio abre:
+
+```text
+Settings → Secrets and variables → Actions
+```
+
+Crea estos secretos:
+
+```text
+SUPABASE_URL
+SUPABASE_ANON_KEY
+```
+
+Utiliza únicamente una clave **anon** o **publishable** para el cliente web. Nunca uses una clave `service_role` o `sb_secret_...` dentro del juego.
+
+### 4. Activar GitHub Pages
+
+Abre:
 
 ```text
 Settings → Pages → Build and deployment → Source → GitHub Actions
 ```
 
-El archivo `.github/workflows/pages.yml` publicará automáticamente el proyecto después de cada cambio enviado a las ramas `main` o `master`.
-
-### 4. Abrir el enlace
-
-Cuando la acción termine correctamente, GitHub mostrará una dirección parecida a:
+El workflow:
 
 ```text
-https://ma-nucho-pro.github.io/GTA-MANUCHO/
+.github/workflows/deploy-pages.yml
 ```
 
-El nombre final depende del nombre real del repositorio.
+genera la configuración de Supabase durante el despliegue y publica el proyecto después de cada cambio enviado a la rama `main`.
 
-## Publicar en un hosting propio
+### 5. Abrir el juego
 
-El proyecto es estático. Funciona en un hosting que permita servir archivos HTML, CSS, JavaScript, imágenes, WebP, audio y modelos 3D.
-
-1. Entra al administrador de archivos o al FTP de tu hosting.
-2. Abre la carpeta pública, normalmente `public_html`, `www` o `htdocs`.
-3. Sube **el contenido completo** del proyecto conservando todas las carpetas.
-4. Comprueba que `index.html` quede directamente dentro de la carpeta pública.
-5. Visita tu dominio con HTTPS.
-
-Ejemplo de estructura:
+La dirección esperada será:
 
 ```text
-public_html/
-├── index.html
-├── project-credits.js
-├── startup-intro.js
-├── assets/
-├── docs/
-├── juego/
-└── menu-animations/
+https://ma-nucho-pro.github.io/GTA-MANUCHO-ONLINE/
 ```
 
-No se necesita PHP, una base de datos ni Node.js para publicar esta versión. El servidor debe respetar las rutas relativas y servir correctamente archivos `.js`, `.glb`, `.gltf`, `.bin`, `.webp`, `.png`, `.jpg`, `.mp3` y `.wav`.
+## Probarlo localmente
 
-## Probarlo localmente sin BAT ni CMD
+### 1. Crear la configuración local
 
-La forma gráfica más sencilla es abrir la carpeta con Visual Studio Code, instalar la extensión **Live Server** y pulsar **Go Live**. Luego abre la dirección que muestre la extensión.
+Dentro de `juego/`, copia:
 
-Los módulos JavaScript y los modelos 3D deben cargarse mediante `http://` o `https://`; abrir `index.html` directamente con `file://` puede bloquear recursos por seguridad del navegador.
+```text
+supabase-config.example.js
+```
+
+como:
+
+```text
+supabase-config.local.js
+```
+
+Completa la URL y la clave anon de tu proyecto Supabase.
+
+### 2. Iniciar un servidor local
+
+La forma más sencilla es abrir la carpeta con Visual Studio Code, instalar la extensión **Live Server** y pulsar **Go Live**.
+
+También puedes utilizar cualquier servidor HTTP local. Los módulos JavaScript y los modelos 3D deben cargarse mediante `http://` o `https://`; abrir el proyecto directamente con `file://` puede bloquear recursos del navegador.
 
 ## Controles principales
 
 | Acción | Control |
 |---|---|
+| Abrir o cerrar el modo online | O |
 | Moverse | W, A, S, D o flechas |
 | Correr / nadar más rápido | Shift |
 | Saltar / subir en el agua | Espacio |
@@ -165,39 +261,71 @@ Los módulos JavaScript y los modelos 3D deben cargarse mediante `http://` o `ht
 | Cambiar cámara | V |
 | Cámara alternativa de vehículo | C |
 | Reiniciar cámara | R |
-| Primera / tercera persona | V según el estado |
 
-Los controles adicionales aparecen dentro de la interfaz del juego según el vehículo, arma o zona activa.
+Los controles adicionales aparecen dentro de la interfaz según el vehículo, arma o zona activa.
 
 ## Estructura técnica
 
 ```text
-GTA-MANUCHO/
-├── index.html                         # Tutorial y presentación inicial
-├── startup-intro.js                  # Galería aleatoria de imágenes y clips
-├── project-credits.js                # Firma pública y metadatos del creador
+GTA-MANUCHO-ONLINE/
+├── index.html
+├── startup-intro.js
+├── project-credits.js
+├── assets/
+├── docs/media/
+├── menu-animations/
 ├── juego/
-│   ├── index.html                    # Juego principal
-│   ├── assets/index-CXrFrkSv.js      # Compilación completa del juego
-│   ├── marine-world-v84.js           # Natación, mar, barcos, nubes y seguridad
-│   ├── city-extras-loader.js         # Carga progresiva de sistemas
-│   └── marine-assets/                # Water, normales y textura local de nubes
-├── docs/media/                       # Portada, capturas y clips WebP
-├── .github/workflows/pages.yml       # Publicación automática
+│   ├── index.html
+│   ├── gta-manucho-online.js
+│   ├── mejoras-v92.js
+│   ├── marine-world-v84.js
+│   ├── performance-boost.js
+│   ├── supabase-config.example.js
+│   ├── supabase-config.local.js       # Privado e ignorado por Git
+│   ├── libs/supabase.esm.js
+│   ├── assets/index-CXrFrkSv.js
+│   └── models, vehículos y mundos 3D
+├── .github/workflows/deploy-pages.yml
+├── .gitignore
 ├── LICENSE
 └── NOTICE.md
 ```
 
+## Seguridad de Supabase
+
+La clave anon o publishable permite conectar el juego web con Supabase, pero no sustituye la seguridad del backend. Las tablas, canales y demás recursos deben protegerse mediante las políticas correspondientes de Supabase.
+
+Nunca publiques:
+
+- Claves `service_role`.
+- Claves `sb_secret_...`.
+- Contraseñas de base de datos.
+- Tokens privados.
+- Archivos `.env` reales.
+
 ## Rendimiento
 
-La V84 conserva los sistemas existentes y reduce bloqueos en el entorno marino mediante reflejos limitados según la carga del fotograma, nubes formadas por planos instanciados y comprobaciones de seguridad repartidas en intervalos cortos. Los modelos marinos continúan cargándose por turnos para evitar concentrar todo el trabajo en un solo fotograma.
+La V92 prepara en segundo plano los modelos online más importantes, incluyendo personajes, coches, aeronaves y tanques. También compila sus shaders en momentos de menor carga para reducir tirones cuando otro jugador utiliza un vehículo por primera vez.
 
-En equipos con pocos recursos, cierra otras pestañas pesadas y utiliza los ajustes gráficos incluidos en el propio juego.
+La resolución se adapta automáticamente cuando disminuyen los FPS. La población de peatones y coches usa instancias para mostrar más actividad sin crear una cantidad equivalente de llamadas de renderizado.
+
+## Inteligencia artificial utilizada
+
+Este proyecto fue desarrollado y ampliado con herramientas de inteligencia artificial a partir de instrucciones y prompts del creador.
+
+Herramientas indicadas para el proyecto:
+
+- **ChatGPT 5.6**
+- **Gemini 3.5 Pro**
+- **Mythos**
+- **Fable 5**
+
+La dirección creativa, integración, pruebas y evolución del juego corresponden a **Roberto Manuel Jara Peche**.
 
 ## Autor y redes oficiales
 
 **Roberto Manuel Jara Peche**  
-Creador e integrador de **GTA MANUCHO**  
+Creador e integrador de **GTA MANUCHO ONLINE**  
 Marca: **ARKEA AI / Manucho**  
 GitHub: **[ma-nucho-pro](https://github.com/ma-nucho-pro)**  
 Instagram: **[robertmanuchojp](https://www.instagram.com/robertmanuchojp/)**  
@@ -220,6 +348,6 @@ Las bibliotecas, modelos, texturas, sonidos, tipografías y demás recursos de t
 
 <div align="center">
 
-**GTA MANUCHO V84 · HECHO POR ROBERTO MANUEL JARA PECHE · ARKEA AI**
+**GTA MANUCHO ONLINE V92 · HECHO POR ROBERTO MANUEL JARA PECHE · ARKEA AI**
 
 </div>
