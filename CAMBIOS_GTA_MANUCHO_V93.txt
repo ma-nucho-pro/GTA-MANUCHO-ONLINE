@@ -1,0 +1,103 @@
+GTA MANUCHO V93 — FLUIDEZ, ONLINE, BARCOS, MISIONES Y MENÚ PRINCIPAL
+(basado en V92, sin quitar nada de lo que ya tenías)
+
+1. FLUIDEZ REAL — SE ACABARON LOS CONGELONES "DE LA NADA"
+- Se eliminó el redimensionado del lienzo que ocurría CADA VEZ que empezabas
+  o dejabas de caminar (una micro-congelada por cada arrancada/parada).
+- Se corrigieron los umbrales del auto-optimizador: antes trataba 65–110 FPS
+  como "malo" y 57–62 como "bueno", así que subía y bajaba la calidad en
+  bucle alrededor de 60 FPS provocando tirones constantes. Ahora solo baja
+  calidad por debajo de 50 FPS y la recupera a partir de 58 FPS.
+- Precarga en momentos libres (mejoras-v93.js): modelo de policía, tanque,
+  jet policial, ambulancia, coche de bandas, helicóptero, aviones y el coche
+  online, y después compila sus shaders. Cuando llega la policía o entras al
+  modo online, los modelos ya están listos y la pantalla no se congela.
+
+2. MODO ONLINE — LOS AMIGOS YA NO CAMINAN AL REVÉS
+- El personaje remoto ahora se orienta hacia su dirección REAL de avance
+  (atan2 con el signo correcto para el Soldier, que mira hacia -Z).
+  Caminando, corriendo o en diagonal siempre avanza de frente.
+- Quieto, usa la orientación que envía el propio jugador.
+
+3. JUGADORES ONLINE EN EL MAPA GRANDE (TAB)
+- Al abrir el mapa con TAB ahora se ven todos los jugadores conectados con
+  su punto de color, su nombre y un 🚗 si van en vehículo.
+- Se corrigió además el marcador del jugador local (usaba una fórmula que
+  solo era exacta en el punto de aparición).
+
+4. TAB = PAUSA REAL
+- Al abrir el mapa con TAB el juego se PAUSA de verdad: jugador, NPCs,
+  tráfico, policía, mar, aeronaves y territorios quedan congelados (igual
+  que al entrar en configuración). Las teclas del juego se bloquean mientras
+  el mapa está abierto. Al cerrar con TAB todo continúa donde estaba.
+
+5. TELETRANSPORTE EN EL MAPA
+- Abre el mapa (TAB), haz CLIC en cualquier punto (aparece un 📍) y pulsa
+  CTRL+Y para teletransportarte ahí. Funciona también con el mapa cerrado
+  (recuerda el último punto marcado). Aparece sobre el suelo o el agua.
+
+6. TRUCO "CORRUPTO"
+- Escribe CORRUPTO en cualquier momento: estrellas a 0 y la policía deja de
+  perseguirte (los delitos no suman búsqueda). Escríbelo otra vez para
+  desactivarlo.
+
+7. BARCOS QUE POR FIN SE MANEJAN
+- Bug encontrado y corregido: el motor solo movía el barco activo si antes
+  se había cargado la exhibición de barcos del Retiro. Ahora el barco activo
+  se actualiza SIEMPRE: sube con [E] junto al casco y conduce con W/A/S/D,
+  cámara con V, baja con E — igual que un coche.
+
+8. ISLAS SIN PARPADEO
+- Las islas parpadeaban por "z-fighting" (el modelo 3D de la isla y los
+  cilindros del terreno peleaban en la misma altura). Se separan las capas
+  con polygonOffset, se eleva ligeramente el modelo, se desactiva el culling
+  agresivo y se compilan sus materiales. Se puede caminar por ellas.
+
+9. MISIONES DE AMBULANCIA (PARAMÉDICO) Y TAXI, AHORA VISIBLES
+- Estas misiones ya existían pero estaban escondidas. Ahora:
+  · Hay 6 TAXIS amarillos con cartel "TAXI" por la ciudad (antes 3).
+  · Al subir a un TAXI, AMBULANCIA o PATRULLA aparece el aviso claro:
+    "PULSA [Y] PARA LA MISIÓN". Taxi: recoge al pasajero marcado y llévalo
+    al destino (+$650). Ambulancia (en el hospital): recoge al herido y
+    vuelve al hospital (+$900). Patrulla: arresta al ladrón (+$1200).
+  · La tecla Y de misión ya no choca con CTRL+Y del teletransporte.
+
+10. AVIÓN — SE ACABÓ EL BUG DE CAMINAR INCLINADO A 30 GRADOS
+- Al bajar de una aeronave el personaje se endereza por completo (ejes X y Z)
+  y se ajusta al suelo. Además, un guardián de postura continuo corrige
+  cualquier inclinación lateral residual y evita hundirse en el suelo
+  (el núcleo solo corregía un eje; el otro quedaba torcido para siempre).
+
+11. CABALLOS
+- TODOS los caballos son montables con [E] (antes solo el 10%; el resto
+  decía "CABALLO ARISCO").
+- Se añadieron 4 caballos al Parque del Retiro listos para montar.
+
+12. PARQUE DEL RETIRO CON MENOS GENTE
+- Tope de NPCs dentro del parque (8 del núcleo + 6 interactivos); el resto
+  se recoloca automáticamente fuera del parque. Los caballos no cuentan.
+
+13. MENÚ PRINCIPAL AL INICIAR (antes de todo)
+- Nueva pantalla con: INICIAR PARTIDA · OPCIONES · SALIR DEL JUEGO.
+  · INICIAR PARTIDA: cinemática + tutorial + juego (flujo normal).
+  · OPCIONES: CONTINUAR PARTIDA (autoguardado: la partida se guarda sola
+    cada 20 s con tu posición, dinero, vida y arma, y se retoma donde la
+    dejaste), CARGAR PARTIDA desde archivo .vcsave, ENTRAR DIRECTO AL JUEGO
+    (sin cinemática) y PANTALLA COMPLETA. El resto de ajustes (controles,
+    sonido, radio, idioma) siguen dentro del juego con ESC.
+  · SALIR DEL JUEGO: intenta cerrar la pestaña o muestra la despedida.
+- Se maneja con flechas + ENTER o con el ratón, estilo GTA clásico.
+
+ARCHIVOS TOCADOS
+- juego/assets/index-CXrFrkSv.js (8 parches quirúrgicos: pausa con TAB,
+  barcos siempre activos, sin resize al moverse, umbrales de FPS, caballos
+  montables, marcador del mapa, texto del mapa)
+- juego/gta-manucho-online.js (orientación del jugador remoto)
+- juego/v71-city-features.js (6 taxis, tecla Y sin CTRL)
+- juego/mejoras-v93.js (NUEVO: truco, teletransporte, mapa online, postura,
+  islas, precargas, avisos de misión, Retiro, autoguardado)
+- juego/index.html (carga mejoras-v93.js)
+- main-menu.js + main-menu.css (NUEVOS: menú principal)
+- index.html y startup-intro.js (la cinemática espera al menú)
+
+No se eliminó ningún NPC, coche, mundo ni función existente.

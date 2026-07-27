@@ -1,0 +1,11 @@
+GTA MANUCHO V93 — CORRECCIÓN DEL MENÚ INICIAL
+
+- Al abrir la página ya no se crea la capa visual de la cinemática.
+- El menú principal es ahora la primera pantalla visible e interactiva.
+- La cinemática solo se inicializa después de pulsar INICIAR PARTIDA.
+- OPCIONES, CARGAR PARTIDA y ENTRAR DIRECTO AL JUEGO siguen funcionando
+  desde el menú sin que una capa invisible intercepte el ratón o el teclado.
+
+Archivos modificados:
+- startup-intro.js
+- index.html

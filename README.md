@@ -1,353 +1,269 @@
 <div align="center">
 
-<img src="docs/media/Portada.png" alt="Portada de GTA MANUCHO ONLINE" width="100%">
+<img src="docs/media/Portada.png" alt="Portada de GTA MANUCHO" width="100%">
 
-# GTA MANUCHO ONLINE V92
+# GTA MANUCHO
 
-### Mundo abierto 3D multijugador para navegador · ARKEA AI
+### Mundo abierto 3D que corre en el navegador · ARKEA AI
 
-**Online GTA-style open-world game generated with AI from a single prompt.**  
-**Built with ChatGPT 5.6, Gemini 3.5 Pro, Mythos, and Fable 5.**
-
-**Creado e integrado por Roberto Manuel Jara Peche**  
+**Creado e integrado por Roberto Manuel Jara Peche**
 GitHub: **[ma-nucho-pro](https://github.com/ma-nucho-pro)**
 
-[Instagram](https://www.instagram.com/robertmanuchojp/) · [YouTube ma-nucho / @ManuchoAI](https://www.youtube.com/@ManuchoAI) · [LinkedIn](https://www.linkedin.com/in/roberto-manuel-jara-peche-10867240b/)
+[Instagram](https://www.instagram.com/robertmanuchojp/) · [YouTube @ManuchoAI](https://www.youtube.com/@ManuchoAI) · [LinkedIn](https://www.linkedin.com/in/roberto-manuel-jara-peche-10867240b/)
+
+**Versión V113** · Código abierto · Licencia MIT
 
 </div>
 
-## Sobre el juego
+---
 
-**GTA MANUCHO ONLINE** es un juego 3D de mundo abierto que funciona directamente en el navegador. Incluye una ciudad explorable, personajes, NPC, tráfico, policía, bandas, coches, bicicletas, barcos, jets, aviones, helicópteros, tanques, propiedades, combate, cámaras en primera y tercera persona, mar, islas y diferentes mundos secundarios.
+## Qué es
 
-La versión **V92** convierte la experiencia en un mundo multijugador conectado mediante **Supabase Realtime**. Los jugadores pueden crear o compartir un código de sala, entrar al mismo servidor y encontrarse dentro del juego sin instalar un cliente adicional.
+Un juego de mundo abierto en 3D que se ejecuta entero dentro del navegador, sin
+instalar nada y sin plugins. Es un sitio web estático: se abre y se juega.
 
-> Pulsa **O** durante la partida para abrir el panel de **GTA MANUCHO ONLINE**.
+Tiene ciudad, tráfico, peatones, policía con nivel de búsqueda, bandas, coches,
+motos, barcos, balsas, helicópteros, aviones, tanques, caballos, propiedades que
+se compran, mar abierto con natación, islas, puente Golden Gate, misiones
+secundarias y modo online para jugar con amigos.
 
-## Ahora es online
+Está construido sobre [Three.js](https://threejs.org) y WebGL.
 
-El modo online permite:
+---
 
-- Crear o unirse a una sala mediante un código compartido.
-- Elegir el nombre y el color del personaje.
-- Ver a los demás jugadores con su nombre sobre la cabeza.
-- Sincronizar posición, movimiento, rotación y animaciones `Idle`, `Walk` y `Run`.
-- Ver a otros jugadores caminando en la dirección correcta.
-- Mostrar jugadores online en el radar y en el mapa.
-- Sincronizar coches, jets, aviones, helicópteros, tanques y barcos.
-- Ver vehículos generados mediante trucos a escala real.
-- Compartir policía, disparos, combate y estados del mundo.
-- Encontrarse en la ciudad, el mar, las islas, el bosque, el museo, el coliseo, el castillo, el desierto, el salón arcade y otros mundos del juego.
+## Cómo ejecutarlo
 
-La comunicación multijugador utiliza canales de **Supabase Realtime**, presencia para detectar jugadores conectados y eventos de difusión para compartir los estados de la partida.
+El proyecto es estático. **No necesita compilación, ni Node, ni npm, ni ningún
+archivo `.bat` o `.cmd`.**
 
-## Cómo jugar online
+### Opción 1 · Servidor local (recomendado)
 
-1. Abre el juego desde GitHub Pages o desde un servidor local.
-2. Inicia la partida normalmente.
-3. Pulsa la tecla **O**.
-4. Escribe tu nombre.
-5. Selecciona el color de tu personaje.
-6. Introduce un código de servidor, por ejemplo:
+Los navegadores bloquean los módulos de JavaScript abiertos con `file://`, así
+que hace falta servir la carpeta. Con cualquiera de estos vale:
 
-```text
-MANUCHO
+```bash
+# Python (viene instalado en casi todo)
+python3 -m http.server 8080
+
+# Node
+npx serve .
+
+# PHP
+php -S localhost:8080
 ```
 
-7. Pulsa **JUGAR ONLINE**.
-8. Comparte el mismo código con tus amigos.
+Después abre <http://localhost:8080/juego/index.html>
 
-Los jugadores que usen el mismo código entrarán en la misma sala.
+### Opción 2 · GitHub Pages
 
-## Clips del juego
+Sube el repositorio, entra en *Settings → Pages*, elige la rama y la carpeta
+raíz. El juego queda publicado en `https://TU-USUARIO.github.io/TU-REPO/juego/`.
 
-<p align="center">
-  <img src="docs/media/GTA-MANUCHO-VIDEO-1.webp" alt="Clip animado 1 de GTA MANUCHO ONLINE" width="31%">
-  <img src="docs/media/GTA-MANUCHO-VIDEO-2.webp" alt="Clip animado 2 de GTA MANUCHO ONLINE" width="31%">
-  <img src="docs/media/GTA-MANUCHO-VIDEO-3.webp" alt="Clip animado 3 de GTA MANUCHO ONLINE" width="31%">
-</p>
+### Opción 3 · Cualquier hosting estático
 
-## Capturas
+Netlify, Vercel, Cloudflare Pages, Firebase Hosting o un servidor propio.
+Se sube la carpeta tal cual.
 
-<p align="center">
-  <img src="docs/media/GTA-MANUCHO-1.png" alt="GTA MANUCHO captura 1" width="48%">
-  <img src="docs/media/GTA-MANUCHO-2.png" alt="GTA MANUCHO captura 2" width="48%">
-</p>
+### Requisitos
 
-<p align="center">
-  <img src="docs/media/GTA-MANUCHO-3.png" alt="GTA MANUCHO captura 3" width="48%">
-  <img src="docs/media/GTA-MANUCHO-4.png" alt="GTA MANUCHO captura 4" width="48%">
-</p>
+- Un navegador con WebGL2: Chrome, Edge, Firefox, Opera o Brave actualizados.
+- Ratón y teclado. Se recomienda pantalla completa.
+- Funciona en equipos modestos: el juego mide los FPS reales y ajusta solo la
+  resolución interna, la distancia de dibujado y el detalle.
 
-<p align="center">
-  <img src="docs/media/GTA-MANUCHO-5.png" alt="GTA MANUCHO captura 5" width="31%">
-  <img src="docs/media/GTA-MANUCHO-6.png" alt="GTA MANUCHO captura 6" width="31%">
-  <img src="docs/media/GTA-MANUCHO-7.png" alt="GTA MANUCHO captura 7" width="31%">
-</p>
+---
 
-<details>
-<summary>Ver más capturas</summary>
+## Controles
 
-<p align="center">
-  <img src="docs/media/GTA-MANUCHO-8.png" alt="GTA MANUCHO captura 8" width="31%">
-  <img src="docs/media/GTA-MANUCHO-9.png" alt="GTA MANUCHO captura 9" width="31%">
-  <img src="docs/media/GTA-MANUCHO-10.png" alt="GTA MANUCHO captura 10" width="31%">
-</p>
-
-</details>
-
-## Cambios principales de la V92
-
-### Multijugador
-
-- Personajes remotos con el modelo original `Soldier.glb`.
-- Animaciones remotas de reposo, caminata y carrera.
-- Corrección del giro que hacía caminar al otro jugador de espaldas.
-- Posición y rotación online actualizadas con alta frecuencia.
-- Nombres y colores personalizados para cada jugador.
-- Salas privadas mediante códigos compartidos.
-- Sincronización de jugadores, disparos, policía y combate.
-- Marcadores de otros jugadores en el radar y el mapa.
-
-### Vehículos online
-
-- Coches, jets, aviones, helicópteros, tanques y barcos visibles para todos los jugadores.
-- Vehículos remotos con tamaño y escala reales.
-- Sincronización de posición, rotación y conducción.
-- Vehículos generados mediante trucos visibles para los demás jugadores.
-- Precarga de modelos y shaders para evitar congelaciones al aparecer.
-
-### Mundo y rendimiento
-
-- Cámara de natación baja y cercana al personaje.
-- Vehículos bloqueados al intentar entrar al agua.
-- Recuperación automática del Parque del Retiro si falla durante la carga.
-- Mayor cantidad de NPC y coches mediante sistemas instanciados.
-- Resolución adaptativa para mantener una experiencia fluida.
-- Carga escalonada de sistemas secundarios y compilación anticipada de shaders.
-
-## Tecnologías
-
-- **Three.js** para el mundo 3D y la renderización en el navegador.
-- **JavaScript ES Modules** para los sistemas del juego.
-- **GLTF / GLB** para personajes, vehículos y escenarios.
-- **Supabase Realtime** para presencia, salas y sincronización multijugador.
-- **GitHub Actions** para generar la configuración de despliegue.
-- **GitHub Pages** o cualquier hosting web compatible con HTTPS.
-
-## Publicar en GitHub Pages
-
-### 1. Repositorio
-
-El repositorio recomendado es:
-
-```text
-GTA-MANUCHO-ONLINE
-```
-
-Dirección del proyecto:
-
-```text
-https://github.com/ma-nucho-pro/GTA-MANUCHO-ONLINE
-```
-
-### 2. Subir el proyecto completo
-
-Debes subir todo el contenido del proyecto, conservando la estructura:
-
-```text
-assets/
-docs/
-juego/
-menu-animations/
-.github/
-index.html
-README.md
-LICENSE
-NOTICE.md
-```
-
-El archivo principal es `index.html`. El juego también puede abrirse directamente desde:
-
-```text
-juego/index.html?noprogressive=1
-```
-
-### 3. Configurar Supabase de forma segura
-
-No subas tu configuración local real de Supabase.
-
-El archivo privado es:
-
-```text
-juego/supabase-config.local.js
-```
-
-Este archivo está incluido en `.gitignore` y no debe aparecer en GitHub.
-
-En el repositorio abre:
-
-```text
-Settings → Secrets and variables → Actions
-```
-
-Crea estos secretos:
-
-```text
-SUPABASE_URL
-SUPABASE_ANON_KEY
-```
-
-Utiliza únicamente una clave **anon** o **publishable** para el cliente web. Nunca uses una clave `service_role` o `sb_secret_...` dentro del juego.
-
-### 4. Activar GitHub Pages
-
-Abre:
-
-```text
-Settings → Pages → Build and deployment → Source → GitHub Actions
-```
-
-El workflow:
-
-```text
-.github/workflows/deploy-pages.yml
-```
-
-genera la configuración de Supabase durante el despliegue y publica el proyecto después de cada cambio enviado a la rama `main`.
-
-### 5. Abrir el juego
-
-La dirección esperada será:
-
-```text
-https://ma-nucho-pro.github.io/GTA-MANUCHO-ONLINE/
-```
-
-## Probarlo localmente
-
-### 1. Crear la configuración local
-
-Dentro de `juego/`, copia:
-
-```text
-supabase-config.example.js
-```
-
-como:
-
-```text
-supabase-config.local.js
-```
-
-Completa la URL y la clave anon de tu proyecto Supabase.
-
-### 2. Iniciar un servidor local
-
-La forma más sencilla es abrir la carpeta con Visual Studio Code, instalar la extensión **Live Server** y pulsar **Go Live**.
-
-También puedes utilizar cualquier servidor HTTP local. Los módulos JavaScript y los modelos 3D deben cargarse mediante `http://` o `https://`; abrir el proyecto directamente con `file://` puede bloquear recursos del navegador.
-
-## Controles principales
-
-| Acción | Control |
+| Tecla | Acción |
 |---|---|
-| Abrir o cerrar el modo online | O |
-| Moverse | W, A, S, D o flechas |
-| Correr / nadar más rápido | Shift |
-| Saltar / subir en el agua | Espacio |
-| Sumergirse | Mantener clic del ratón |
-| Interactuar / subir o bajar | E |
-| Cambiar cámara | V |
-| Cámara alternativa de vehículo | C |
-| Reiniciar cámara | R |
+| **W A S D** | Moverse |
+| **Ratón** | Mirar |
+| **Espacio** | Saltar · subir nadando |
+| **Shift** | Correr · turbo en vehículo |
+| **E** | Subir y bajar de cualquier vehículo |
+| **V** | Cambiar de cámara (lejana, cercana, primera persona) |
+| **Clic** | Disparar |
+| **Tab** | Mapa completo (clic para marcar destino) |
+| **Y** | Empezar o cancelar la misión del vehículo de servicio |
+| **8** | Modo online |
+| **F** | Acciones contextuales |
 
-Los controles adicionales aparecen dentro de la interfaz según el vehículo, arma o zona activa.
+---
 
-## Estructura técnica
+## Códigos
 
-```text
-GTA-MANUCHO-ONLINE/
-├── index.html
-├── startup-intro.js
-├── project-credits.js
-├── assets/
-├── docs/media/
-├── menu-animations/
+Se escriben con el teclado durante la partida, sin abrir nada y sin pulsar
+Intro, como en los GTA clásicos. En cuanto las últimas letras coinciden, el
+código se activa.
+
+| Código | Qué hace |
+|---|---|
+| `MOTORA` | Trae una **moto** a tu lado |
+| `TAXU` | Trae un **taxi** · habilita las misiones de taxi |
+| `YUTA` | Trae un **coche patrulla** · habilita las misiones de policía |
+| `PARAMEDIC` | Trae una **ambulancia** · habilita las misiones de ambulancia |
+
+---
+
+## Misiones secundarias
+
+Sube al vehículo con **E** y pulsa **Y** para empezar. Pulsa **Y** otra vez para
+cancelar. El objetivo aparece marcado en el radar y en el panel de la esquina.
+
+- **Taxi** — Recoge al pasajero marcado y llévalo a su destino. **+$650**
+- **Policía** — Persigue al ladrón marcado y detenlo. **+$1200**
+- **Ambulancia** — Recoge al herido y llévalo al hospital. **+$900**
+
+Los tres vehículos también aparecen por el mapa sin usar códigos; los códigos
+son solo un atajo para tener uno a mano.
+
+---
+
+## Modo online
+
+Se entra con la tecla **8**. Puedes ver a tus amigos moverse por la ciudad,
+disparar, conducir y subirse contigo al mismo vehículo. Los aliados que reclutes
+de tu banda también suben contigo a coches, barcos, motos y aeronaves.
+
+Quien conduce es siempre quien manda sobre la física del vehículo: los pasajeros
+solo van dentro. Es la decisión que evita que un vehículo compartido vibre o se
+teletransporte entre las dos máquinas.
+
+---
+
+## Qué se ha ido mejorando
+
+### Mundo
+
+- **Islas del mar rehechas.** Antes eran un disco de arena naranja creado a mano
+  que tapaba por completo el modelo real de la isla. Ahora la isla es ese modelo,
+  con sus palmeras y sus rocas, elevado sobre el agua.
+- **Se acabó flotar en el aire.** La colisión de las islas ya no es una fórmula
+  aproximada: se rasterizan los triángulos reales del terreno en un campo de
+  alturas. Donde no hay malla, no hay suelo.
+- **Orillas físicas.** Nadando no se atraviesa la isla por debajo. Al acercarse a
+  la playa el fondo sube y se pasa de nadar a caminar sin escalón.
+- **Rocas generadas por SDF y marching cubes**, con cuatro niveles de detalle,
+  impostores a distancia e instancing.
+- **Puente Golden Gate** elevado por encima de las palmeras, con rampas que
+  aterrizan sobre la arena de las islas.
+- **Calzadas sobre el mar** donde las rutas de tráfico cruzaban agua.
+- **Balsa navegable** que se conduce viendo al personaje encima.
+
+### Rendimiento
+
+Esta ha sido la parte más larga del trabajo. Lo que de verdad movió la aguja:
+
+- **Un error que se lanzaba en cada fotograma.** Una función fuera de ámbito
+  provocaba una excepción sesenta veces por segundo, y cada una imprimía su traza
+  completa en la consola. Eso solo ya convertía el juego en una presentación de
+  diapositivas.
+- **Coches de 360.000 triángulos.** El motor creaba 150 instancias de un modelo
+  de escaparate: **54 millones de triángulos por fotograma**, y el doble con el
+  reflejo del agua. Un juego normal usa entre uno y tres millones. Ahora solo se
+  dibujan los más cercanos.
+- **Una fábrica de basura.** El código que elegía qué peatones dibujar creaba
+  unos 250 objetos nuevos por fotograma. El recolector de basura para el mundo
+  unos milisegundos cuando le apetece, y eso era el tirón al moverse.
+- **Descarte por distancia que tiene en cuenta el tamaño** de cada objeto, con
+  margen para que nada parpadee, y sin tocar nada que se mueva.
+- **Precompilación de shaders** para que descubrir contenido nuevo no congele la
+  pantalla.
+- **Peticiones muertas bloqueadas.** El motor descargaba modelos de servidores
+  que responden 404 o bloquean por CORS, y esperaba el viaje completo antes de
+  usar su plan B.
+- **Gobernador automático** que mide los FPS reales y ajusta resolución,
+  distancia y detalle, con modo de emergencia si la cosa se pone fea.
+
+### Corrección de fallos
+
+- Los amigos del modo online ya no aparecen tumbados en el suelo al bajarse de un
+  avión, ni caminan de espaldas.
+- Los coches de NPC ya no circulan sobre el mar.
+- El punto que marcas en el mapa se ve de verdad.
+- La cámara cercana de la moto por fin es cercana.
+- Los vehículos se hunden en el mar, chocan con los edificios y atropellan.
+
+Cada versión tiene su archivo `CAMBIOS_GTA_MANUCHO_VXXX.txt` en la raíz, con la
+explicación de qué fallaba y por qué.
+
+---
+
+## Diagnóstico
+
+Con **F12** abierto, el juego imprime cada quince segundos una línea así:
+
+```
+[fluidez-v111] 47 fps · fotograma 21.3 ms (dibujo 8.1 ms = 38 %) ·
+               96 llamadas · 162k triángulos · cuello: PROCESADOR
+```
+
+Sirve para saber dónde está el cuello de botella: si el reparto se va al dibujo,
+sobra geometría o resolución; si no, sobran NPC o lógica.
+
+Otras herramientas desde la consola:
+
+```js
+window.__V101_FRAME_BUDGET__.stats()   // FPS, llamadas, triángulos
+window.__V106_MAR__.off()              // desactiva la detección de mar
+window.__V113_CODIGOS__.activate('TAXU')
+```
+
+---
+
+## Estructura
+
+```
+.
 ├── juego/
-│   ├── index.html
-│   ├── gta-manucho-online.js
-│   ├── mejoras-v92.js
-│   ├── marine-world-v84.js
-│   ├── performance-boost.js
-│   ├── supabase-config.example.js
-│   ├── supabase-config.local.js       # Privado e ignorado por Git
-│   ├── libs/supabase.esm.js
-│   ├── assets/index-CXrFrkSv.js
-│   └── models, vehículos y mundos 3D
-├── .github/workflows/deploy-pages.yml
-├── .gitignore
+│   ├── index.html              punto de entrada
+│   ├── assets/                 motor del juego
+│   ├── marine-assets/          modelos del mar y las islas
+│   ├── skin-assets/            personajes y bandas
+│   ├── bosque/ desert/ castillo/ mundo-barco/ coliseo/ arcade/
+│   └── *.js                    módulos de mejoras
+├── docs/media/                 capturas y clips
+├── README.md
 ├── LICENSE
-└── NOTICE.md
+├── NOTICE.md
+├── CONTRIBUTING.md
+└── CAMBIOS_GTA_MANUCHO_*.txt   historial de cambios
 ```
 
-## Seguridad de Supabase
+---
 
-La clave anon o publishable permite conectar el juego web con Supabase, pero no sustituye la seguridad del backend. Las tablas, canales y demás recursos deben protegerse mediante las políticas correspondientes de Supabase.
+## Código abierto
 
-Nunca publiques:
+El código original de este proyecto se publica bajo **licencia MIT**. Puedes
+estudiarlo, usarlo, modificarlo y compartirlo, incluso con fines comerciales.
 
-- Claves `service_role`.
-- Claves `sb_secret_...`.
-- Contraseñas de base de datos.
-- Tokens privados.
-- Archivos `.env` reales.
+La única condición es **conservar el aviso de copyright, el archivo `LICENSE`,
+el archivo `NOTICE.md` y los créditos** a:
 
-## Rendimiento
+> **Roberto Manuel Jara Peche** — ARKEA AI — GitHub [ma-nucho-pro](https://github.com/ma-nucho-pro)
 
-La V92 prepara en segundo plano los modelos online más importantes, incluyendo personajes, coches, aeronaves y tanques. También compila sus shaders en momentos de menor carga para reducir tirones cuando otro jugador utiliza un vehículo por primera vez.
+Las bibliotecas, modelos, texturas, sonidos y tipografías de terceros conservan
+sus propias licencias y autores. Están detallados en [NOTICE.md](NOTICE.md).
 
-La resolución se adapta automáticamente cuando disminuyen los FPS. La población de peatones y coches usa instancias para mostrar más actividad sin crear una cantidad equivalente de llamadas de renderizado.
+Three.js se distribuye bajo licencia MIT, copyright de sus autores.
 
-## Inteligencia artificial utilizada
+Si quieres contribuir, lee [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Este proyecto fue desarrollado y ampliado con herramientas de inteligencia artificial a partir de instrucciones y prompts del creador.
+---
 
-Herramientas indicadas para el proyecto:
+## Aviso
 
-- **ChatGPT 5.6**
-- **Gemini 3.5 Pro**
-- **Mythos**
-- **Fable 5**
-
-La dirección creativa, integración, pruebas y evolución del juego corresponden a **Roberto Manuel Jara Peche**.
-
-## Autor y redes oficiales
-
-**Roberto Manuel Jara Peche**  
-Creador e integrador de **GTA MANUCHO ONLINE**  
-Marca: **ARKEA AI / Manucho**  
-GitHub: **[ma-nucho-pro](https://github.com/ma-nucho-pro)**  
-Instagram: **[robertmanuchojp](https://www.instagram.com/robertmanuchojp/)**  
-YouTube: **[ma-nucho · @ManuchoAI](https://www.youtube.com/@ManuchoAI)**  
-LinkedIn: **[Roberto Manuel Jara Peche](https://www.linkedin.com/in/roberto-manuel-jara-peche-10867240b/)**
-
-## Licencia y uso
-
-El código original creado para este proyecto se distribuye bajo la licencia MIT. Puedes estudiar, usar, modificar y compartir el código, pero debes conservar el aviso de copyright, el archivo `LICENSE`, el archivo `NOTICE.md` y los créditos a:
-
-```text
-Roberto Manuel Jara Peche
-GitHub: ma-nucho-pro
-ARKEA AI / Manucho
-```
-
-Las bibliotecas, modelos, texturas, sonidos, tipografías y demás recursos de terceros conservan sus respectivas licencias y autores. Consulta [LICENSE](LICENSE) y [NOTICE.md](NOTICE.md).
+Proyecto independiente, personal y sin ánimo de lucro, hecho como ejercicio de
+desarrollo web y 3D. **No está afiliado, patrocinado ni respaldado por Rockstar
+Games ni por Take-Two Interactive.** «Grand Theft Auto» y «GTA» son marcas
+registradas de sus respectivos propietarios. El nombre de este proyecto es un
+homenaje personal del autor, no un producto oficial ni un intento de sustituirlo.
 
 ---
 
 <div align="center">
 
-**GTA MANUCHO ONLINE V92 · HECHO POR ROBERTO MANUEL JARA PECHE · ARKEA AI**
+**GTA MANUCHO** · Roberto Manuel Jara Peche · ARKEA AI
 
 </div>

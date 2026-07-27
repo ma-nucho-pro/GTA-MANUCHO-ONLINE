@@ -1,0 +1,27 @@
+GTA MANUCHO V98
+================
+
+Correcciones solicitadas sobre la V97:
+
+1. ÁRBOLES ANTIGUOS DEL RETIRO
+- Eliminadas también las copas redondas oscuras que seguían visibles.
+- El fallo era que las copas antiguas estaban agrupadas en 40 instancias,
+  mientras el filtro anterior esperaba solamente 8.
+- Se conservan los árboles exactos del archivo adjunto y sus colisiones.
+
+2. TRES CÁMARAS DE MOTO
+- V cambia exactamente una cámara por pulsación, sin saltos por repetición.
+- Cámara 1: tercera persona lejana.
+- Cámara 2: tercera persona cercana, claramente diferenciada y con el
+  personaje visible conduciendo.
+- Cámara 3: primera persona con arma y mira.
+
+3. DAÑO REAL AL DISPARAR DESDE LA MOTO
+- La bala de la mira ahora incluye peatones nativos del juego base.
+- También mantiene el daño contra bandas, enemigos y policía.
+- Se usan los sistemas reales de salud, reacción, muerte y búsqueda.
+- La mira parpadea en rojo al confirmar un impacto.
+
+Controles de la moto:
+W/S acelerar y frenar · A/D girar · Shift turbo · V cámara ·
+E bajar · clic izquierdo disparar.

@@ -69,7 +69,7 @@ function ensureUi(){
   const style=document.createElement('style');
   style.textContent=`
   #v71-notice{position:fixed;top:21%;left:50%;transform:translateX(-50%);z-index:25020;display:none;padding:13px 22px;border:2px solid #ff9c2a;background:rgba(5,10,16,.94);box-shadow:0 0 20px rgba(255,140,30,.42);font:1000 16px/1.2 Arial;color:#fff;letter-spacing:1px;text-align:center;border-radius:8px;pointer-events:none}
-  #v71-mission{position:fixed;right:24px;bottom:24px;z-index:25010;display:none;width:min(330px,42vw);padding:12px 16px;background:rgba(6,13,20,.9);border:2px solid #47c7ff;border-radius:9px;color:#fff;font:900 13px/1.35 Arial;letter-spacing:.5px;box-shadow:0 0 18px rgba(50,185,255,.25);pointer-events:none}
+  #v71-mission{position:fixed;right:24px;bottom:24px;z-index:2147482500;display:none;width:min(330px,42vw);padding:12px 16px;background:rgba(6,13,20,.9);border:2px solid #47c7ff;border-radius:9px;color:#fff;font:900 13px/1.35 Arial;letter-spacing:.5px;box-shadow:0 0 18px rgba(50,185,255,.25);pointer-events:none}
   #v71-mission b{display:block;color:#5ed8ff;font-size:15px;margin-bottom:4px}
   `;
   document.head.appendChild(style);
@@ -241,7 +241,7 @@ function addTaxiSign(car){
 async function setupTaxis(){
   const started=performance.now();
   while(!(window.__CUSTOM_CARS__||[]).length&&performance.now()-started<22000)await wait(250);
-  const cars=(window.__CUSTOM_CARS__||[]).slice(0,3);cars.forEach(addTaxiSign);window.__V71_TAXIS__=TAXIS;
+  const cars=(window.__CUSTOM_CARS__||[]).slice(0,6);cars.forEach(addTaxiSign);window.__V71_TAXIS__=TAXIS;
 }
 
 function activeCarType(car){
@@ -433,7 +433,7 @@ function onMouseDown(event){
 }
 function onContext(event){if(getActiveCar())event.preventDefault();}
 function onKey(event){
-  if(event.code==='KeyY'&&!event.repeat){event.preventDefault();startVehicleMission();}
+  if(event.code==='KeyY'&&!event.repeat&&!event.ctrlKey&&!event.metaKey){event.preventDefault();startVehicleMission();}
 }
 
 function updateMissionsAndActors(dt,now){

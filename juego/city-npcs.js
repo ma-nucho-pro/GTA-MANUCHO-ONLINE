@@ -18,7 +18,7 @@ window.__CITY_NPCS_READY__ = false;
 const WORLD_SCALE = 16;
 // V85: más NPCs interactivos y animación de caminata más fluida (24 Hz en vez
 // de 8 Hz; solo se animan los visibles, así que el costo sigue siendo mínimo).
-const CIVILIAN_COUNT = 46; // V92: más NPCs interactivos
+const CIVILIAN_COUNT = 12; // V111: bajado de 26. Es donde más se juntan y donde más se notaba.
 const GANG_COUNT = 4;
 const TOTAL = CIVILIAN_COUNT + GANG_COUNT;
 const SIM_STEP = 1 / 12;

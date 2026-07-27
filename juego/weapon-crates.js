@@ -5,6 +5,7 @@
  */
 import * as THREE from './bosque/libs/three.module.js';
 import { GLTFLoader } from './bosque/bike-runtime/loaders/GLTFLoader.js';
+import { clone as cloneSkeleton } from './bosque/bike-runtime/utils/SkeletonUtils.js';
 import { OBJLoader } from './weapon-assets/OBJLoader.js';
 
 THREE.Cache.enabled = true;
@@ -27,10 +28,10 @@ const SAFE_CRATE_ANCHORS = [
 ];
 
 const WEAPONS = {
-  fist: { label: 'PUÑO', ammo: Infinity, cooldown: 260, damage: 1 },
-  pistol: { label: 'PISTOLA', ammoGrant: 48, cooldown: 330, damage: 1 },
-  akm: { label: 'AK-47', ammoGrant: 120, cooldown: 105, damage: 2 },
-  shotgun: { label: 'ESCOPETA', ammoGrant: 30, cooldown: 720, damage: 3 }
+  fist: { label: 'PUÑO', ammo: Infinity, cooldown: 260, damage: 1, combatDamage: 18 },
+  pistol: { label: 'PISTOLA', ammoGrant: 48, cooldown: 330, damage: 1, combatDamage: 42 },
+  akm: { label: 'AK-47', ammoGrant: 120, cooldown: 105, damage: 2, combatDamage: 34 },
+  shotgun: { label: 'ESCOPETA', ammoGrant: 30, cooldown: 720, damage: 3, combatDamage: 72 }
 };
 
 const CHEAT_CODES = {
@@ -60,6 +61,10 @@ let lastShotAt = 0;
 let nearestPickup = null;
 let prompt = null;
 let viewWeapon = null;
+let viewWeaponMixer = null;
+let viewWeaponShootAction = null;
+let pistolAnimations = [];
+let lastWeaponFrame = performance.now();
 let commandBuffer = '';
 let commandTimer = 0;
 let inventory = loadInventory();
@@ -241,7 +246,7 @@ function cloneWeaponSource(id, mode = 'pickup') {
   if (id === 'akm') source = mode === 'view' ? weaponSources.akmView : weaponSources.akmPickup;
   else source = weaponSources[id];
   if (!source) return null;
-  const clone = source.clone(true);
+  const clone = cloneSkeleton(source);
   clone.traverse(object => {
     if (!object.isMesh && !object.isSkinnedMesh) return;
     if (mode === 'view') {
@@ -249,13 +254,15 @@ function cloneWeaponSource(id, mode = 'pickup') {
       const cloned = materials.map(material => {
         if (!material) return material;
         const copy = material.clone();
-        copy.depthTest = false;
-        copy.depthWrite = false;
+        // trigger.glb conserva la profundidad normal del HTML adjunto. Las
+        // otras armas sí usan superposición para evitar recortes del escenario.
+        copy.depthTest = id === 'pistol';
+        copy.depthWrite = id === 'pistol';
         copy.transparent = material.transparent;
         return copy;
       });
       object.material = Array.isArray(object.material) ? cloned : cloned[0];
-      object.renderOrder = 9999;
+      object.renderOrder = id === 'pistol' ? 0 : 9999;
       object.frustumCulled = false;
     }
   });
@@ -267,7 +274,7 @@ async function precompileWeaponSource(source) {
   await idleTurn(1000);
   const stage = new THREE.Scene();
   stage.add(new THREE.HemisphereLight(0xffffff, 0x303030, 1.5));
-  const clone = source.clone(true);
+  const clone = cloneSkeleton(source);
   clone.position.set(0, 0, -3);
   stage.add(clone);
   const camera = new THREE.PerspectiveCamera(55, 1, .05, 30);
@@ -295,18 +302,17 @@ function refreshWeaponVisuals(id) {
 }
 
 async function loadPistolModel() {
-  const textureLoader = new THREE.TextureLoader();
-  const [map, normalMap, roughnessMap] = await Promise.all([
-    textureLoader.loadAsync('./weapon-assets/cerberus/Cerberus_A.jpg'),
-    textureLoader.loadAsync('./weapon-assets/cerberus/Cerberus_N.jpg'),
-    textureLoader.loadAsync('./weapon-assets/cerberus/Cerberus_RM.jpg')
-  ]);
-  map.colorSpace = THREE.SRGBColorSpace;
-  for (const texture of [map, normalMap, roughnessMap]) texture.anisotropy = Math.min(2, game.renderer?.capabilities?.getMaxAnisotropy?.() || 1);
-  const root = await new OBJLoader().loadAsync('./weapon-assets/cerberus/Cerberus.obj');
-  const material = new THREE.MeshStandardMaterial({ map, normalMap, roughnessMap, roughness: .62, metalness: .28 });
-  root.traverse(object => { if (object.isMesh) object.material = material; });
-  weaponSources.pistol = normalizeWeaponModel(optimizeLoadedModel(root), 1.15, 0);
+  const gltf = await new GLTFLoader().loadAsync(
+    './deathchase-assets/models/trigger.glb'
+  );
+  const model = optimizeLoadedModel(gltf.scene);
+  model.scale.set(.075, .075, .075);
+  model.rotation.y = -Math.PI / 1.9;
+  const source = new THREE.Group();
+  source.name = 'TRIGGER_GLB_DEL_HTML_ADJUNTO_V97';
+  source.add(model);
+  weaponSources.pistol = source;
+  pistolAnimations = gltf.animations || [];
   await precompileWeaponSource(weaponSources.pistol);
   refreshWeaponVisuals('pistol');
 }
@@ -364,14 +370,26 @@ function weaponPickupVisual(id) {
 function createViewWeapon(id) {
   if (viewWeapon?.parent) viewWeapon.parent.remove(viewWeapon);
   viewWeapon = null;
+  viewWeaponMixer = null;
+  viewWeaponShootAction = null;
   if (id === 'fist') return;
   viewWeapon = cloneWeaponSource(id, 'view') || createProceduralWeapon(id);
   viewWeapon.name = 'V63_VIEW_WEAPON';
   if (weaponSources[id] || (id === 'akm' && weaponSources.akmView)) {
     if (id === 'pistol') {
-      viewWeapon.scale.setScalar(.92);
-      viewWeapon.position.set(.42, -.34, -1.02);
-      viewWeapon.rotation.set(-.05, -.06, -.03);
+      // Transformación exacta del HTML del tirador: contenedor y modelo
+      // conservan sus escalas y rotaciones originales.
+      viewWeapon.scale.setScalar(1);
+      viewWeapon.position.set(.15, -.25, -.55);
+      viewWeapon.rotation.set(0, Math.PI, 0);
+      if (pistolAnimations.length) {
+        viewWeaponMixer = new THREE.AnimationMixer(viewWeapon);
+        const clip = pistolAnimations[pistolAnimations.length > 1 ? 1 : 0];
+        viewWeaponShootAction = viewWeaponMixer.clipAction(clip);
+        viewWeaponShootAction.setLoop(THREE.LoopOnce);
+        viewWeaponShootAction.clampWhenFinished = true;
+        viewWeaponShootAction.setEffectiveTimeScale(2);
+      }
     } else if (id === 'akm') {
       viewWeapon.scale.setScalar(.92);
       viewWeapon.position.set(.22, -.48, -1.22);
@@ -552,9 +570,13 @@ function fireCustomWeapon() {
   lastShotAt = now;
   state.ammo--;
   saveInventory();
+  if (viewWeaponShootAction) viewWeaponShootAction.reset().play();
   const crate = raycastCrate();
   if (crate) damageCrate(crate, spec.damage);
   try { game.performShoot?.(); } catch {}
+  window.dispatchEvent(new CustomEvent('vice-weapon-fired', {
+    detail: { weaponId:selectedWeapon, damage:spec.combatDamage }
+  }));
 }
 
 function patchGameWeapons() {
@@ -638,6 +660,10 @@ function onKeyDown(event) {
 
 function update() {
   requestAnimationFrame(update);
+  const now = performance.now();
+  const weaponDt = Math.min(.05, Math.max(0, (now - lastWeaponFrame) / 1000));
+  lastWeaponFrame = now;
+  viewWeaponMixer?.update(weaponDt);
   const player = game?.playerContainer?.position;
   if (!player) return;
 
@@ -661,8 +687,20 @@ function update() {
   }
 
   if (viewWeapon) {
-    const inVehicle = Boolean(game.activeCar || game.activeBoat || game.activeRiddenHorse || window.__ACTIVE_AIRCRAFT__ || window.__ACTIVE_TANK__);
+    // V97: la moto admite disparo y arma visible desde su cámara en primera
+    // persona. Los demás vehículos conservan el comportamiento anterior.
+    const inVehicle = Boolean(
+      (game.activeCar && !game.activeCar.userData?.__v95Motorcycle) ||
+      game.activeBoat || game.activeRiddenHorse ||
+      window.__ACTIVE_AIRCRAFT__ || window.__ACTIVE_TANK__
+    );
     viewWeapon.visible = !inVehicle && selectedWeapon !== 'fist' && game.state?.camMode === 2;
+    if (viewWeapon.visible && selectedWeapon === 'pistol' && Math.abs(game.camera.fov - 90) > .01) {
+      // El HTML entregado usa DEFAULT_FOV 90 para la vista de trigger.glb.
+      game.camera.fov = 90;
+      game.camera.near = .1;
+      game.camera.updateProjectionMatrix();
+    }
   }
   if (game.pistolMesh) game.pistolMesh.visible = false;
   if (game.fpPistolMesh) game.fpPistolMesh.visible = false;

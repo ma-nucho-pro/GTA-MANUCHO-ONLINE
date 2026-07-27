@@ -13,8 +13,8 @@ import * as THREE from './bosque/libs/three.module.js';
 const WORLD_SCALE = 16;
 // V85: población mucho más abundante. Al ser InstancedMesh, subir los contadores
 // no añade draw calls; solo crece el muestreo a 9 Hz, que es muy barato.
-const CAR_COUNT = 135; // V92: más coches por toda la ciudad
-const PED_COUNT = 330; // V92: muchos más peatones
+const CAR_COUNT = 38;  // V110: bajado de 80. Tercera reducción, a petición.
+const PED_COUNT = 95;  // V110: bajado de 170. Sigue habiendo vida sin ahogar la CPU.
 const UPDATE_STEP = 1 / 9;
 
 const ROAD_ROUTES_LOGICAL = [
@@ -64,12 +64,63 @@ function groundAt(x, z, fallback = 0) {
   }
 }
 
-function buildRoutes(source) {
-  return source.map(route => route.map(([lx,lz]) => {
+// V108: CÓMO SE SABE, SIN ADIVINAR, SI UN PUNTO ES MAR
+// El motor, cuando NO encuentra suelo y se le pregunta sin insistir
+// (strict=false), devuelve siempre el mismo número exacto: 0.5 * WORLD_SCALE,
+// o sea 8. Ese 8 clavado es su forma de decir "aquí no hay nada". Una carretera
+// de verdad devuelve 8.8 o 24, y el interior de la ciudad -1.6; ninguna da 8
+// exacto. Así que preguntándole al propio motor sabemos con certeza dónde hay
+// suelo y dónde no, sin mapas ni estimaciones.
+const VOID_MARK = 0.5 * WORLD_SCALE;
+
+function isVoid(x, z) {
+  try {
+    const y = game?.getGroundY?.(x, 600, z, false);
+    if (!Number.isFinite(y)) return true;
+    return Math.abs(y - VOID_MARK) < 0.001;
+  } catch { return false; }
+}
+
+// Una ruta se descarta ENTERA si buena parte de su recorrido cae en el vacío.
+// No basta con mirar las esquinas: un tramo recto puede cruzar la bahía de lado
+// a lado con las dos esquinas en tierra, así que se muestrea todo el trayecto.
+function routeCrossesWater(points) {
+  let checked = 0;
+  let dry = 0;
+  for (let i = 0; i < points.length; i++) {
+    const a = points[i];
+    const b = points[(i + 1) % points.length];
+    for (let s = 0; s < 10; s++) {
+      const t = s / 10;
+      checked++;
+      if (!isVoid(a.x + (b.x - a.x) * t, a.z + (b.z - a.z) * t)) dry++;
+    }
+  }
+  return checked > 0 && dry / checked < 0.86;   // 14 % mojado ya la descarta
+}
+
+function buildRoutes(source, label) {
+  const all = source.map(route => route.map(([lx,lz]) => {
     const x = lx * WORLD_SCALE;
     const z = lz * WORLD_SCALE;
     return new THREE.Vector3(x, groundAt(x,z,0), z);
   }));
+  // V109: ahora hay carretera construida sobre el agua (calzadas-v109.js), así
+  // que lo normal es que NINGUNA ruta salga descartada. Este filtro se queda
+  // sólo como red de seguridad: si la construcción hubiese fallado, se vuelve
+  // al comportamiento de la V108 y los coches no aparecen sobre el agua.
+  const dry = all.filter(points => !routeCrossesWater(points));
+  if (!dry.length) {
+    console.warn(`[poblacion-v109] ${label}: la comprobación descartó TODAS las rutas. Se dejan intactas.`);
+    return all;
+  }
+  const dropped = all.length - dry.length;
+  if (dropped) {
+    console.warn(`[poblacion-v109] ${label}: ${dropped} de ${all.length} rutas siguen sobre el vacío. La calzada no llegó a construirse ahí.`);
+  } else {
+    console.log(`[poblacion-v109] ${label}: las ${all.length} rutas tienen suelo firme.`);
+  }
+  return dry;
 }
 
 function makeState(routes, index, kind) {
@@ -158,22 +209,79 @@ function createMeshes() {
   return { carBody,carCabin,carWheels,pedBody,pedHead,pedLegs };
 }
 
+// El objeto de límites se guardaba en caché: antes se creaba uno por fotograma.
+let cachedLimits = null;
+let cachedQuality = null;
+
 function qualityLimits() {
   const q = window.__VICE_VIDEO_SETTINGS__?.quality || 'medium';
+  if (q === cachedQuality && cachedLimits) return cachedLimits;
+  cachedQuality = q;
+  cachedLimits = computeLimits(q);
+  return cachedLimits;
+}
+
+function computeLimits(q) {
   // V85: límites visibles mucho más altos manteniendo fluidez (instanciado).
-  if (q === 'low') return { cars:42, peds:100, carDistance:3400, pedDistance:2900 };
-  if (q === 'high') return { cars:100, peds:245, carDistance:6800, pedDistance:5900 };
-  if (q === 'max') return { cars:135, peds:330, carDistance:8200, pedDistance:7300 };
-  return { cars:75, peds:180, carDistance:5200, pedDistance:4500 };
+  // V107: límites visibles bajados y, sobre todo, radios más cortos. Un peatón
+  // a 400 metros no aporta nada y cuesta lo mismo que uno que tienes delante.
+  if (q === 'low') return { cars:14, peds:28, carDistance:1900, pedDistance:1500 };
+  if (q === 'high') return { cars:30, peds:64, carDistance:3400, pedDistance:2600 };
+  if (q === 'max') return { cars:38, peds:95, carDistance:4200, pedDistance:3200 };
+  return { cars:22, peds:46, carDistance:2600, pedDistance:2100 };
+}
+
+// V107: NI UN COCHE SOBRE EL AGUA. Los coches y los peatones son mallas
+// instanciadas: no son objetos sueltos que se puedan ocultar de uno en uno, son
+// matrices dentro de una sola malla. Por eso los intentos anteriores de
+// "quitar los coches del mar" no hacían nada. El sitio correcto es este: al
+// decidir qué instancias se dibujan. Si el mapa de tierra no está activo, esta
+// función no filtra nada y el tráfico queda exactamente como estaba.
+function overSea(state) {
+  const sea = window.__V106_MAR__;
+  return typeof sea?.isSea === 'function' ? sea.isSea(state.x, state.z) : false;
+}
+
+// V108: ESTO ERA UNA FÁBRICA DE BASURA.
+// El código anterior hacía map + filter + sort + slice sobre 250 elementos en
+// CADA fotograma: unos 250 objetos nuevos por fotograma, 15.000 por segundo,
+// que el recolector de basura tiene que ir limpiando. El recolector no avisa:
+// para el mundo unos milisegundos cuando le apetece, y ESO es exactamente el
+// tirón que se siente al moverse. Ahora se reutiliza siempre el mismo array de
+// trabajo y no se crea ni un objeto por fotograma. Resultado idéntico, coste
+// cero.
+const scratch = [];
+let scratchLen = 0;
+
+function compareDist(a, b) { return a.distSq - b.distSq; }
+
+function rankStates(states, maxDistance, player) {
+  const limitSq = maxDistance * maxDistance;
+  scratchLen = 0;
+  for (let i = 0; i < states.length; i++) {
+    const state = states[i];
+    const dx = player ? state.x - player.x : 0;
+    const dz = player ? state.z - player.z : 0;
+    const distSq = dx * dx + dz * dz;
+    if (distSq > limitSq) continue;
+    if (overSea(state)) continue;
+    let slot = scratch[scratchLen];
+    if (!slot) { slot = { state: null, distSq: 0 }; scratch[scratchLen] = slot; }
+    slot.state = state;
+    slot.distSq = distSq;
+    scratchLen++;
+  }
+  for (let i = scratchLen; i < scratch.length; i++) scratch[i].distSq = Infinity;
+  scratch.sort(compareDist);
+  return scratchLen;
 }
 
 function fillCarMatrices(states, limits, player) {
-  const ranked = states.map((state,index) => ({ state,index,distSq:player ? (state.x-player.x)**2 + (state.z-player.z)**2 : 0 }))
-    .filter(e => e.distSq <= limits.carDistance * limits.carDistance)
-    .sort((a,b) => a.distSq-b.distSq)
-    .slice(0,limits.cars);
+  const found = rankStates(states, limits.carDistance, player);
+  const total = Math.min(found, limits.cars);
   let slot = 0;
-  for (const {state} of ranked) {
+  for (let r = 0; r < total; r++) {
+    const state = scratch[r].state;
     dummy.position.set(state.x,state.y+7,state.z);
     dummy.rotation.set(0,state.yaw,0);
     dummy.scale.set(1,1,1);
@@ -196,12 +304,11 @@ function fillCarMatrices(states, limits, player) {
 }
 
 function fillPedMatrices(states, limits, player, elapsed) {
-  const ranked = states.map((state,index) => ({ state,index,distSq:player ? (state.x-player.x)**2 + (state.z-player.z)**2 : 0 }))
-    .filter(e => e.distSq <= limits.pedDistance * limits.pedDistance)
-    .sort((a,b) => a.distSq-b.distSq)
-    .slice(0,limits.peds);
+  const found = rankStates(states, limits.pedDistance, player);
+  const total = Math.min(found, limits.peds);
   let slot = 0;
-  for (const {state} of ranked) {
+  for (let r = 0; r < total; r++) {
+    const state = scratch[r].state;
     const bob = Math.abs(Math.sin(elapsed*6 + state.phase)) * .7;
     dummy.rotation.set(0,state.yaw,0);
     dummy.scale.set(1,1,1);
@@ -248,8 +355,8 @@ function install() {
   game = window.__VICE_CITY_GAME__;
   if (!game?.scene || !game?.playerContainer) return;
   installed = true;
-  const roadRoutes = buildRoutes(ROAD_ROUTES_LOGICAL);
-  const walkRoutes = buildRoutes(WALK_ROUTES_LOGICAL);
+  const roadRoutes = buildRoutes(ROAD_ROUTES_LOGICAL, 'coches');
+  const walkRoutes = buildRoutes(WALK_ROUTES_LOGICAL, 'peatones');
   carStates = Array.from({length:CAR_COUNT},(_,i) => makeState(roadRoutes,i,'car'));
   pedStates = Array.from({length:PED_COUNT},(_,i) => makeState(walkRoutes,i,'ped'));
   for (const state of [...carStates,...pedStates]) sampleState(state,Math.random()*25);
@@ -260,9 +367,15 @@ function install() {
   requestAnimationFrame(frame);
 }
 
+// V109: se espera a que estén construidas las calzadas sobre el agua. Si se
+// midieran las rutas antes, el suelo nuevo aún no existiría y se descartarían
+// por error. Hay un tope de 40 segundos por si ese módulo no llega.
+let waited = 0;
 const wait = setInterval(() => {
   game = window.__VICE_CITY_GAME__ || game;
   if (!game?.scene || !game?.playerContainer || typeof game.getGroundY !== 'function') return;
+  waited += 120;
+  if (!window.__V109_CALZADAS_READY__ && waited < 40000) return;
   clearInterval(wait);
   install();
 },120);

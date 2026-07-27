@@ -1,0 +1,84 @@
+GTA MANUCHO V113
+================
+
+CÓDIGOS
+-------
+Se escriben con el teclado durante la partida, sin abrir nada y sin pulsar
+Intro, como en los GTA clásicos. Se guarda un registro de las últimas letras
+tecleadas y, en cuanto coinciden con un código, se activa.
+
+    MOTORA      trae una moto
+    TAXU        trae un taxi        -> Y para misiones de taxi
+    YUTA        trae un coche patrulla -> Y para misiones de policía
+    PARAMEDIC   trae una ambulancia -> Y para misiones de ambulancia
+
+El vehículo aparece a tu derecha, apoyado en el suelo (se consulta la altura del
+terreno), nunca encima de ti. Sale un aviso amarillo diciendo qué ha llegado y
+qué teclas usar.
+
+CÓMO SE HA CONSEGUIDO QUE LAS MISIONES FUNCIONEN DE VERDAD
+-----------------------------------------------------------
+Las tres misiones ya estaban escritas en v71-city-features.js desde hace
+versiones, pero eran casi imposibles de ver funcionando, por dos motivos.
+
+1. SÓLO ARRANCABAN CON EL VEHÍCULO CORRECTO, Y ERA DIFÍCIL ENCONTRARLO.
+   La función activeCarType() decide qué misión toca mirando dos cosas muy
+   concretas: la marca userData.taxi y el nombre del objeto (que contenga
+   AMBULANCIA, o VCPD/POLICE/PATRULLA). Si no encontrabas por la calle un coche
+   con esas marcas exactas, no había misión posible.
+
+   Los códigos no inventan un sistema nuevo ni duplican nada: cogen el coche
+   libre más cercano, le ponen EXACTAMENTE esas marcas, lo pintan del color que
+   toca y lo dejan a tu lado. Por eso las misiones arrancan de verdad: es el
+   mismo código de siempre, alimentado con lo que espera.
+
+2. LAS MISIONES ESTABAN MUDAS POR MI CULPA.
+   En la V105 oculté todos los carteles del juego, como pediste. Pero la regla
+   que usé, [id$="-notice"], se llevó por delante #v71-notice, que es justo por
+   donde hablan las misiones ("PASAJERO A BORDO", "HERIDO RECOGIDO"...), y el
+   panel #v71-mission, que enseña el objetivo. Sin eso una misión es
+   incomprensible: no sabes a dónde ir ni si has recogido a nadie.
+
+   Ahora esos dos están excluidos de la regla. No son carteles ambientales:
+   sólo aparecen cuando hay una misión en marcha. El resto sigue oculto.
+
+   Detalle importante: NO se fuerza display:block sobre ellos, porque el propio
+   juego los muestra y los esconde. Forzarlo los habría dejado fijos en pantalla
+   aunque estuvieran vacíos. Lo correcto era sacarlos de la regla que oculta.
+
+3. El panel de misión estaba en una capa por detrás de otras. Subido al frente.
+
+LAS MISIONES
+------------
+Sube con E, pulsa Y para empezar, Y otra vez para cancelar. El objetivo se marca
+en el radar y en el panel de la esquina inferior derecha.
+
+    TAXI        recoge al pasajero y llévalo a su destino    +$650
+    POLICÍA     persigue al ladrón marcado y detenlo         +$1200
+    AMBULANCIA  recoge al herido y llévalo al hospital       +$900
+
+UN DETALLE QUE CONVIENE SABER
+------------------------------
+La tecla Y es a la vez la de empezar misión y la primera letra de YUTA. Si
+escribes YUTA mientras conduces un vehículo de servicio, esa Y inicial iniciará
+o cancelará la misión antes de que el código llegue a completarse. No rompe
+nada, pero los códigos se escriben mejor a pie. Lo dejo así a propósito: la
+alternativa era secuestrar la tecla Y, y eso habría impedido empezar misiones
+con normalidad.
+
+README
+------
+Sustituido por uno nuevo, único y oficial. Incluye qué es el juego, cómo
+ejecutarlo (servidor local, GitHub Pages o cualquier hosting estático), los
+requisitos, la tabla de controles, los códigos, las misiones, el modo online, un
+repaso de todas las mejoras con la explicación de qué fallaba en cada caso, las
+herramientas de diagnóstico por consola, la estructura de carpetas, la licencia
+MIT con la obligación de conservar los créditos, y el aviso de que es un
+proyecto independiente sin relación con Rockstar Games.
+
+ARCHIVOS TOCADOS
+----------------
+  juego/codigos-v113.js          nuevo
+  juego/correcciones-v105.js     excepción para la interfaz de misiones
+  juego/v71-city-features.js     panel de misión al frente
+  README.md                      reemplazado

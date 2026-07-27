@@ -295,7 +295,7 @@ async function bootExtras() {
   window.__GTA_LOADING__?.setProgress?.(90);
   await idle(700);
   await preparePoliceBeforeReveal();
-  await importSafely('./territory-combat.js?v=90', 'la policía, las bandas y los servicios');
+  await importSafely('./territory-combat.js?v=113', 'la policía, las bandas y los servicios');
   await waitForFlag('__TERRITORY_COMBAT_READY__', 'territory-combat-ready', 11000);
 
   setStatus('Precalentando animaciones cercanas…');
@@ -310,12 +310,14 @@ async function bootExtras() {
   // Resto de mundos y extras realmente secundarios.
   scheduleIdle(async () => {
     await waitForCoreWorld(12000);
-    await importSafely('./marine-world-v84.js?v=87', 'el mar, las islas y los barcos');
+    await importSafely('./marine-world-v84.js?v=113', 'el mar, las islas y los barcos');
+    await waitForFlag('__GTA_MARINE_READY__', 'gta-manucho-marine-ready', 12000);
+    await importSafely('./golden-gate-bridge-v100.js?v=113', 'el puente Golden Gate');
   }, 1800);
 
   scheduleIdle(async () => {
     await waitForCoreWorld(12000);
-    await importSafely('./aircraft-system.js?v=87', 'las aeronaves y el helicóptero');
+    await importSafely('./aircraft-system.js?v=94', 'las aeronaves y el helicóptero');
     await waitForFlag('__AIRCRAFT_SYSTEM_READY__', 'aircraft-system-ready', 9000);
     try { await window.__AIRCRAFT_SYSTEM__?.ensureExhibit?.(); } catch {}
   }, 3600);
@@ -332,9 +334,9 @@ async function bootExtras() {
   scheduleIdle(() => importSafely('./city-birds.js?v=49', 'las aves'), 3000);
   scheduleIdle(() => importSafely('./wanted-stars.js?v=65', 'las estrellas de reducción de búsqueda'), 3900);
   scheduleIdle(() => importSafely('./police-foot-behavior.js?v=87', 'el comportamiento terrestre de la policía'), 5200);
-  scheduleIdle(() => importSafely('./weapon-crates.js?v=82', 'las cajas y armas del inventario Q'), 7600);
-  scheduleIdle(() => importSafely('./fog-city-horses.js?v=82', 'Fog City y sus caballos'), 9400);
-  scheduleIdle(() => importSafely('./fog-city-jetpack.js?v=82', 'el jetpack físico de Fog City'), 10100);
+  scheduleIdle(() => importSafely('./weapon-crates.js?v=113', 'las cajas y armas del inventario Q'), 7600);
+  scheduleIdle(() => importSafely('./fog-city-horses.js?v=113', 'Fog City y sus caballos'), 9400);
+  scheduleIdle(() => importSafely('./fog-city-jetpack.js?v=113', 'la moto voladora física de Fog City'), 10100);
   scheduleIdle(() => importSafely('./girlfriend-house.js?v=61', 'la casa de la novia y las estadísticas'), 11200);
   scheduleIdle(() => importSafely('./arcade-hall.js?v=49', 'el salón de juegos'), 13200);
   scheduleIdle(() => importSafely('./coliseum.js?v=49', 'el coliseo de carreras'), 15800);

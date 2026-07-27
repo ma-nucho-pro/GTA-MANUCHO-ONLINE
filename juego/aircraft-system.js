@@ -15,8 +15,8 @@ const AIRCRAFT_DEFS = {
     label: 'SF1',
     desiredLength: 300,
     visualYaw: 0,
-    maxSpeed: 1450,
-    acceleration: 760,
+    maxSpeed: 1750, // V94: aviones un poco más rápidos
+    acceleration: 900,
     helicopter: false,
     forwardSign: -1,
     pilotSide: 1,
@@ -29,8 +29,8 @@ const AIRCRAFT_DEFS = {
     label: 'U1H',
     desiredLength: 360,
     visualYaw: 0,
-    maxSpeed: 760,
-    acceleration: 500,
+    maxSpeed: 940, // V94
+    acceleration: 590,
     helicopter: true,
     forwardSign: -1,
     pilotSide: 1,
@@ -43,8 +43,8 @@ const AIRCRAFT_DEFS = {
     label: 'FM2',
     desiredLength: 360,
     visualYaw: Math.PI,
-    maxSpeed: 1180,
-    acceleration: 660,
+    maxSpeed: 1450, // V94
+    acceleration: 790,
     helicopter: false,
     // El FM2 tiene el morro en el eje local opuesto a los demás modelos.
     // Solo este avión usa +Z como frente real.
@@ -59,8 +59,8 @@ const AIRCRAFT_DEFS = {
     label: 'MD5',
     desiredLength: 320,
     visualYaw: 0,
-    maxSpeed: 700,
-    acceleration: 460,
+    maxSpeed: 880, // V94
+    acceleration: 560,
     helicopter: true,
     forwardSign: -1,
     pilotSide: 1,
@@ -551,6 +551,13 @@ function exitAircraft() {
   game.playerContainer.position.set(x, y, z);
   game.playerContainer.rotation.set(0, entry.root.rotation.y, 0);
   restorePilotPose();
+  // V94: el personaje baja SIEMPRE de pie. El núcleo aplicaba la pose de
+  // caída/planeo (rotation.x ≈ -90°) justo tras soltar los mandos y el
+  // modelo quedaba "acostado" en el suelo. Aquí se endereza el modelo y se
+  // avisa a mejoras-v94 para que vigile la postura durante 3 segundos.
+  if (game.playerModel) { game.playerModel.rotation.x = 0; game.playerModel.rotation.z = 0; }
+  if (game.soldierModel) { game.soldierModel.rotation.x = 0; game.soldierModel.rotation.z = 0; }
+  window.__GTA_V94_AIRCRAFT_EXIT_AT__ = performance.now();
   if (game.state) {
     game.state.isFlying = false;
     game.state.inWater = false;
@@ -600,7 +607,9 @@ function applyAircraftCamera(camera) {
     // Cámara trasera pegada al lado correcto de la aeronave.
     localToWorld(entry, 0, entry.height * 0.72, -entry.length * 0.72 * forwardSign, tempA);
     localToWorld(entry, 0, entry.height * 0.35, entry.length * 0.85 * forwardSign, tempB);
-    smoothing = 0.34;
+    // V94: cámara anclada al avión (sin lerp). El suavizado de 0.34 hacía que
+    // la cámara "persiguiera" al avión y se percibía como tambaleo constante.
+    smoothing = 1;
   }
   if (smoothing >= 1) camera.position.copy(tempA);
   else camera.position.lerp(tempA, smoothing);
@@ -666,8 +675,9 @@ function updateProjectiles(dt) {
 
 function onAircraftMouseMove(event) {
   if (!active || !document.pointerLockElement) return;
-  active.pitch = THREE.MathUtils.clamp(active.pitch - event.movementY * 0.0015, -0.72, 0.72);
-  active.root.rotation.y -= event.movementX * 0.0018;
+  // V94: sensibilidad reducida para que el morro no tiemble con el ratón.
+  active.pitch = THREE.MathUtils.clamp(active.pitch - event.movementY * 0.0009, -0.72, 0.72);
+  active.root.rotation.y -= event.movementX * 0.0011;
 }
 
 function onAircraftMouseDown(event) {

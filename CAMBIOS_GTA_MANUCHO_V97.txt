@@ -1,0 +1,49 @@
+GTA MANUCHO V97 — CORRECCIÓN DE MOTO Y RECURSOS ADJUNTOS
+
+CAMBIOS PRINCIPALES
+
+1. MOTO ORIGINAL
+- La moto conserva motorcycle_compressed.glb, rider_compressed.glb y
+  arms_compressed.glb del HTML entregado.
+- Se redujo de 76 a 48 unidades de largo para quedar proporcionada al jugador.
+- Tres cámaras en este orden: LEJOS, CERCA y PRIMERA PERSONA.
+- El personaje del jugador se muestra en las dos cámaras externas.
+- La primera persona oculta el cuerpo para no bloquear la vista.
+- La mira verde permanece visible sobre la moto para poder apuntar y disparar.
+- La tecla 2 ya no rompe la interfaz si esa ranura todavía está vacía.
+
+2. ARMA Y PÁJAROS
+- La pistola se sustituyó por trigger.glb del HTML adjunto.
+- Conserva la posición, escala, rotación y animación Fire del archivo original.
+- trigger.glb puede obtenerse rompiendo las cajas que entregan pistola.
+- Los pájaros son clones animados de raven.glb y pueden ser abatidos.
+- Sólo se muestran 5 u 8 según la potencia del equipo y aparecen por periodos.
+
+3. ÁRBOLES Y CÉSPED
+- Los árboles antiguos de Three.js del Retiro se ocultan y sus obstáculos se
+  anulan para no dejar colisiones invisibles.
+- Las cuatro praderas usan el generador exacto del HTML de árboles adjunto.
+- Se aumentó el bosque a 56 árboles en modo ligero y 88 en modo normal.
+- El césped usa grasslight-big.jpg, RepeatWrapping y repeat(100, 100), con
+  MeshStandardMaterial, roughness 1.0 y color 0xdddddd.
+
+4. MAR
+- Las balsas fabricadas con troncos se sustituyeron por el casco y los bancos
+  del HTML de balsa/barca adjunto.
+- Siguen siendo manejables con W/S y A/D, con cámaras V y salida E.
+- Se corrigió la altura del personaje sobre el asiento.
+- Las rocas submarinas y de islas usan el SDF, las 14–22 sustracciones y los
+  rangos de forma del archivo ROCAS adjunto; se renderizan por InstancedMesh.
+
+5. ISLA DE MEDIANOCHE
+- Aparece únicamente entre 00:00 y 00:15.
+- Usa el suelo circular, materiales, 18 lápidas, 6 cruces, 10 montículos y
+  5 cuervos del HTML nocturno adjunto.
+
+RECURSOS LOCALES
+
+Los seis HTML de referencia se conservan dentro de:
+juego/recursos-adjuntos-originales/
+
+Los modelos y la textura necesarios se conservan dentro de:
+juego/deathchase-assets/

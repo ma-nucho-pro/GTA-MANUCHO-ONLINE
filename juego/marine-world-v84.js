@@ -38,10 +38,42 @@ const SAFE_SURFACES = [
   { xMin:-1000,xMax:1000,zMin:1200,zMax:1350 }
 ].map(s => ({xMin:s.xMin*WORLD_SCALE,xMax:s.xMax*WORLD_SCALE,zMin:s.zMin*WORLD_SCALE,zMax:s.zMax*WORLD_SCALE}));
 
+// V101: se retira por completo el disco de arena naranja. Las dos islas de la
+// zona de los barcos son ahora el modelo adjunto island.glb (palmeras y rocas),
+// colocado de pie, elevado sobre el agua y con la colisión calcada de su propia
+// malla. Antes el suelo se calculaba con una parábola que llegaba hasta
+// radius=2400 mientras la arena visible sólo medía 1848: esos ~550 puntos de
+// diferencia eran el "suelo invisible" sobre el que se caminaba en el aire.
 const ISLANDS = [
-  { id:'isla_oeste', x:-205*WORLD_SCALE, z:2050*WORLD_SCALE, radius:150*WORLD_SCALE, top:WATER_LEVEL+104 },
-  { id:'isla_este', x:245*WORLD_SCALE, z:2290*WORLD_SCALE, radius:120*WORLD_SCALE, top:WATER_LEVEL+82 }
+  {
+    id:'isla_oeste',
+    x:-205*WORLD_SCALE, z:2050*WORLD_SCALE,
+    modelScale:34,                       // el adjunto mide ~85 unidades de ancho
+    yaw:-.35,                            // giro real sobre el eje vertical
+    summitAboveWater:11*WORLD_SCALE,     // cuánto sobresale la cima del agua
+    radius:150*WORLD_SCALE,              // provisional: se recalcula con la malla
+    landRadius:0,
+    top:WATER_LEVEL+11*WORLD_SCALE
+  },
+  {
+    id:'isla_este',
+    x:245*WORLD_SCALE, z:2290*WORLD_SCALE,
+    modelScale:28,
+    yaw:2.15,
+    summitAboveWater:9*WORLD_SCALE,
+    radius:120*WORLD_SCALE,
+    landRadius:0,
+    top:WATER_LEVEL+9*WORLD_SCALE
+  }
 ];
+
+// Profundidad máxima a la que todavía se considera "tierra". Sirve para entrar
+// al agua caminando por la orilla en vez de pasar a nadar de golpe. Se mantiene
+// baja a propósito (1,5 m, por la cintura): a partir de ahí ya se nada, así que
+// en ningún momento parece que se camine sobre el agua.
+const WADE_DEPTH = 2.1*WORLD_SCALE;
+// Rejilla de alturas de cada isla, generada a partir de sus triángulos reales.
+const islandFields = [];
 
 let game = null;
 let installed = false;
@@ -100,7 +132,9 @@ function notice(text,ms=2600){
 }
 
 function insideMainBounds(x,z){ return x>=MAIN_BOUNDS.xMin&&x<=MAIN_BOUNDS.xMax&&z>=MAIN_BOUNDS.zMin&&z<=MAIN_BOUNDS.zMax; }
-function insideIsland(x,z){ return ISLANDS.some(i => (x-i.x)**2+(z-i.z)**2 <= i.radius*i.radius); }
+// V101: "estar en la isla" se decide con la malla y no con un círculo teórico.
+// Si el terreno del adjunto no cubre ese punto, ahí no hay suelo y se nada.
+function insideIsland(x,z){ return Number.isFinite(islandGround(x,z)); }
 function onLand(x,z){
   if(insideIsland(x,z))return true;
   return SAFE_SURFACES.some(s => x>=s.xMin&&x<=s.xMax&&z>=s.zMin&&z<=s.zMax);
@@ -158,9 +192,12 @@ function nearestSafeLandPosition(x,z,vehicle=false){
     if(distance<bestDistance){bestDistance=distance;best={x:px,z:pz};}
   }
   for(const island of ISLANDS){
+    // V101: sólo se rescata hacia una isla si su malla ya está medida; el punto
+    // elegido está dentro de la parte que de verdad sobresale del agua.
+    if(!(island.landRadius>0))continue;
     const dx=x-island.x,dz=z-island.z;
     const length=Math.max(1,Math.hypot(dx,dz));
-    const radius=island.radius*.58;
+    const radius=island.landRadius*.5;
     const px=island.x+dx/length*radius;
     const pz=island.z+dz/length*radius;
     const distance=(px-x)**2+(pz-z)**2;
@@ -190,13 +227,180 @@ function restoreToSafeLand(root,map,{vehicle=false,entry=null}={}){
   if(entry?.destination?.isVector3)entry.destination.copy(destination);
   return destination;
 }
+// ---------------------------------------------------------------------------
+// V101 · COLISIÓN CALCADA DE LA MALLA (fin del suelo invisible)
+// ---------------------------------------------------------------------------
+// En vez de inventar una parábola, se rasterizan los triángulos del terreno del
+// adjunto island.glb en una rejilla de alturas. Donde la malla no llega, la
+// rejilla no tiene dato y getGroundY no devuelve nada: es imposible quedarse
+// flotando sobre aire, porque sólo hay suelo donde de verdad se ve suelo.
+function buildIslandField(island,meshes,cellSize=26){
+  if(!meshes?.length)return null;
+  const box=new THREE.Box3();
+  for(const mesh of meshes){
+    mesh.updateWorldMatrix?.(true,false);
+    box.union(new THREE.Box3().setFromObject(mesh));
+  }
+  if(!Number.isFinite(box.min.x)||box.min.x>box.max.x)return null;
+
+  const pad=cellSize*2;
+  const minX=box.min.x-pad, minZ=box.min.z-pad;
+  const nx=Math.max(4,Math.ceil((box.max.x-box.min.x+pad*2)/cellSize)+1);
+  const nz=Math.max(4,Math.ceil((box.max.z-box.min.z+pad*2)/cellSize)+1);
+  if(nx*nz>360000)return null; // salvaguarda de memoria
+
+  const heights=new Float32Array(nx*nz).fill(-Infinity);
+  const mask=new Uint8Array(nx*nz);
+  const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
+
+  const stamp=(ix,iz,y)=>{
+    if(ix<0||iz<0||ix>=nx||iz>=nz)return;
+    const k=iz*nx+ix;
+    if(!mask[k]||y>heights[k]){heights[k]=y;mask[k]=1;}
+  };
+
+  for(const mesh of meshes){
+    const geometry=mesh.geometry;
+    const position=geometry?.attributes?.position;
+    if(!position)continue;
+    const index=geometry.index;
+    const count=index?index.count:position.count;
+    const matrix=mesh.matrixWorld;
+    for(let t=0;t<count;t+=3){
+      const i0=index?index.getX(t):t;
+      const i1=index?index.getX(t+1):t+1;
+      const i2=index?index.getX(t+2):t+2;
+      a.fromBufferAttribute(position,i0).applyMatrix4(matrix);
+      b.fromBufferAttribute(position,i1).applyMatrix4(matrix);
+      c.fromBufferAttribute(position,i2).applyMatrix4(matrix);
+
+      // Los tres vértices se marcan siempre: garantiza que no queden agujeros
+      // aunque el triángulo sea más pequeño que una celda.
+      stamp(Math.round((a.x-minX)/cellSize),Math.round((a.z-minZ)/cellSize),a.y);
+      stamp(Math.round((b.x-minX)/cellSize),Math.round((b.z-minZ)/cellSize),b.y);
+      stamp(Math.round((c.x-minX)/cellSize),Math.round((c.z-minZ)/cellSize),c.y);
+
+      const x0=Math.max(0,Math.floor((Math.min(a.x,b.x,c.x)-minX)/cellSize));
+      const x1=Math.min(nx-1,Math.ceil((Math.max(a.x,b.x,c.x)-minX)/cellSize));
+      const z0=Math.max(0,Math.floor((Math.min(a.z,b.z,c.z)-minZ)/cellSize));
+      const z1=Math.min(nz-1,Math.ceil((Math.max(a.z,b.z,c.z)-minZ)/cellSize));
+      if(x1<x0||z1<z0)continue;
+
+      // Coordenadas baricéntricas en el plano XZ para interpolar la altura.
+      const d=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);
+      if(Math.abs(d)<1e-6)continue;
+      for(let iz=z0;iz<=z1;iz++){
+        const pz=minZ+iz*cellSize;
+        for(let ix=x0;ix<=x1;ix++){
+          const px=minX+ix*cellSize;
+          const w0=((b.z-c.z)*(px-c.x)+(c.x-b.x)*(pz-c.z))/d;
+          if(w0<-.001||w0>1.001)continue;
+          const w1=((c.z-a.z)*(px-c.x)+(a.x-c.x)*(pz-c.z))/d;
+          if(w1<-.001||w1>1.001)continue;
+          const w2=1-w0-w1;
+          if(w2<-.001||w2>1.001)continue;
+          stamp(ix,iz,a.y*w0+b.y*w1+c.y*w2);
+        }
+      }
+    }
+  }
+
+  // Un relleno suave cierra huecos de un solo punto sin inventar terreno nuevo.
+  const filled=mask.slice();
+  for(let iz=1;iz<nz-1;iz++){
+    for(let ix=1;ix<nx-1;ix++){
+      const k=iz*nx+ix;
+      if(mask[k])continue;
+      let sum=0,n=0;
+      for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+        const j=(iz+dz)*nx+(ix+dx);
+        if(mask[j]){sum+=heights[j];n++;}
+      }
+      if(n>=5){heights[k]=sum/n;filled[k]=1;}
+    }
+  }
+
+  // Cota de la cima y radio real de la parte que sobresale del agua.
+  let top=-Infinity,landRadius=0;
+  for(let iz=0;iz<nz;iz++){
+    for(let ix=0;ix<nx;ix++){
+      const k=iz*nx+ix;
+      if(!filled[k])continue;
+      const y=heights[k];
+      if(y>top)top=y;
+      if(y>WATER_LEVEL){
+        const dx=minX+ix*cellSize-island.x;
+        const dz=minZ+iz*cellSize-island.z;
+        const r=Math.hypot(dx,dz);
+        if(r>landRadius)landRadius=r;
+      }
+    }
+  }
+
+  const field={minX,minZ,cell:cellSize,nx,nz,heights,mask:filled,island};
+  islandFields.push(field);
+  island.field=field;
+  if(Number.isFinite(top))island.top=top;
+  if(landRadius>0){island.landRadius=landRadius;island.radius=landRadius;}
+  console.log(`[marine-v101] ${island.id}: rejilla ${nx}x${nz}, cima ${Math.round(island.top)}, radio real ${Math.round(landRadius)}`);
+  return field;
+}
+
+function sampleIslandField(field,x,z){
+  const fx=(x-field.minX)/field.cell;
+  const fz=(z-field.minZ)/field.cell;
+  if(!(fx>=0&&fz>=0)||fx>field.nx-1.001||fz>field.nz-1.001)return -Infinity;
+  const ix=fx|0, iz=fz|0;
+  const tx=fx-ix, tz=fz-iz;
+  const i00=iz*field.nx+ix, i10=i00+1, i01=i00+field.nx, i11=i01+1;
+  const m=field.mask, h=field.heights;
+  if(m[i00]&&m[i10]&&m[i01]&&m[i11]){
+    const lo=h[i00]+(h[i10]-h[i00])*tx;
+    const hi=h[i01]+(h[i11]-h[i01])*tx;
+    return lo+(hi-lo)*tz;
+  }
+  // En el borde exacto de la malla no se interpola con celdas vacías: se toma
+  // la celda que se está pisando y, si no existe, ahí simplemente no hay suelo.
+  const k=(tz<.5?(tx<.5?i00:i10):(tx<.5?i01:i11));
+  return m[k]?h[k]:-Infinity;
+}
+
+// V102: altura del terreno de la isla SIN filtro de calado. Es lo que impide
+// que, nadando, se atraviese la isla por debajo: la malla existe también bajo
+// el agua y hay que apoyarse en ella.
+function islandSeabed(x,z){
+  let best=-Infinity;
+  for(let i=0;i<islandFields.length;i++){
+    const y=sampleIslandField(islandFields[i],x,z);
+    if(y>best)best=y;
+  }
+  return best;
+}
+
 function islandGround(x,z){
   let best=-Infinity;
-  for(const island of ISLANDS){
-    const d=Math.hypot(x-island.x,z-island.z);
-    if(d>island.radius)continue;
-    const t=d/island.radius;
-    best=Math.max(best,island.top - t*t*54);
+  for(let i=0;i<islandFields.length;i++){
+    const y=sampleIslandField(islandFields[i],x,z);
+    if(y>best)best=y;
+  }
+  return best>=WATER_LEVEL-WADE_DEPTH?best:-Infinity;
+}
+
+// Altura real de los obstáculos sólidos registrados en el juego (cajas del
+// obstacleGrid: rocas, cajones, estructuras). Se replica el mismo criterio que
+// usa el motor para poder distinguir un suelo de verdad del valor de reserva.
+function obstacleGround(x,y,z,strict){
+  const grid=game?.obstacleGrid;
+  if(typeof grid?.getNearby!=='function')return -Infinity;
+  let best=-Infinity;
+  const tolerance=strict?2.5*WORLD_SCALE:5*WORLD_SCALE;
+  let nearby;
+  try{nearby=grid.getNearby(x,z,1);}catch{return -Infinity;}
+  for(const box of nearby||[]){
+    if(!box||box.h===0)continue;
+    if(Math.abs(x-box.x)>=box.w/2||Math.abs(z-box.z)>=box.d/2)continue;
+    const top=box.y+box.h;
+    if(y>=top-tolerance&&top>best)best=top;
   }
   return best;
 }
@@ -205,12 +409,21 @@ function patchIslandGround(){
   if(game.__v81MarineGroundPatched)return;
   game.__v81MarineGroundPatched=true;
   originalGetGroundY=game.getGroundY.bind(game);
-  game.getGroundY=function v81MarineGround(x,y,z,strict=true){
-    let base;
-    try{base=originalGetGroundY(x,y,z,strict);}catch{base=-Infinity;}
+  game.getGroundY=function v101MarineGround(x,y,z,strict=true){
     const islandY=islandGround(x,z);
-    if(Number.isFinite(islandY))return Math.max(Number.isFinite(base)?base:-Infinity,islandY);
-    return base;
+    if(!Number.isFinite(islandY)){
+      // Fuera de la isla no se toca nada: manda la lógica original del juego.
+      try{return originalGetGroundY(x,y,z,strict);}catch{return -Infinity;}
+    }
+    // V101: sobre la isla mandan su malla y los obstáculos sólidos que tenga
+    // encima (las rocas adjuntas). Antes esto era Math.max(original, isla) y el
+    // original, al no encontrar suelo sobre el mar, devolvía lastSafeGroundY:
+    // un valor heredado de la ciudad, mucho más alto que la isla. Ese era el
+    // segundo motivo por el que el personaje aparecía flotando por el aire.
+    const solid=obstacleGround(x,y,z,strict);
+    const result=solid>islandY?solid:islandY;
+    if(strict)game.lastSafeGroundY=result;
+    return result;
   };
 }
 
@@ -234,14 +447,20 @@ function createOcean(){
     }
   );
 
+  // V104: el reflejo se calculaba a 128x128 y al nadar, con la cámara pegada al
+  // agua, esos 128 píxeles se estiraban por toda la pantalla: de ahí el aspecto
+  // tan sucio. Sube a 256 (o 384 en equipos holgados). NO cuesta cuatro veces
+  // más porque el reflejo no se recalcula cada fotograma, sino cada 700 ms como
+  // mucho, y se aplaza solo si el fotograma anterior fue pesado.
+  const reflectionSize=(navigator.hardwareConcurrency||4)>=8&&(navigator.deviceMemory||4)>=8?384:256;
   ocean=new Water(geometry,{
-    textureWidth:128,
-    textureHeight:128,
+    textureWidth:reflectionSize,
+    textureHeight:reflectionSize,
     waterNormals,
     sunDirection:(game.sun?.clone?.()||new THREE.Vector3(.4,.8,.2)).normalize(),
     sunColor:0xffffff,
     waterColor:0x001e0f,
-    distortionScale:3.7,
+    distortionScale:2.6,
     fog:Boolean(game.scene.fog)
   });
   ocean.name='GTA_MANUCHO_OCEANO_WATER_V84';
@@ -262,7 +481,10 @@ function createOcean(){
     const player=game?.playerContainer?.position;
     const altitude=player?Math.abs(player.y-WATER_LEVEL):0;
     const horizontal=player?Math.hypot(player.x-MARINE_CENTER.x,player.z-MARINE_CENTER.z):0;
-    const interval=altitude<420&&horizontal<24000?700:(altitude<1200?1500:3400);
+    // Nadando o justo sobre el agua es donde más se nota que el reflejo va a
+    // saltos, así que ahí se refresca casi el doble de rápido.
+    const swimming=Boolean(game?.state?.inWater||game?.state?.isSubmerged);
+    const interval=swimming?380:(altitude<420&&horizontal<24000?700:(altitude<1200?1500:3400));
     if(now<nextReflectionAt)return;
     camera.getWorldPosition(tempC);
     const moved=tempC.distanceToSquared(lastReflectionCameraPos)>55*55;
@@ -345,10 +567,14 @@ function createClouds(){
 
 
 
+// V101: el cuaternión se reutiliza. Antes se creaba uno nuevo cada vez que se
+// refrescaban las nubes, y eso alimentaba al recolector de basura sin necesidad.
+const cloudQuaternion=new THREE.Quaternion();
+
 function updateClouds(elapsed,force=false){
   if(!cloudMeshes.length||!game?.playerContainer||!game?.camera)return;
   const player=game.playerContainer.position;
-  const cameraQuaternion=game.camera.getWorldQuaternion(new THREE.Quaternion());
+  const cameraQuaternion=game.camera.getWorldQuaternion(cloudQuaternion);
   for(let index=0;index<cloudData.length;index++){
     const data=cloudData[index];
     const drift=((elapsed*data.speed+data.phase)%18000)-9000;
@@ -388,20 +614,12 @@ function createUnderwaterBase(){
 }
 
 function createPhysicalIslands(){
+  // V101: ya no se construye nada aquí. Antes se creaban dos cilindros por isla
+  // (el disco de arena naranja 0xb99a60 y un pedestal de roca) que tapaban por
+  // completo el modelo adjunto de palmeras y rocas. Ahora la isla es únicamente
+  // ese modelo, así que también se ahorran cuatro mallas grandes por fotograma.
   marineGroup=new THREE.Group();
   marineGroup.name='ISLAS_Y_BARCOS_GTA_MANUCHO';
-  const sand=new THREE.MeshLambertMaterial({color:0xb99a60});
-  const rock=new THREE.MeshLambertMaterial({color:0x655c4d});
-  for(const island of ISLANDS){
-    const base=new THREE.Mesh(new THREE.CylinderGeometry(island.radius*.72,island.radius*1.03,250,20),rock);
-    base.position.set(island.x,island.top-145,island.z);
-    base.scale.y=1;
-    base.matrixAutoUpdate=false;base.updateMatrix();
-    const top=new THREE.Mesh(new THREE.CylinderGeometry(island.radius*.68,island.radius*.77,36,20),sand);
-    top.position.set(island.x,island.top-18,island.z);
-    top.matrixAutoUpdate=false;top.updateMatrix();
-    marineGroup.add(base,top);
-  }
   game.scene.add(marineGroup);
 }
 
@@ -455,13 +673,90 @@ async function loadIslandVisuals(){
       const island=ISLANDS[i];
       const visual=data.scene.clone(true);
       visual.name=`ISLA_ADJUNTA_${i+1}`;
-      visual.position.set(island.x,island.top-95,island.z);
-      visual.rotation.set(Math.PI/2,-Math.PI+i*.55,0);
-      visual.scale.setScalar(i===0?18:14);
+
+      // El adjunto viene con Z hacia arriba. El giro anterior (+90° en X) lo
+      // dejaba boca abajo, y como el "yaw" se aplicaba antes del volteo en el
+      // orden XYZ, la segunda isla salía además inclinada 31°. Con -90° en X y
+      // orden YXZ la isla queda de pie y el giro es un giro de verdad.
+      visual.rotation.set(-Math.PI/2,island.yaw,0,'YXZ');
+      visual.scale.setScalar(island.modelScale);
+      visual.position.set(island.x,0,island.z);
+      visual.updateMatrixWorld(true);
+
+      // Se separa el terreno (sobre el que se camina) de palmeras y rocas.
+      const terrain=[];
+      const modelRocks=[];
+      visual.traverse(node=>{
+        if(!node.isMesh&&!node.isSkinnedMesh)return;
+        node.castShadow=false;node.receiveShadow=false;node.frustumCulled=true;
+        const materials=Array.isArray(node.material)?node.material:[node.material];
+        for(const material of materials){
+          const name=(material?.name||'').toLowerCase();
+          if(name.includes('material.001')){
+            if(!terrain.includes(node))terrain.push(node);
+          }else if(name.includes('rocks')){
+            if(!modelRocks.includes(node))modelRocks.push(node);
+          }
+        }
+      });
+      // Las rocas del island.glb se conservan: forman parte del modelo adjunto
+      // de la isla y no son las que había que quitar.
+      void modelRocks;
+      if(!terrain.length){
+        // Reserva: si el material cambia de nombre, el terreno es la malla de
+        // mayor huella horizontal.
+        let widest=null,area=-1;
+        visual.traverse(node=>{
+          if(!node.isMesh)return;
+          const b=new THREE.Box3().setFromObject(node);
+          const a=(b.max.x-b.min.x)*(b.max.z-b.min.z);
+          if(a>area){area=a;widest=node;}
+        });
+        if(widest)terrain.push(widest);
+      }
+
+      // El terreno se dibuja por las dos caras: desde el mar o desde debajo del
+      // agua ya no se transparenta ahora que no hay pedestal que lo tape.
+      for(const mesh of terrain){
+        const materials=Array.isArray(mesh.material)?mesh.material:[mesh.material];
+        for(const material of materials){
+          if(!material)continue;
+          material.side=THREE.DoubleSide;
+          material.shadowSide=THREE.DoubleSide;
+        }
+      }
+
+      // Se sube la isla hasta que su cima quede a la cota pedida sobre el agua.
+      const bounds=new THREE.Box3();
+      for(const mesh of terrain)bounds.union(new THREE.Box3().setFromObject(mesh));
+      if(Number.isFinite(bounds.max.y)){
+        visual.position.y=(WATER_LEVEL+island.summitAboveWater)-bounds.max.y;
+        visual.updateMatrixWorld(true);
+      }
+
       marineGroup.add(visual);
+      island.visual=visual;
+      island.terrainMeshes=terrain;
+      await nextFrame();
+
+      // Y la colisión se calca de esa misma malla ya colocada.
+      buildIslandField(island,terrain);
       await nextFrame();
     }
-  }catch(error){console.warn('[marine-v81] Isla GLB omitida; permanece la isla física.',error);}finally{draco.dispose();}
+    window.__GTA_ISLAND_GROUND__=islandGround;
+    // Versión sin filtro de calado: la usan las rocas adjuntas para poder
+    // asentarse también en la parte del talud que queda bajo el agua.
+    window.__GTA_ISLAND_GROUND_RAW__=(x,z)=>{
+      let best=-Infinity;
+      for(let i=0;i<islandFields.length;i++){
+        const y=sampleIslandField(islandFields[i],x,z);
+        if(y>best)best=y;
+      }
+      return best;
+    };
+    window.__GTA_MANUCHO_ISLANDS__=ISLANDS;
+    window.dispatchEvent(new CustomEvent('gta-manucho-islands-ready'));
+  }catch(error){console.warn('[marine-v101] Isla GLB omitida.',error);}finally{draco.dispose();}
 }
 
 async function loadPlantsAndRocks(){
@@ -566,7 +861,10 @@ function makeBoatEntry(model,name,x,z,playerDriveable){
 
 async function createBoats(){
   const [base,navigator]=await Promise.all([loadBoatBase(),loadNavigatorTemplate()]);
-  mainBoat=makeBoatEntry(base,'BARCO_JUGABLE_GTA_MANUCHO',MARINE_CENTER.x-1200,MARINE_CENTER.z-1300,true);
+  // V95: el barco jugable aparecía dentro del radio físico de isla_oeste.
+  // Por eso era posible subir, pero cualquier intento de avanzar se interpretaba
+  // como una colisión con tierra. Este punto está comprobado en agua libre.
+  mainBoat=makeBoatEntry(base,'BARCO_JUGABLE_GTA_MANUCHO',MARINE_CENTER.x,MARINE_CENTER.z+2600,true);
   const second=base.clone(true);
   npcBoat=makeBoatEntry(second,'BARCO_NPC_GTA_MANUCHO',MARINE_CENTER.x+2100,MARINE_CENTER.z+700,false);
   if(navigator?.scene){
@@ -613,10 +911,9 @@ function ensureUi(){
 }
 
 function patchBoatController(){
-  if(game.__v81BoatControllerPatched)return;
-  game.__v81BoatControllerPatched=true;
+  if(game.updateActiveBoat?.__v100BoatController)return;
   originalUpdateActiveBoat=typeof game.updateActiveBoat==='function'?game.updateActiveBoat.bind(game):null;
-  game.updateActiveBoat=function v81UpdateBoat(dt,elapsed){
+  const controller=function v100UpdateBoat(dt,elapsed){
     const root=this.activeBoat;
     const entry=root?.userData?.v81BoatEntry;
     if(!entry)return originalUpdateActiveBoat?.(dt,elapsed);
@@ -625,8 +922,8 @@ function patchBoatController(){
     const reverse=this.keys.KeyS||this.keys.s||this.keys.ArrowDown;
     const left=this.keys.KeyA||this.keys.a||this.keys.ArrowLeft;
     const right=this.keys.KeyD||this.keys.d||this.keys.ArrowRight;
-    if(forward)entry.speed=Math.min(430,entry.speed+250*dt);
-    else if(reverse)entry.speed=Math.max(-120,entry.speed-210*dt);
+    if(forward)entry.speed=Math.min(760,entry.speed+560*dt);
+    else if(reverse)entry.speed=Math.max(-210,entry.speed-380*dt);
     else entry.speed*=Math.exp(-1.35*dt);
     const steer=(left?1:0)-(right?1:0);
     root.rotation.y+=steer*Math.sign(entry.speed||1)*.78*dt*Math.min(1,.25+Math.abs(entry.speed)/130);
@@ -643,6 +940,9 @@ function patchBoatController(){
     this.playerContainer.rotation.y=root.rotation.y;
     this.state.inWater=false;this.state.isSubmerged=false;this.state.onGround=true;this.state.vy=0;
   };
+  controller.__v100BoatController=true;
+  game.updateActiveBoat=controller;
+  game.__v81BoatControllerPatched=true;
 }
 
 function enterBoat(entry){
@@ -895,9 +1195,15 @@ function enforcePlayerSwimming(dt=lastFrameDt,elapsed=performance.now()/1000){
   game.state.isFlying=false;
   game.state.isSubmerged=position.y<WATER_LEVEL-5*WORLD_SCALE;
   const surfaceTop=WATER_LEVEL+4*WORLD_SCALE;
-  const bottom=WATER_LEVEL-200*WORLD_SCALE;
+  let bottom=WATER_LEVEL-200*WORLD_SCALE;
+  // V102: LAS ORILLAS SON FÍSICAS. La malla de la isla sigue existiendo bajo el
+  // agua, así que nadando hay que apoyarse en ella en vez de atravesarla. Al
+  // acercarse a la playa el fondo sube y empuja al personaje hacia arriba por
+  // el talud, hasta que la profundidad es de vadeo y deja de nadar solo.
+  const seabed=islandSeabed(position.x,position.z);
+  if(Number.isFinite(seabed)&&seabed>bottom)bottom=seabed+1.2*WORLD_SCALE;
   if(position.y>surfaceTop)position.y=THREE.MathUtils.lerp(position.y,surfaceTop,Math.min(1,dt*6));
-  if(position.y<bottom){position.y=bottom;game.state.vy=0;}
+  if(position.y<bottom){position.y=bottom;if(game.state.vy<0)game.state.vy=0;}
   game.state.vy=THREE.MathUtils.clamp(Number(game.state.vy)||0,-28*WORLD_SCALE,38*WORLD_SCALE);
   applySwimPose(elapsed);
   return true;
@@ -962,7 +1268,12 @@ function frame(now=performance.now()){
     setUnderwaterLook(Boolean(game.state.isSubmerged));
   }
   if(cloudAccumulator>=.16){cloudAccumulator=0;updateClouds(now/1000);}
-  if(safetyAccumulator>=SAFETY_STEP){safetyAccumulator=0;sweepCharacters();sweepCars();}
+  if(safetyAccumulator>=SAFETY_STEP){
+    safetyAccumulator=0;
+    sweepCharacters();
+    sweepCars();
+    patchBoatController();
+  }
 }
 
 
@@ -1019,7 +1330,7 @@ async function install(){
   await idleTurn(900);await createBoats();
   await prewarmMarineScene();
 
-  window.__V84_MARINE_WORLD__={ocean,marineGroup,underwaterGroup,mainBoat,npcBoat,fish,sharks,islands:ISLANDS,waterLevel:WATER_LEVEL};
+  window.__V100_MARINE_WORLD__=window.__V84_MARINE_WORLD__={ocean,marineGroup,underwaterGroup,mainBoat,npcBoat,fish,sharks,islands:ISLANDS,waterLevel:WATER_LEVEL};
   window.__V81_MARINE_WORLD__=window.__V84_MARINE_WORLD__; // alias para compatibilidad
   window.__GTA_MARINE_READY__=true;
   window.dispatchEvent(new CustomEvent('gta-manucho-marine-ready'));

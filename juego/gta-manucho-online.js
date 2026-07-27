@@ -1,7 +1,9 @@
 /**
- * GTA MANUCHO V91 — ONLINE sincronizado con Supabase Realtime.
+ * GTA MANUCHO V99 — ONLINE sincronizado con Supabase Realtime.
  * Personaje Soldier.glb original, animaciones, nombres, colores exactos,
  * vehículos a escala real, PVP, policía, objetos de trucos y mapa compartido.
+ * V94: cero tirones (medición de vehículos cacheada, shaders precompilados
+ * antes de conectar), amigos caminando de frente y panel rediseñado.
  */
 import * as THREE from './bosque/libs/three.module.js';
 import { GLTFLoader } from './bosque/bike-runtime/loaders/GLTFLoader.js';
@@ -9,9 +11,7 @@ import { DRACOLoader } from './bosque/bike-runtime/loaders/DRACOLoader.js';
 import { clone as cloneSkeleton } from './bosque/bike-runtime/utils/SkeletonUtils.js';
 import { createClient } from './libs/supabase.esm.js';
 
-const SUPABASE_CONFIG = globalThis.GTA_MANUCHO_CONFIG?.supabase || {};
-const SUPABASE_URL = String(SUPABASE_CONFIG.url || '').trim();
-const SUPABASE_ANON_KEY = String(SUPABASE_CONFIG.anonKey || '').trim();
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase-config.local.js';
 const SEND_HZ = 16;
 const WORLD_HZ = 4;
 const WORLD_SCALE = 16;
@@ -39,6 +39,7 @@ let badge = null;
 let lastSendAt = 0;
 let lastWorldSendAt = 0;
 let lastLocalShotAt = 0;
+let localShotSequence = 0;
 let avatarTemplatePromise = null;
 let objectSequence = 0;
 const livePresenceIds = new Set();
@@ -435,16 +436,31 @@ function localVehicle() {
   if (car?.position) return { type:'car', code:car.userData?.customCarData ? 'FERRARI' : 'SCATTERED', root:car };
   return null;
 }
-function serializeTransform(root) {
-  if (!root) return null;
+function measureDimsOnce(root) {
+  // V94 ANTI-TIRONES: antes cada envío recorría TODA la jerarquía 3D del
+  // vehículo con setFromObject (16 veces/seg con tu avión + 4 veces/seg por
+  // CADA policía/tanque/patrulla del mundo). Ese recorrido era la causa de
+  // los tirones al volar y de los congelones en online. Ahora las
+  // dimensiones se miden UNA sola vez por objeto y quedan cacheadas.
+  const cached = root.userData && root.userData.__onlineDims;
+  if (cached) return cached;
   root.updateMatrixWorld?.(true);
   tempBox.setFromObject(root);
   tempBox.getSize(tempSize);
+  const dims = [round(tempSize.x,2), round(tempSize.y,2), round(tempSize.z,2)];
+  if (dims[0] < 1 && dims[1] < 1 && dims[2] < 1) return dims; // modelo aún cargando: no cachear
+  if (!root.userData) root.userData = {};
+  root.userData.__onlineDims = dims;
+  return dims;
+}
+function serializeTransform(root) {
+  if (!root) return null;
+  const dims = measureDimsOnce(root);
   return {
     x:round(root.position.x),y:round(root.position.y),z:round(root.position.z),
     qx:round(root.quaternion.x,4),qy:round(root.quaternion.y,4),qz:round(root.quaternion.z,4),qw:round(root.quaternion.w,4),
     s:[round(root.scale.x,4),round(root.scale.y,4),round(root.scale.z,4)],
-    d:[round(tempSize.x,2),round(tempSize.y,2),round(tempSize.z,2)]
+    d:[dims[0],dims[1],dims[2]]
   };
 }
 function localMoving() {
@@ -475,6 +491,9 @@ function getLocalState() {
     health:round(game.health || 0,1), armor:round(game.armor || 0,1),
     wanted:Number(game.crimeWorld?.getWantedLevel?.() ?? game.crimeWorld?.wantedLevel ?? game.wantedLevel ?? 0),
     vehicle:vehicle ? {type:vehicle.type,code:vehicle.code,transform:serializeTransform(vehicle.root)} : null,
+    // V104: si vamos de pasajeros en el vehículo de otro, se manda de quién y
+    // en qué asiento. El conductor sigue siendo el único que simula la física.
+    ride:window.__V104_RIDE__ || null,
     at:Date.now()
   };
 }
@@ -483,8 +502,12 @@ function updateRemoteFromState(payload) {
   const remote = ensureRemote(payload.id,payload);
   if (!remote) return;
   const nextX=Number(payload.x)||0,nextY=Number(payload.y)||0,nextZ=Number(payload.z)||0;
-  // V91: usamos la orientación mundial real enviada por Soldier.glb.
-  // La fórmula anterior invertía el vector de avance y hacía caminar de espaldas.
+  // V94: signo corregido — el Soldier mira hacia +Z, así que el rumbo real
+  // de avance es atan2(dx,dz). Con el signo invertido de V93 los amigos
+  // caminaban de espaldas. Quieto usa la orientación que envía el jugador.
+  // V103: se usa SIEMPRE la orientación que envía el jugador remoto, que es
+  // literalmente la de su propio modelo. Deducirla del desplazamiento con
+  // atan2 podía salir girada 180 grados y fallaba al caminar de lado.
   remote.targetYaw=Number.isFinite(Number(payload.ry))?Number(payload.ry):(remote.targetYaw||0);
   remote.target.set(nextX,nextY,nextZ);
   remote.moving = Boolean(payload.m);
@@ -493,6 +516,7 @@ function updateRemoteFromState(payload) {
   remote.wanted = Number(payload.wanted)||0;
   remote.lastSeen = performance.now();
   remote.vehicle = payload.vehicle || null;
+  remote.ride = payload.ride || null;
   if (!remote.hasTarget) {
     remote.group.position.copy(remote.target);
     remote.group.rotation.y = remote.targetYaw;
@@ -516,22 +540,63 @@ function playerHitByRay(payload) {
   const origin = new THREE.Vector3(payload.ox,payload.oy,payload.oz);
   const direction = new THREE.Vector3(payload.dx,payload.dy,payload.dz).normalize();
   const ray = new THREE.Ray(origin,direction);
-  let targetRoot = localVehicle()?.root || game.playerModel || game.playerContainer;
-  const box = new THREE.Box3().setFromObject(targetRoot);
-  if (box.isEmpty()) {
-    const center = game.playerContainer.position.clone().add(new THREE.Vector3(0,35,0));
-    box.setFromCenterAndSize(center,new THREE.Vector3(34,75,34));
-  } else box.expandByScalar(8);
-  const hit = ray.intersectBox(box,tempV2);
-  if (!hit || hit.distanceTo(origin) > 4200) return false;
-  const damage = payload.vehicleType ? 24 : 16;
-  if (window.__CITY_LIFE_SYSTEM__?.damagePlayer) window.__CITY_LIFE_SYSTEM__.damagePlayer(damage,`DISPARO DE ${clampText(payload.name,'JUGADOR',14)}`);
-  else {
+  const boxes = [];
+  const bodyRoot = game.playerModel || game.playerContainer;
+  const bodyBox = new THREE.Box3().setFromObject(bodyRoot);
+  const bodyCenter = game.playerContainer.position.clone().add(new THREE.Vector3(0,32,0));
+  const reliableBodyBox = new THREE.Box3().setFromCenterAndSize(
+    bodyCenter,
+    new THREE.Vector3(40,82,40)
+  );
+  if (!bodyBox.isEmpty()) bodyBox.expandByScalar(9).union(reliableBodyBox);
+  else bodyBox.copy(reliableBodyBox);
+  boxes.push(bodyBox);
+
+  // Al conducir, el jugador sigue siendo un blanco además del vehículo. En
+  // V98 se comprobaba uno u otro y apuntar al cuerpo del motorista fallaba.
+  const vehicleRoot = localVehicle()?.root;
+  if (vehicleRoot) {
+    const vehicleBox = new THREE.Box3().setFromObject(vehicleRoot);
+    if (!vehicleBox.isEmpty()) boxes.push(vehicleBox.expandByScalar(6));
+  }
+  let hit = null;
+  let hitDistance = Infinity;
+  for (const box of boxes) {
+    const point = ray.intersectBox(box, new THREE.Vector3());
+    if (!point) continue;
+    const distance = point.distanceTo(origin);
+    if (distance < hitDistance) {
+      hitDistance = distance;
+      hit = point;
+    }
+  }
+  if (!hit || hitDistance > 4200) return false;
+  const damage = Math.max(8, Math.min(80, Number(payload.damage) || (payload.vehicleType ? 42 : 24)));
+  let damageResult = null;
+  if (window.__CITY_LIFE_SYSTEM__?.damagePlayer) {
+    damageResult = window.__CITY_LIFE_SYSTEM__.damagePlayer(damage,`DISPARO DE ${clampText(payload.name,'JUGADOR',14)}`);
+    if (damageResult === false) return false;
+  } else {
     let remaining=damage;
     if(game.armor>0){const block=Math.min(game.armor,remaining);game.armor-=block;remaining-=block;}
     game.health=Math.max(0,(game.health||150)-remaining);game.updateHUDState?.();
+    damageResult={applied:true,killed:game.health<=0,health:game.health,damage};
   }
   notice(`${clampText(payload.name,'JUGADOR',14)} TE DISPARÓ`,1200);
+  channel?.send?.({
+    type:'broadcast',
+    event:'hit-confirm',
+    payload:{
+      shooterId:payload.id,
+      targetId:myId,
+      targetName:myName,
+      damage:Number(damageResult?.damage) || damage,
+      health:Math.max(0, Number(damageResult?.health ?? game.health) || 0),
+      killed:Boolean(damageResult?.killed),
+      shotId:payload.shotId || '',
+      at:Date.now()
+    }
+  });
   return true;
 }
 function getShotData() {
@@ -541,11 +606,14 @@ function getShotData() {
   game.camera?.getWorldDirection(direction);
   if (!Number.isFinite(direction.x) || direction.lengthSq()<.5) direction.set(0,0,-1).applyQuaternion(game.playerContainer.quaternion);
   const vehicle = localVehicle();
+  const weaponId = window.__WEAPON_CRATES__?.selectedWeapon || 'pistol';
+  const damage = weaponId === 'shotgun' ? 72 : weaponId === 'akm' ? 34 : weaponId === 'pistol' ? 42 : 18;
   return {
     id:myId,name:myName,color:myColor,
     ox:round(origin.x),oy:round(origin.y),oz:round(origin.z),
     dx:round(direction.x,4),dy:round(direction.y,4),dz:round(direction.z,4),
-    vehicleType:vehicle?.type || '',at:Date.now()
+    vehicleType:vehicle?.type || '',weaponId,damage,
+    shotId:`${myId || 'local'}:${Date.now()}:${++localShotSequence}`,at:Date.now()
   };
 }
 function broadcastShot() {
@@ -567,6 +635,9 @@ function installShotHook() {
   window.addEventListener('keydown',event=>{
     if((event.code==='KeyF'||event.code==='Numpad0')&&(window.__AIRCRAFT_SYSTEM__?.active||window.__POLICE_RESPONSE__?.activeTank))setTimeout(broadcastShot,0);
   },true);
+  window.addEventListener('vice-weapon-fired',()=>{
+    if(game.activeCar?.userData?.v95BikeEntry)setTimeout(broadcastShot,0);
+  });
 }
 function objectId(root,prefix) {
   if (!root) return null;
@@ -725,14 +796,31 @@ function animate() {
   for(const [id,remote] of remotes){
     if(now-remote.lastSeen>18000){removeRemote(id);continue;}
     if(!remote.hasTarget)continue;
+    // V104: si este amigo va de pasajero en el vehículo de otro, de colocarlo
+    // se encarga pasajeros-v104.js, que sabe dónde está cada asiento.
+    if(remote.ride){remote.avatarRoot.visible=true;remote.mixer?.update(dt);setAction(remote,'Idle');continue;}
     const ghost=ensureRemoteVehicle(remote,remote.vehicle);
     if(ghost){
       remote.avatarRoot.visible=false;
       remote.group.position.lerp(ghost.position,.35);
       remote.group.quaternion.slerp(ghost.quaternion,.35);
       remote.label.position.y=150;
+      // El grupo se queda con el cabeceo y el alabeo del vehículo.
+      remote.tiltedByVehicle=true;
     }else{
       remote.avatarRoot.visible=true;
+      // V103: AQUÍ ESTABA EL FALLO. Al ir en avión o en coche, la línea de
+      // arriba copia el quaternion COMPLETO del vehículo (cabeceo y alabeo
+      // incluidos). Al bajarse, este bloque sólo corregía rotation.y, así que
+      // la inclinación del avión se quedaba puesta y el amigo aparecía tumbado
+      // en el suelo. Y además, con el grupo inclinado, rotation.y ya no es el
+      // rumbo real, por eso también parecía que caminaban al revés.
+      // A pie la orientación es SIEMPRE un giro puro sobre el eje vertical.
+      if(remote.tiltedByVehicle){
+        tempEuler.setFromQuaternion(remote.group.quaternion,'YXZ');
+        remote.group.rotation.set(0,tempEuler.y,0);
+        remote.tiltedByVehicle=false;
+      }
       remote.group.position.lerp(remote.target,.24);
       const delta=Math.atan2(Math.sin(remote.targetYaw-remote.group.rotation.y),Math.cos(remote.targetYaw-remote.group.rotation.y));
       remote.group.rotation.y+=delta*.25;
@@ -750,7 +838,7 @@ function animate() {
 }
 function setStatus(text,color='#ff8a00') {
   const node=document.getElementById('gta-online-status');if(node){node.textContent=text;node.style.color=color;}
-  const dot=badge?.querySelector('.gta-online-dot');if(dot)dot.style.background=color;
+  const dot=badge?.querySelector('.gta-online-dot');if(dot){dot.style.background=color;dot.style.boxShadow='0 0 10px '+color;}
 }
 function notice(text,duration=3600) {
   let node=document.getElementById('gta-online-notice');
@@ -762,14 +850,35 @@ function updateBadge() {
   const count=connected?remotes.size+1:0;
   badge.querySelector('.gta-online-count').textContent=connected?`ONLINE · ${count} JUGADOR${count===1?'':'ES'} · ${roomCode}`:'MODO ONLINE · PULSA O';
 }
+async function prewarmAvatarShaders() {
+  // V94: compila por adelantado el shader del Soldier teñido. El congelón al
+  // conectarse alguien era la primera compilación de materiales del avatar
+  // remoto; ahora se hace en segundo plano mucho antes de conectar.
+  try {
+    const data = await loadAvatarTemplate();
+    if (!data || !game?.scene) return;
+    const ghost = safeClone(data.scene);
+    if (!ghost) return;
+    ghost.name = 'ONLINE_PREWARM_GHOST';
+    ghost.scale.set(20,20,20);
+    ghost.position.set(0,-100000,0);
+    tintModel(ghost,'#25d366');
+    game.scene.add(ghost);
+    try { if (game.renderer?.compileAsync) await game.renderer.compileAsync(game.scene, game.camera); } catch {}
+    setTimeout(() => { try { ghost.parent?.remove(ghost); } catch {} }, 2600);
+  } catch {}
+}
 function prewarmOnlineTemplates() {
   // V92: descarga y prepara por adelantado los modelos que el otro jugador
   // puede usar (jet, helicóptero, avión, tanque y coche). Así, cuando aparecen
   // en la partida online ya están listos y la pantalla no se congela.
+  // V94: se lanza al arrancar el juego (no al conectar) e incluye la
+  // precompilación de shaders del avatar remoto.
   if (prewarmOnlineTemplates.__done) return;
   prewarmOnlineTemplates.__done = true;
   const jobs = [
     () => loadAvatarTemplate(),
+    () => prewarmAvatarShaders(),
     () => loadOnlineVehicleTemplate('aircraft','JET'),
     () => loadOnlineVehicleTemplate('aircraft','HELICOPTER'),
     () => loadOnlineVehicleTemplate('aircraft','PLANE'),
@@ -798,11 +907,6 @@ async function connect() {
   if(connected)return;
   setStatus('CONECTANDO…','#ffd23f');
   try{
-    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
-      setStatus('FALTA CONFIGURACIÓN DE SUPABASE','#ff4d4d');
-      notice('CONFIGURA SUPABASE PARA ACTIVAR EL MODO ONLINE',5200);
-      throw new Error('Falta juego/supabase-config.local.js');
-    }
     if(!supabase)supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{realtime:{params:{eventsPerSecond:35}}});
     myId=myId||`p_${globalThis.crypto?.randomUUID?.()?.slice(0,8)||Math.random().toString(36).slice(2,10)}`;
     channel=supabase.channel(`gta-v86:${roomCode}`,{config:{presence:{key:myId},broadcast:{self:false,ack:false}}});
@@ -821,6 +925,16 @@ async function connect() {
       if(!payload||payload.id===myId)return;
       drawRemoteShot(payload);playerHitByRay(payload);damageHostEntityFromShot(payload);
     });
+    channel.on('broadcast',{event:'hit-confirm'},({payload})=>{
+      if(!payload||payload.shooterId!==myId)return;
+      const target=clampText(payload.targetName,'JUGADOR',14);
+      notice(payload.killed
+        ? `JUGADOR ELIMINADO · ${target}`
+        : `IMPACTO ONLINE · ${target} · VIDA ${Math.max(0,Math.round(Number(payload.health)||0))}`,1500);
+      window.dispatchEvent(new CustomEvent('vice-combat-hit',{
+        detail:{online:true,targetId:payload.targetId,damage:Number(payload.damage)||0,killed:Boolean(payload.killed)}
+      }));
+    });
     channel.on('broadcast',{event:'objects'},({payload})=>{
       if(!payload||payload.id===myId)return;
       updateWorldGhosts(payload.id,'objects',payload.objects||[]);
@@ -830,7 +944,7 @@ async function connect() {
     channel.subscribe(async status=>{
       if(status==='SUBSCRIBED'){
         connected=true;livePresenceIds.add(myId);recalculateHost();
-        await channel.track({name:myName,color:myColor,version:91,at:Date.now()});
+        await channel.track({name:myName,color:myColor,version:99,at:Date.now()});
         setStatus(`ONLINE · SERVIDOR ${roomCode}`,'#25d366');
         notice(`CONECTADO A ${roomCode} · JUGADORES, VEHÍCULOS, POLICÍA Y COMBATE SINCRONIZADOS`,5200);
         prewarmOnlineTemplates();
@@ -848,25 +962,51 @@ async function disconnect() {
   setStatus('DESCONECTADO','#ff8a00');updateBadge();
 }
 function buildUi() {
+  // V94: panel rediseñado al estilo gangsta de GTA — chapa negra con rayas
+  // diagonales, dorado clásico, título tipo Pricedown (Impact en cursiva con
+  // sombra dura), estrellas de búsqueda, fichas de color circulares y botón
+  // dorado con relieve. Mismos IDs de siempre: solo cambia la piel.
   const style=document.createElement('style');
   style.textContent=`
-  #gta-online-panel{position:fixed;right:18px;bottom:18px;z-index:6400;width:310px;background:linear-gradient(155deg,rgba(15,10,5,.98),rgba(31,17,5,.98));border:2px solid #ff8a00;padding:16px;color:#ffe9c9;font-family:Arial,sans-serif;box-shadow:0 18px 55px rgba(0,0,0,.72)}
-  #gta-online-panel.gta-online-min{display:none}#gta-online-panel h3{margin:0 0 4px;color:#ff8a00;font:900 19px Impact,"Arial Black",Arial;letter-spacing:.07em}#gta-online-panel .sub{font:700 9px Arial;color:#c9a06a;letter-spacing:.13em;margin-bottom:11px}
-  #gta-online-panel label{display:block;margin:9px 0 4px;color:#e8c491;font:900 10px Arial;letter-spacing:.09em}#gta-online-panel input{width:100%;box-sizing:border-box;background:#050403;border:1px solid #8b5519;color:#fff1d8;padding:8px 10px;font:900 13px "Arial Black",Arial;outline:none}#gta-online-panel input:focus{border-color:#ffb345}
-  .gta-online-colors{display:flex;gap:7px;flex-wrap:wrap}.gta-online-colors button{width:28px;height:28px;border:2px solid #4b3825;cursor:pointer}.gta-online-colors button.sel{border-color:#fff;transform:scale(1.12);box-shadow:0 0 0 2px #ff8a00}
-  #gta-online-connect{width:100%;margin-top:14px;padding:11px;background:#ff8a00;border:0;color:#140900;font:900 14px Impact,"Arial Black",Arial;letter-spacing:.1em;cursor:pointer}#gta-online-disconnect{width:100%;margin-top:7px;padding:8px;background:transparent;border:1px solid #7a4a12;color:#c9a06a;font:900 10px Arial;cursor:pointer}
-  #gta-online-status{margin-top:10px;text-align:center;color:#ff8a00;font:900 10px Arial;letter-spacing:.08em}#gta-online-close{position:absolute;right:9px;top:7px;background:none;border:0;color:#c9a06a;font-weight:900;cursor:pointer}
-  #gta-online-badge{position:fixed;right:18px;bottom:18px;z-index:6390;display:flex;gap:8px;align-items:center;background:rgba(10,7,3,.94);border:1px solid #ff8a00;padding:8px 13px;color:#ffe9c9;font:900 10px "Arial Black",Arial;letter-spacing:.07em;cursor:pointer}.gta-online-dot{width:9px;height:9px;border-radius:50%;background:#ff8a00}
+  #gta-online-panel{position:fixed;right:18px;bottom:18px;z-index:6400;width:344px;padding:0 0 18px;color:#f3e3c3;font-family:Arial,sans-serif;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.022) 0 2px,transparent 2px 9px),radial-gradient(120% 90% at 50% 0%,#241505 0%,#0d0a05 46%,#060504 100%);border:1px solid #000;outline:3px solid #f5a41c;outline-offset:-4px;box-shadow:0 0 0 1px #5b3b09,0 26px 70px rgba(0,0,0,.85),0 0 42px rgba(245,164,28,.16);animation:gtaPanelIn .28s cubic-bezier(.2,.9,.3,1.2)}
+  @keyframes gtaPanelIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+  #gta-online-panel.gta-online-min{display:none}
+  .gta-online-head{position:relative;padding:16px 16px 12px;text-align:center;border-bottom:2px solid #f5a41c;background:linear-gradient(180deg,rgba(245,164,28,.14),rgba(0,0,0,0) 78%)}
+  .gta-online-head:before{content:'';position:absolute;left:0;right:0;top:0;height:7px;background:repeating-linear-gradient(-45deg,#f5a41c 0 12px,#0a0803 12px 24px);opacity:.92}
+  .gta-online-stars{margin-top:7px;font:900 12px Arial;color:#f5a41c;letter-spacing:.4em;text-shadow:0 0 8px rgba(245,164,28,.65),1px 2px 0 #000}
+  #gta-online-panel h3{margin:6px 0 0;color:#fff;font:italic 900 30px Impact,"Arial Black",Arial;letter-spacing:.02em;transform:skewX(-5deg);text-shadow:3px 3px 0 #000,4px 5px 0 rgba(0,0,0,.55),0 0 22px rgba(245,164,28,.35)}
+  .gta-online-neon{margin-top:2px;font:italic 900 15px Impact,"Arial Black",Arial;letter-spacing:.55em;text-indent:.55em;color:#ff3fa4;text-shadow:0 0 9px #ff3fa4,0 0 20px rgba(255,63,164,.7),1px 2px 0 #000}
+  #gta-online-panel .sub{font:800 8.5px Arial;color:#b9924e;letter-spacing:.2em;text-align:center;margin:10px 14px 2px}
+  .gta-online-body{padding:2px 18px 0}
+  #gta-online-panel label{display:block;margin:13px 0 5px;color:#f5a41c;font:900 9.5px Arial;letter-spacing:.16em;text-shadow:1px 1px 0 #000}
+  #gta-online-panel input{width:100%;box-sizing:border-box;background:#070604;border:2px solid #3d2c0d;border-radius:2px;color:#ffedcd;padding:10px 11px;font:900 14px "Arial Black",Arial;letter-spacing:.05em;outline:none;box-shadow:inset 0 3px 9px rgba(0,0,0,.75);transition:border-color .15s,box-shadow .15s}
+  #gta-online-panel input:focus{border-color:#f5a41c;box-shadow:inset 0 3px 9px rgba(0,0,0,.75),0 0 12px rgba(245,164,28,.4)}
+  .gta-online-colors{display:flex;gap:8px;flex-wrap:wrap;padding:2px 0}
+  .gta-online-colors button{width:31px;height:31px;border-radius:50%;border:2px solid #000;cursor:pointer;box-shadow:0 0 0 2px #453310,inset 0 2px 4px rgba(255,255,255,.22),0 3px 6px rgba(0,0,0,.6);transition:transform .12s}
+  .gta-online-colors button:hover{transform:scale(1.14)}
+  .gta-online-colors button.sel{transform:scale(1.18);box-shadow:0 0 0 2.5px #fff,0 0 14px #f5a41c,inset 0 2px 4px rgba(255,255,255,.25)}
+  #gta-online-connect{width:100%;margin-top:17px;padding:13px;border:1px solid #131313;border-radius:2px;cursor:pointer;color:#160c00;background:linear-gradient(180deg,#ffd35e 0%,#f5a41c 48%,#c67c07 100%);font:italic 900 17px Impact,"Arial Black",Arial;letter-spacing:.12em;text-shadow:0 1px 0 rgba(255,255,255,.5);box-shadow:0 4px 0 #6f4703,0 9px 22px rgba(0,0,0,.55);transition:transform .08s,box-shadow .08s,filter .12s}
+  #gta-online-connect:hover{filter:brightness(1.09)}
+  #gta-online-connect:active{transform:translateY(3px);box-shadow:0 1px 0 #6f4703,0 4px 10px rgba(0,0,0,.5)}
+  #gta-online-disconnect{width:100%;margin-top:9px;padding:8px;background:rgba(122,27,27,.14);border:1px solid #7a2a1b;border-radius:2px;color:#e8a08d;font:900 10px Arial;letter-spacing:.12em;cursor:pointer;transition:background .15s,color .15s}
+  #gta-online-disconnect:hover{background:rgba(122,27,27,.32);color:#ffc8ba}
+  #gta-online-status{margin:12px 4px 0;padding:8px;text-align:center;color:#f5a41c;font:900 10px "Arial Black",Arial;letter-spacing:.1em;background:rgba(0,0,0,.5);border:1px solid #2c2110;border-radius:2px;text-shadow:1px 1px 0 #000}
+  #gta-online-close{position:absolute;right:10px;top:12px;z-index:2;background:rgba(0,0,0,.45);border:1px solid #5b3b09;border-radius:2px;color:#e8c491;width:24px;height:24px;line-height:20px;font-weight:900;cursor:pointer}
+  #gta-online-close:hover{color:#fff;border-color:#f5a41c}
+  #gta-online-badge{position:fixed;right:18px;bottom:18px;z-index:6390;display:flex;gap:9px;align-items:center;cursor:pointer;padding:9px 15px;color:#ffe9c9;font:italic 900 11px Impact,"Arial Black",Arial;letter-spacing:.1em;background:repeating-linear-gradient(-45deg,rgba(255,255,255,.03) 0 2px,transparent 2px 8px),linear-gradient(180deg,#1b1206,#090705);border:1px solid #000;outline:2px solid #f5a41c;outline-offset:-3px;box-shadow:0 10px 26px rgba(0,0,0,.7),0 0 18px rgba(245,164,28,.14);text-shadow:1px 1px 0 #000}
+  #gta-online-badge:hover{filter:brightness(1.12)}
+  .gta-online-dot{width:10px;height:10px;border-radius:50%;background:#f5a41c;border:1.5px solid #000;box-shadow:0 0 10px #f5a41c;animation:gtaDotPulse 1.6s ease-in-out infinite}
+  @keyframes gtaDotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.28)}}
   `;
   document.head.appendChild(style);
-  panel=document.createElement('div');panel.id='gta-online-panel';panel.className='gta-online-min';panel.innerHTML=`<button id="gta-online-close">✕</button><h3>GTA MANUCHO ONLINE</h3><div class="sub">MUNDO, POLICÍA, VEHÍCULOS Y COMBATE COMPARTIDOS</div><label>TU NOMBRE</label><input id="gta-online-name" maxlength="14"><label>COLOR EXACTO DEL PERSONAJE</label><div class="gta-online-colors" id="gta-online-colors"></div><label>CÓDIGO DEL SERVIDOR</label><input id="gta-online-room" maxlength="16"><button id="gta-online-connect">JUGAR ONLINE</button><button id="gta-online-disconnect">DESCONECTAR</button><div id="gta-online-status">DESCONECTADO · PULSA O</div>`;
+  panel=document.createElement('div');panel.id='gta-online-panel';panel.className='gta-online-min';panel.innerHTML=`<button id="gta-online-close">✕</button><div class="gta-online-head"><div class="gta-online-stars">★ ★ ★ ★ ★</div><h3>GTA MANUCHO</h3><div class="gta-online-neon">ONLINE</div></div><div class="sub">MUNDO · POLICÍA · VEHÍCULOS · COMBATE COMPARTIDO</div><div class="gta-online-body"><label>TU NOMBRE EN LA CALLE</label><input id="gta-online-name" maxlength="14" spellcheck="false" autocomplete="off"><label>COLOR DE TU PERSONAJE</label><div class="gta-online-colors" id="gta-online-colors"></div><label>CÓDIGO DEL SERVIDOR</label><input id="gta-online-room" maxlength="16" spellcheck="false" autocomplete="off"><button id="gta-online-connect">JUGAR ONLINE</button><button id="gta-online-disconnect">DESCONECTAR</button><div id="gta-online-status">DESCONECTADO · PULSA O</div></div>`;
   document.body.appendChild(panel);
   badge=document.createElement('div');badge.id='gta-online-badge';badge.innerHTML='<span class="gta-online-dot"></span><span class="gta-online-count">MODO ONLINE · PULSA O</span>';document.body.appendChild(badge);
   const nameInput=panel.querySelector('#gta-online-name'),roomInput=panel.querySelector('#gta-online-room'),colors=panel.querySelector('#gta-online-colors');
   nameInput.value=myName;roomInput.value=roomCode;
-  for(const color of PLAYER_COLORS){const button=document.createElement('button');button.style.background=color;button.title=color;if(color===myColor)button.classList.add('sel');button.onclick=()=>{myColor=color;colors.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));button.classList.add('sel');savePrefs();applyColorToLocalPlayer();if(connected)channel?.track({name:myName,color:myColor,version:91,at:Date.now()});};colors.appendChild(button);}
+  for(const color of PLAYER_COLORS){const button=document.createElement('button');button.style.background=color;button.title=color;if(color===myColor)button.classList.add('sel');button.onclick=()=>{myColor=color;colors.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));button.classList.add('sel');savePrefs();applyColorToLocalPlayer();if(connected)channel?.track({name:myName,color:myColor,version:94,at:Date.now()});};colors.appendChild(button);}
   badge.onclick=()=>panel.classList.toggle('gta-online-min');panel.querySelector('#gta-online-close').onclick=()=>panel.classList.add('gta-online-min');
-  panel.querySelector('#gta-online-connect').onclick=async()=>{myName=clampText(nameInput.value,'MANUCHO',14).toUpperCase();const next=clampText(roomInput.value,'MANUCHO',16).toUpperCase().replace(/[^A-Z0-9-]/g,'')||'MANUCHO';nameInput.value=myName;roomInput.value=next;if(connected&&next!==roomCode)await disconnect();roomCode=next;savePrefs();applyColorToLocalPlayer();if(connected)await channel.track({name:myName,color:myColor,version:91,at:Date.now()});else connect();};
+  panel.querySelector('#gta-online-connect').onclick=async()=>{myName=clampText(nameInput.value,'MANUCHO',14).toUpperCase();const next=clampText(roomInput.value,'MANUCHO',16).toUpperCase().replace(/[^A-Z0-9-]/g,'')||'MANUCHO';nameInput.value=myName;roomInput.value=next;if(connected&&next!==roomCode)await disconnect();roomCode=next;savePrefs();applyColorToLocalPlayer();if(connected)await channel.track({name:myName,color:myColor,version:99,at:Date.now()});else connect();};
   panel.querySelector('#gta-online-disconnect').onclick=disconnect;
   for(const input of [nameInput,roomInput])for(const type of ['keydown','keyup','keypress'])input.addEventListener(type,event=>event.stopPropagation());
   window.addEventListener('keydown',event=>{if(event.code==='KeyO'&&!event.repeat&&document.activeElement?.tagName!=='INPUT')panel.classList.toggle('gta-online-min');});
@@ -882,8 +1022,10 @@ function install() {
     if(game?.soldierModel||tintAttempts>=24)clearInterval(tintTimer);
   },500);
   requestAnimationFrame(animate);requestAnimationFrame(sendLoop);
-  window.__GTA_ONLINE__={connect,disconnect,remotes,worldGhosts,get connected(){return connected;},get hostId(){return hostId;},getRemoteMapStates(){return [...remotes.values()].filter(remote=>remote.hasTarget).map(remote=>({id:remote.id,name:remote.name,color:remote.color,position:remote.vehicleGhost?.visible?remote.vehicleGhost.position:remote.group.position,yaw:remote.targetYaw,vehicle:Boolean(remote.vehicle)}));}};
-  setTimeout(()=>notice('MODO ONLINE V91 DISPONIBLE · PULSA O',5000),3500);
+  // V99: precalentado en segundo plano nada más arrancar, sin esperar a conectar.
+  setTimeout(()=>{try{prewarmOnlineTemplates();}catch{}},9000);
+  window.__GTA_ONLINE__={connect,disconnect,broadcastShot,remotes,worldGhosts,get myId(){return myId;},get connected(){return connected;},get hostId(){return hostId;},getRemoteMapStates(){return [...remotes.values()].filter(remote=>remote.hasTarget).map(remote=>({id:remote.id,name:remote.name,color:remote.color,position:remote.vehicleGhost?.visible?remote.vehicleGhost.position:remote.group.position,yaw:remote.targetYaw,vehicle:Boolean(remote.vehicle)}));}};
+  setTimeout(()=>notice('MODO ONLINE V99 DISPONIBLE · PULSA O',5000),3500);
   return true;
 }
 const wait=setInterval(()=>{if(install())clearInterval(wait);},300);

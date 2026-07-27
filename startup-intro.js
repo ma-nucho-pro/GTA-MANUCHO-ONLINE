@@ -6,6 +6,10 @@
 (() => {
   'use strict';
 
+  // V93 corregido: no se crea ninguna capa de la cinemática al abrir la
+  // página. Toda la introducción se inicializa únicamente después de que el
+  // jugador elige "INICIAR PARTIDA" en el menú principal.
+  function initializeIntro() {
   const cover = {
     src: './docs/media/Portada.png',
     alt: 'Portada de GTA MANUCHO',
@@ -215,6 +219,9 @@
     setTimeout(startTutorial, 900);
   }
 
+  // V93: la cinemática solo comienza cuando el menú principal pulsa "INICIAR PARTIDA".
+  function beginIntroSequence() {
+  body.classList.add('gta-intro-active');
   preload(1);
   progress.style.width = '8%';
   typeBrief(media[0].brief);
@@ -223,11 +230,19 @@
     showIndex(index + 1);
   }, 2400);
 
+  intro.addEventListener('pointerdown', skip, { once: true });
+  window.addEventListener('keydown', skip, true);
+  }
+
   function skip(event) {
     if (event?.type === 'keydown' && !['Enter', 'Space'].includes(event.code)) return;
     event?.preventDefault?.();
     finishSequence();
   }
-  intro.addEventListener('pointerdown', skip, { once: true });
-  window.addEventListener('keydown', skip, true);
+
+  beginIntroSequence();
+  }
+
+  if (window.__GTA_MENU_STARTED__) initializeIntro();
+  else window.addEventListener('gta-main-menu-start', initializeIntro, { once: true });
 })();

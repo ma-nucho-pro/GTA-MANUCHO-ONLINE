@@ -1087,7 +1087,7 @@ function n4() {
 }
 T2.preload(Ws);
 const Li = "https://offline.invalid",
-    _i = "offline-public-placeholder",
+    _i = "sb_publishable_not_configured",
     A3 = (() => {
         const e = {
                 data: [],
@@ -4741,7 +4741,7 @@ function eo(e) {
     }
 }
 const qo = "https://offline.invalid",
-    bp = "offline-public-placeholder";
+    bp = "sb_publishable_not_configured";
 async function po() {
     const {
         data: e,

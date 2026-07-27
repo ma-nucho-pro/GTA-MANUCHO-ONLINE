@@ -1,0 +1,22 @@
+GTA MANUCHO V100
+================
+
+- Moto: tres cámaras diferenciadas con V (lejana, cercana y primera persona).
+- Cámara en primera persona estabilizada para evitar el temblor del suelo.
+- Pistola trigger.glb y encuadre FOV 90 conservados del HTML adjunto.
+- Los disparos desde la moto conservan mira y daño real sobre NPC, bandas y policía.
+- Búsqueda equilibrada: un tiroteo continuado da una sola estrella; las estrellas
+  adicionales llegan por delitos graves, policías eliminados, atropellos múltiples
+  o cada cinco NPC eliminados.
+- Golden Gate construido con el archivo golden_gate_bridge.js adjunto y colocado
+  sobre el mar. La carretera, accesos y cables principales admiten la moto; al
+  perder el equilibrio en un cable, la moto cae.
+- Clima dinámico según hora y probabilidad: sol, nubes, lluvia, amanecer rosado,
+  cielo rojo, noches nubladas o despejadas, estrellas y estrellas fugaces.
+- La arena de las dos islas queda casi a nivel del agua.
+- Control del barco principal reforzado para avanzar, retroceder y girar.
+- El jetpack de Fog City se reemplazó por una moto voladora manejable basada en
+  la motocicleta original adjunta al proyecto.
+- Caballos del Retiro: animación hacia delante y velocidad de paseo/carrera normal.
+- Ajustes progresivos de partículas, sombras y frecuencia de actualización para
+  mantener estabilidad en equipos de pocos recursos.

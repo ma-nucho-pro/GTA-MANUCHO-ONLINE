@@ -1,0 +1,14 @@
+GTA MANUCHO V99
+
+CORRECCIONES DE MOTO
+- La tecla V recorre exactamente tres cámaras: lejana, cercana y primera persona.
+- La cámara cercana tiene una posición propia y ya no queda dentro del personaje.
+- Mientras se conduce una moto se bloquea el cambio de cámara del vehículo del juego base, que era el que hacía saltar la vista intermedia.
+- El modo actual aparece como CÁMARA 1/3, 2/3 o 3/3.
+
+DISPAROS Y DAÑO
+- Los disparos confirmados desde la moto usan la dirección real de la mira.
+- Los impactos reducen la vida de civiles, NPC, bandas y policías, con una pequeña tolerancia para cuerpos animados.
+- El arma seleccionada conserva su daño propio: pistola, AK-47 y escopeta.
+- En el modo online, el cuerpo del jugador y su vehículo se comprueban por separado.
+- Los amigos online reciben daño real, pueden morir y el tirador ve la confirmación del impacto o eliminación.

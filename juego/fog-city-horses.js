@@ -26,6 +26,7 @@ const horses = [];
 let lastTime = performance.now();
 let accumulator = 0;
 const HORSE_STEP = 1 / 15;
+let mountedHorseBaseSpeeds = null;
 
 function groundPatch() {
   if (game.__fogCityGroundPatched) return;
@@ -243,12 +244,13 @@ function addHorse(model, clip, index) {
   game.city.add(root);
   const entry = {
     root, model, route, routeIndex: (index + 1) % route.length,
-    speed: 75 + index * 7, mixer: null
+    speed: 145 + index * 10, mixer: null
   };
   if (clip) {
     entry.mixer = new THREE.AnimationMixer(model);
     const action = entry.mixer.clipAction(clip);
     action.setLoop(THREE.LoopRepeat, Infinity);
+    action.timeScale = 1.22;
     action.play();
     action.time = Math.random() * Math.max(.1, clip.duration);
   }
@@ -290,12 +292,50 @@ function updateHorses(dt) {
     const yaw = Math.atan2(vx, vz);
     let delta = Math.atan2(Math.sin(yaw - horse.root.rotation.y), Math.cos(yaw - horse.root.rotation.y));
     horse.root.rotation.y += delta * Math.min(1, dt * 5);
-    horse.mixer?.update(dt);
+    horse.mixer?.update(dt * 1.08);
+  }
+}
+
+function updateMountedRetiroHorse() {
+  const ridden = game?.activeRiddenHorse;
+  if (ridden) {
+    if (!mountedHorseBaseSpeeds) {
+      mountedHorseBaseSpeeds = {
+        walk: Number(game.state?.walkSpeed || 1),
+        run: Number(game.state?.runSpeed || 1)
+      };
+    }
+    // El movimiento a pie recupera sus valores al desmontar; el aumento solo
+    // compensa la escala grande del Retiro mientras el caballo está montado.
+    game.state.walkSpeed = mountedHorseBaseSpeeds.walk * 1.4;
+    game.state.runSpeed = mountedHorseBaseSpeeds.run * 1.35;
+
+    const walk = ridden.actions?.Walk;
+    if (walk && !walk.userData?.v100ForwardPlayback) {
+      walk.userData ||= {};
+      walk.userData.v100ForwardPlayback = true;
+      let positiveTimeScale = 1.28;
+      try {
+        Object.defineProperty(walk, 'timeScale', {
+          configurable: true,
+          enumerable: true,
+          get() { return positiveTimeScale; },
+          set(value) { positiveTimeScale = Math.max(1.18, Math.abs(Number(value) || 1.28)); }
+        });
+      } catch {
+        walk.timeScale = 1.28;
+      }
+    }
+  } else if (mountedHorseBaseSpeeds && game?.state) {
+    game.state.walkSpeed = mountedHorseBaseSpeeds.walk;
+    game.state.runSpeed = mountedHorseBaseSpeeds.run;
+    mountedHorseBaseSpeeds = null;
   }
 }
 
 function loop(now = performance.now()) {
   requestAnimationFrame(loop);
+  updateMountedRetiroHorse();
   accumulator += Math.min(.1, Math.max(0, (now - lastTime) / 1000));
   lastTime = now;
   if (accumulator < HORSE_STEP) return;

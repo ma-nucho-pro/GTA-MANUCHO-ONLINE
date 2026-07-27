@@ -1,0 +1,48 @@
+GTA MANUCHO V96 — CORRECCIÓN CON LOS RECURSOS ORIGINALES ADJUNTOS
+
+Todos estos cambios se aplican al juego principal, no al tutorial ni a los
+mundos separados.
+
+1. MOTOS CON NPC
+- Se eliminó por completo la moto geométrica creada en V95.
+- Las motos usan directamente motorcycle_compressed.glb del HTML adjunto.
+- Los conductores usan directamente rider_compressed.glb del HTML adjunto.
+- La vista de conducción incorpora arms_compressed.glb con la posición,
+  rotación y escala definidas en el mismo HTML.
+- El jugador puede robarlas con E.
+- Controles: W/S acelerar y frenar, A/D girar, SHIFT turbo, V cámara y E bajar.
+- Tres cámaras: tercera persona, primera persona y vista alta.
+- Las armas siguen funcionando sobre la moto y el arma 3D aparece en primera persona.
+
+2. PARQUE, CÉSPED Y ÁRBOLES
+- Se añadieron cuatro zonas de césped dentro del área verde del Retiro.
+- Se eliminaron los troncos y copas geométricos creados en V95.
+- Los árboles se producen con la clase InstancedForest, la ramificación
+  recursiva, las hojas y las texturas del HTML adjunto.
+- Ramas y hojas usan instancias para reducir el coste gráfico.
+- Los troncos tienen colisión: el personaje y las motos no los atraviesan.
+- No se colocaron árboles sobre pistas ni puentes.
+
+3. MAR, ROCAS, ISLAS Y BALSAS
+- Se añadieron rocas instanciadas bajo el mar y alrededor de las islas.
+- Se añadieron balsas que se pueden subir y manejar.
+- El clic durante la natación mantiene el descenso hacia el fondo.
+- Se bajó mucho la arena y la superficie física de las dos islas.
+- El barco jugable ya aparece en agua libre y ahora avanza correctamente.
+
+4. ARMAS Y AVES
+- Se conserva el arma 3D real de primera persona incluida en el inventario.
+- Las aves aparecen por momentos en bandadas pequeñas.
+- Las aves pueden recibir disparos, caer y desaparecer al tocar el suelo.
+
+5. HORA, CLIMA E ISLA-CEMENTERIO
+- El ciclo muestra amanecer rosado, sol, franjas nubladas y noche.
+- Entre las 00:00 y las 00:15 aparece una isla-cementerio en el mar.
+- A las 00:15 la isla desaparece y deja de ser una superficie física.
+
+6. RENDIMIENTO
+- Árboles y rocas se renderizan mediante instancias.
+- NPC de moto y aves se actualizan a frecuencia reducida.
+- Los elementos lejanos se ocultan por distancia.
+- En equipos de pocos núcleos o poca memoria se reducen las cantidades, pero
+  se conservan todas las funciones.

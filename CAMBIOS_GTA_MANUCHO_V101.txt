@@ -1,0 +1,155 @@
+GTA MANUCHO V101
+================
+
+ISLAS DE LA ZONA DE LOS BARCOS
+------------------------------
+
+1. SE QUITA LA ARENA NARANJA
+   El disco naranja no venía de ningún archivo: eran dos cilindros creados a
+   mano en createPhysicalIslands() (arena 0xb99a60 y un pedestal de roca
+   0x655c4d). Tapaban por completo el modelo adjunto de palmeras y rocas, que
+   estaba enterrado 95 unidades por debajo. Se han eliminado los cuatro
+   cilindros. Ahora la isla es únicamente island.glb.
+
+2. SE SUBEN LAS ISLAS DE PALMERAS Y ROCAS
+   Eran las que estaban debajo de la arena. Ahora sobresalen del agua:
+     · isla oeste  → cima 11 m sobre el agua, ~136 m de ancho pisable
+     · isla este   → cima  9 m sobre el agua, ~112 m de ancho pisable
+   De paso se corrigieron dos errores de orientación del modelo:
+     · Venía con Z hacia arriba y se giraba +90° en X, lo que la dejaba boca
+       abajo. Ahora es -90°.
+     · El giro horizontal se aplicaba antes del volteo (orden XYZ), así que la
+       segunda isla salía inclinada 31,5°. Ahora se usa el orden YXZ y el giro
+       es un giro de verdad.
+   El terreno se dibuja por las dos caras, así que ya no se transparenta desde
+   el mar ni desde debajo del agua.
+
+3. FIN DEL SUELO INVISIBLE (el motivo de flotar en el aire)
+   Había DOS causas, las dos corregidas:
+
+   a) La colisión no era la malla, era una parábola:
+        best = island.top - (distancia/radio)^2 * 54
+      calculada hasta radius = 150 * 16 = 2400 unidades, mientras la arena que
+      se veía sólo llegaba a 1848. Esos ~550 puntos (unos 35 m) de diferencia
+      alrededor de todo el borde eran el suelo invisible sobre el que se
+      caminaba. Ahora se rasterizan los triángulos reales del terreno del
+      adjunto en una rejilla de alturas (celda de 26 unidades) y donde la malla
+      no llega, la rejilla no tiene dato: es imposible pisar aire, porque sólo
+      hay suelo donde de verdad se ve suelo.
+
+   b) El parche de getGroundY hacía Math.max(original, isla). Sobre el mar la
+      función original no encuentra suelo y devuelve lastSafeGroundY, un valor
+      heredado de la ciudad y mucho más alto que la isla, así que ese Math.max
+      lo elegía y levantaba al personaje por encima del terreno. Ahora, cuando
+      se está sobre la isla, mandan su malla y los obstáculos sólidos que tenga
+      encima; fuera de la isla no se toca la lógica original del juego.
+
+   Comprobado con la malla decodificada del island.glb: en mar abierto no
+   devuelve suelo en ningún punto, y el suelo termina a 3,5 m de la orilla
+   (esa franja es la parte que se vadea caminando con el agua por la cintura;
+   más allá se nada).
+
+4. TIERRA, NADAR Y RESCATES
+   Lo que cuenta como "estar en la isla" ya no es un círculo teórico sino la
+   propia malla, así que nadar empieza exactamente en la orilla. Los rescates
+   de personajes y vehículos apuntan al radio real de cada isla.
+
+ROCAS DEL ARCHIVO ADJUNTO (ROCAS.html)
+--------------------------------------
+
+5. Nuevo módulo juego/rocas-adjuntas-v101.js con unas 2.400 rocas alrededor de
+   las dos islas: sobre la arena y en la orilla bajo el agua, más concentradas
+   cerca del borde del agua.
+
+   NO son rocas inventadas. Están copiados literalmente del archivo adjunto y
+   verificados carácter a carácter:
+     · class SeededRNG          · function marchingCubes
+     · function createRockSDF   · createBoxImpostor / SphereImpostor0 / 1
+     · const edgeTable          · el shader completo (getRockColor, fbm,
+     · const triTable             perturbNormal, especular mojado, fresnel)
+   Mismas semillas (s * 7919 + 1337) y mismas ocho formas, así que las piedras
+   son exactamente las del archivo.
+
+   Sólo se adaptaron tres cosas para que funcionen dentro del juego:
+     · La escala: una unidad del adjunto = 1,55 m. Salen piedras de 0,64 m a
+       3,51 m.
+     · Las frecuencias del ruido del shader y su epsilon se dividen y se
+       multiplican por esa escala, y el ruido usa coordenadas locales a la isla.
+       Sin esto, estando la isla a z ~ 33.000, sin(n) perdía toda la precisión
+       en la GPU y las rocas se veían como ruido plano.
+     · El recorte inferior usa la cota real del terreno bajo cada roca en vez
+       del plano fijo en y = 0 del demo.
+
+   Se conserva su optimización original: instancing, cuatro niveles de LOD con
+   impostores, descarte por frustum y por distancia. Además las formas se
+   generan de una en una, un fotograma cada una, para que no haya ni un tirón
+   al cargar.
+
+   Las 120 piedras más grandes que pisan tierra son sólidas, con la caja de
+   colisión metida DENTRO de la piedra (lado = radio, no diámetro, y media
+   altura). Se notan al chocar y es imposible pisar un borde invisible.
+
+RENDIMIENTO — juego/optimizacion-fluidez-v101.js
+------------------------------------------------
+
+No se quita ni se sustituye nada del juego: siguen los mismos NPC, tráfico,
+bandas, policía, vehículos y mundos. Sólo cambia cuánto se dibuja de todo eso.
+
+6. LA CAUSA PRINCIPAL DEL LAG
+   El motor arranca con cullDistance = 5000 * 16 = 80.000 unidades y confía en
+   su propio auto-optimizador para bajarlo cuando caen los FPS. Pero
+   performance-boost.js lo anulaba (game.autoAdjustPerformance = () => {}), así
+   que el valor se quedaba clavado en 80.000 para siempre. Con camera.far en
+   50.000 y la niebla tapando todo a partir de unas 22.000 unidades, se estaba
+   procesando más del triple del mundo que se puede llegar a ver.
+
+7. CULLING QUE TIENE EN CUENTA EL TAMAÑO
+   Se sustituye el descarte por distancia al centro del objeto por uno que mide
+   cada objeto una sola vez y lo oculta sólo cuando su borde más cercano sale
+   del radio. Así se puede recortar mucho más sin que aparezcan y desaparezcan
+   edificios delante del jugador. La medición va a seis objetos por fotograma
+   con un presupuesto de 1,1 ms, para no provocar tirones.
+
+8. PLANO LEJANO
+   camera.far baja de 50.000 a entre 26.000 y 34.000 según el equipo: la
+   distancia a la que la niebla ya tapa más del 99,9 %, así que el recorte no
+   se ve. El cielo no se ve afectado porque su shader escribe la profundidad al
+   fondo.
+
+9. GOBERNADOR CON FPS REALES
+   Se estima el nivel del equipo al arrancar (núcleos, memoria, si es móvil y
+   nombre del GPU cuando el navegador lo deja leer) para elegir un punto de
+   partida. A partir de ahí manda la medición real cada 1,2 s y se ajusta en
+   este orden: resolución interna → distancia de dibujado → reflejo del agua.
+   Recuperar calidad se hace despacio, para que no haya vaivén.
+   Márgenes: resolución 0,56–1,25 y distancia 15.200–38.400 unidades.
+
+10. REFLEJO DEL AGUA
+    Vuelve a dibujar la escena completa en un segundo pase; es lo más caro de
+    toda la zona marina. En equipos de pocos recursos arranca apagado y el mar
+    se queda con su color y su normal map. Si los FPS lo permiten, se vuelve a
+    encender solo.
+
+11. UN SOLO DUEÑO DE LA RESOLUCIÓN
+    setPixelRatio queda controlado por el módulo: el motor, performance-boost y
+    el menú de ajustes pueden seguir llamándolo, pero el valor se recorta al
+    presupuesto actual. Antes había tres bucles peleando por ese mismo número.
+
+12. TEXTURAS Y BASURA
+    Anisotropía limitada (1 en equipos bajos, 4 en el resto) y mipmaps
+    activados, repasado en tiempo libre y sin bloquear. Y el cuaternión de las
+    nubes marinas se reutiliza en vez de crear uno nuevo cada refresco.
+
+13. PRESUPUESTO PÚBLICO
+    window.__V101_FRAME_BUDGET__ permite a cualquier módulo preguntar si el
+    fotograma va justo (.overBudget()) y saltarse trabajo no esencial.
+    window.__V101_FRAME_BUDGET__.stats() muestra FPS, nivel de equipo,
+    resolución, distancia, reflejo, draw calls y triángulos.
+
+ARCHIVOS TOCADOS
+----------------
+  juego/marine-world-v84.js            modificado
+  juego/rocas-adjuntas-v101.js         nuevo
+  juego/optimizacion-fluidez-v101.js   nuevo
+  juego/index.html                     registra los dos módulos nuevos
+  juego/city-extras-loader.js          refresca la caché del módulo marino

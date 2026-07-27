@@ -131,6 +131,7 @@ let station = null;
 let ambulance = null;
 let patchedWeapons = false;
 let lastPlayerDamageAt = 0;
+let lastRayShotAt = 0;
 let transitionLock = false;
 let territoryState = loadTerritoryState();
 let assetTextures = null;
@@ -152,6 +153,10 @@ let barberBuilding = null;
 let gymBuilding = null;
 let cityHairGroup = null;
 let lastVehicleCollisionCheck = 0;
+let shotWantedGranted = false;
+let civilianKillCount = 0;
+let runoverKillCount = 0;
+let lastKnownWantedLevel = 0;
 const recruitedGang = [];
 
 const bodyGeo = new THREE.BoxGeometry(14, 27, 9);
@@ -240,6 +245,18 @@ function svgNode(tag, attrs = {}) {
   const node = document.createElementNS('http://www.w3.org/2000/svg', tag);
   for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, String(value));
   return node;
+}
+
+// V104: subido al ámbito del módulo. Estaba declarado con const dentro de
+// buildSatelliteSvg() y updateFullMapSvg() lo llamaba desde fuera, así que
+// lanzaba ReferenceError en CADA fotograma (se ve en la consola del usuario
+// cientos de veces). Además de hundir los FPS por el coste de imprimir la
+// traza, cortaba updateFullMapSvg a la mitad: por eso no salía el punto al
+// hacer clic en el mapa y por eso el teletransporte no tenía destino.
+function makeIconMarker(key, size = 28) {
+  const group = svgNode('g');
+  group.append(svgMapIcon(key, size));
+  return group;
 }
 
 function disableBaseMapUi() {
@@ -968,6 +985,83 @@ function addWanted(amount = 1, message = 'DELITO REPORTADO') {
   setWanted(wantedLevel() + amount, `${message} · ${Math.min(5, wantedLevel() + amount)} ESTRELLAS`);
 }
 
+function reportPlayerShot() {
+  // Un tiroteo es un único delito continuado: el primer disparo da una
+  // estrella y los disparos siguientes no la multiplican por cada clic.
+  if (shotWantedGranted) return;
+  shotWantedGranted = true;
+  if (wantedLevel() < 1) addWanted(1, 'DISPARO REPORTADO');
+}
+
+function reportNpcKill(runover = false) {
+  civilianKillCount++;
+  if (runover) {
+    runoverKillCount++;
+    if (runoverKillCount % 3 === 0) addWanted(1, 'ATROPELLOS MÚLTIPLES');
+  }
+  if (civilianKillCount % 5 === 0) addWanted(1, 'CINCO PERSONAS ELIMINADAS');
+}
+
+function reportPoliceKill() {
+  addWanted(2, 'POLICÍA ELIMINADO');
+}
+
+function patchGunshotCrimeReporter() {
+  const world = game?.crimeWorld;
+  if (!world || typeof world.reportGunshot !== 'function' ||
+      world.reportGunshot.__v100BalancedGunshots) return;
+  const original = world.reportGunshot.bind(world);
+  const balanced = function v100BalancedGunshots() {
+    // El motor base llamaba reportGunshot en cada bala y sumaba una estrella
+    // por clic. Solo el primer disparo de la persecución abre el delito.
+    if (shotWantedGranted || wantedLevel() >= 1) {
+      shotWantedGranted = true;
+      return;
+    }
+    shotWantedGranted = true;
+    const before = wantedLevel();
+    const result = original();
+    if (wantedLevel() > before + 1) setWanted(before + 1);
+    return result;
+  };
+  balanced.__v100BalancedGunshots = true;
+  world.reportGunshot = balanced;
+}
+
+function patchCrimeAgentShotReporter() {
+  const world = game?.crimeWorld;
+  if (!world || typeof world.handlePlayerShot !== 'function' ||
+      world.handlePlayerShot.__v100SeriousCrimes) return;
+  const original = world.handlePlayerShot.bind(world);
+  const balanced = function v100SeriousCrimeShots(...args) {
+    const aliveBefore = new Set(
+      (world.agents || []).filter(agent => agent?.state !== 'dead' && Number(agent?.health || 1) > 0)
+    );
+    const reportCrime = world.reportCrime;
+    // El impacto hiere al objetivo, pero no añade estrellas en cada bala. Las
+    // estrellas adicionales se asignan al producirse una muerte real.
+    world.reportCrime = function suppressRepeatedHitCrime(amount, message) {
+      if (message === 'ATAQUE A UN POLICÍA' ||
+          message === 'TIROTEO EN TERRITORIO DE BANDA') return;
+      return reportCrime.call(world, amount, message);
+    };
+    let result;
+    try {
+      result = original(...args);
+    } finally {
+      world.reportCrime = reportCrime;
+    }
+    for (const agent of aliveBefore) {
+      if (agent.state !== 'dead' && Number(agent.health || 0) > 0) continue;
+      if (agent.faction === 'police') reportPoliceKill();
+      else reportNpcKill(false);
+    }
+    return result;
+  };
+  balanced.__v100SeriousCrimes = true;
+  world.handlePlayerShot = balanced;
+}
+
 function drawTracer(from, to, color = 0xffe184) {
   const geometry = new THREE.BufferGeometry().setFromPoints([from, to]);
   const material = tracerMaterial.clone();
@@ -983,18 +1077,22 @@ function drawTracer(from, to, color = 0xffe184) {
 
 function damagePlayer(amount, source = 'ATAQUE') {
   const now = performance.now();
+  const message = String(source || 'ATAQUE');
+  const onlineShot = message.startsWith('DISPARO DE ');
   // V71: el jugador dispone de más resistencia y no recibe daño repetido en cada
-  // fotograma cuando queda junto a un coche, una bala o un agente.
-  if (now - lastPlayerDamageAt < 360) return;
+  // fotograma cuando queda junto a un coche, una bala o un agente. Los tiros
+  // online usan su propio ritmo porque ya llegan limitados por cada arma.
+  if (now - lastPlayerDamageAt < (onlineShot ? 80 : 360)) return false;
   lastPlayerDamageAt = now;
-  let damage = Math.max(.35, Number(amount || 0) * .64);
+  let damage = Math.max(.35, Number(amount || 0) * (onlineShot ? 1 : .64));
   if (game.armor > 0) {
     const blocked = Math.min(game.armor, damage);
     game.armor -= blocked;
     damage -= blocked;
   }
   game.health = Math.max(0, Number(game.health || 150) - damage);
-  const message = String(source || 'ATAQUE');
+  const killed = game.health <= 0;
+  const healthAfterHit = game.health;
   if (message.includes('ATROPELL') && performance.now() < Number(game.playerContainer?.userData?.v74VehicleExitGraceUntil || 0)) return;
   game.currentMessage = message;
   game.updateHUDState?.();
@@ -1005,7 +1103,8 @@ function damagePlayer(amount, source = 'ATAQUE') {
       game.updateHUDState?.();
     }
   }, message.includes('ATROPELL') ? 650 : 900);
-  if (game.health <= 0) hospitalize(source);
+  if (killed) hospitalize(source);
+  return { applied:true, killed, health:healthAfterHit, damage };
 }
 
 function createExplosion(position, scale = 1) {
@@ -1037,6 +1136,9 @@ function clearWanted() {
     }
   }
   game.wantedLevel = 0;
+  shotWantedGranted = false;
+  civilianKillCount = 0;
+  runoverKillCount = 0;
 }
 
 function hospitalize(reason = 'HAS SIDO HERIDO') {
@@ -1130,11 +1232,6 @@ function damageEntity(entity, damage, source = 'player') {
   if (!entity || entity.dead || entity.invulnerable) return false;
   entity.health -= damage;
   entity.lastHitAt = performance.now();
-  if (source === 'player') {
-    if (entity.faction === 'police') addWanted(2, 'ATAQUE A UN POLICÍA');
-    else if (entity.type === 'civilian') addWanted(1, 'AGRESIÓN A CIVIL');
-    else if (entity.type === 'vehicle' && entity.police) addWanted(2, 'ATAQUE A VEHÍCULO POLICIAL');
-  }
   if (entity.type === 'civilian' && entity.health > 0) {
     entity.state = Math.random() < .62 ? 'flee' : 'fight';
     entity.stateUntil = performance.now() + 9000;
@@ -1148,6 +1245,12 @@ function damageEntity(entity, damage, source = 'player') {
   const deathPosition = entity.root.position.clone();
   entity.dead = true;
   entity.health = 0;
+  if (source === 'player' || source === 'player-runover') {
+    if (entity.faction === 'police' || entity.type === 'police') reportPoliceKill();
+    else if (entity.type === 'civilian' || entity.type === 'gang') {
+      reportNpcKill(source === 'player-runover');
+    }
+  }
   entity.root.visible = false;
   if (entity.type === 'gang') {
     removeRecruit(entity);
@@ -1204,14 +1307,56 @@ function findEntityFromObject(object) {
   return null;
 }
 
+function findNativeTargetFromObject(object) {
+  let current = object;
+  while (current) {
+    if (current.userData?.v98NativeNpcRef) {
+      return { kind:'nativeNpc', target:current.userData.v98NativeNpcRef };
+    }
+    if (current.userData?.v98CrimeAgentRef) {
+      return { kind:'crimeAgent', target:current.userData.v98CrimeAgentRef };
+    }
+    current = current.parent;
+  }
+  return null;
+}
+
 function collectRaycastRoots() {
   const roots = [];
-  for (const entity of entities) if (!entity.dead && entity.root?.visible) roots.push(entity.root);
-  for (const npc of window.__CITY_NPCS__ || []) if (npc.root?.visible) roots.push(npc.root);
-  for (const car of window.__CUSTOM_CARS__ || []) if (car.root?.visible) roots.push(car.root);
-  for (const tank of window.__POLICE_RESPONSE__?.tanks || []) if (tank.root?.visible) roots.push(tank.root);
-  for (const plane of window.__POLICE_RESPONSE__?.policePlanes || []) if (plane.root?.visible) roots.push(plane.root);
-  for (const craft of window.__AIRCRAFT_SYSTEM__?.aircraft || []) if (craft.root?.visible) roots.push(craft.root);
+  const seen = new Set();
+  const add = root => {
+    if (!root?.visible || seen.has(root)) return;
+    seen.add(root);
+    roots.push(root);
+  };
+  for (const entity of entities) if (!entity.dead) add(entity.root);
+  for (const npc of window.__CITY_NPCS__ || []) add(npc.root);
+
+  // Peatones originales del juego base. Antes no estaban en el raycast de las
+  // armas añadidas, así que la mira podía cruzarlos sin reducir su salud.
+  for (const npc of game?.npcs || []) {
+    const root = npc?.mesh || npc?.root;
+    if (!root || npc?.state === 'dead' || npc?.dead) continue;
+    root.userData.v98NativeNpcRef = npc;
+    add(root);
+  }
+
+  // Agentes nativos de policía/bandas, además de los agentes optimizados de
+  // este módulo que ya están en `entities`.
+  const nativeAgents = [
+    ...(game?.crimeWorld?.policeAgents || []),
+    ...(game?.crimeWorld?.gangAgents || [])
+  ];
+  for (const agent of nativeAgents) {
+    if (!agent?.root || agent.state === 'dead' || agent.health <= 0) continue;
+    agent.root.userData.v98CrimeAgentRef = agent;
+    add(agent.root);
+  }
+
+  for (const car of window.__CUSTOM_CARS__ || []) add(car.root);
+  for (const tank of window.__POLICE_RESPONSE__?.tanks || []) add(tank.root);
+  for (const plane of window.__POLICE_RESPONSE__?.policePlanes || []) add(plane.root);
+  for (const craft of window.__AIRCRAFT_SYSTEM__?.aircraft || []) add(craft.root);
   return roots;
 }
 
@@ -1223,16 +1368,118 @@ function currentWeaponDamage() {
   return 18;
 }
 
+function applyShotDamage(target, damage) {
+  if (!target) return false;
+  if (target.kind === 'entity') {
+    return damageEntity(target.target, damage, 'player');
+  }
+  if (target.kind === 'nativeNpc') {
+    const npc = target.target;
+    if (typeof game.damageNpc === 'function') {
+      const wasAlive = npc && npc.state !== 'dead' && !npc.dead;
+      game.damageNpc(npc, damage);
+      if (wasAlive && (npc?.state === 'dead' || npc?.dead || Number(npc?.health) <= 0)) reportNpcKill(false);
+      return true;
+    }
+    if (!npc || npc.state === 'dead' || npc.dead) return false;
+    npc.health = Math.max(0, Number(npc.health || 20) - damage);
+    if (npc.health <= 0) {
+      npc.state = 'dead';
+      npc.dead = true;
+      if (npc.mesh) npc.mesh.rotation.x = -Math.PI / 2;
+      reportNpcKill(false);
+    }
+    return true;
+  }
+  if (target.kind === 'crimeAgent' &&
+      typeof game.crimeWorld?.damageAgent === 'function') {
+    const agent = target.target;
+    const wasAlive = agent && agent.state !== 'dead' && Number(agent.health || 1) > 0;
+    game.crimeWorld.damageAgent(target.target, damage);
+    if (wasAlive && (agent?.state === 'dead' || Number(agent?.health) <= 0)) {
+      const isPolice = (game.crimeWorld?.policeAgents || []).includes(agent);
+      if (isPolice) reportPoliceKill();
+      else reportNpcKill(false);
+    }
+    return true;
+  }
+  return false;
+}
+
+function closestTargetToAimRay() {
+  const origin = game.camera.position;
+  let best = null;
+  let bestAlong = Infinity;
+  const bestPoint = new THREE.Vector3();
+  const consider = (root, kind, target, height = 34) => {
+    if (!root?.visible || !target) return;
+    root.getWorldPosition(tempVec);
+    tempVec.y += height;
+    tempVec2.copy(tempVec).sub(origin);
+    const along = tempDir.dot(tempVec2);
+    if (along < 0 || along > 3200 || along >= bestAlong) return;
+    tempVec2.copy(tempDir).multiplyScalar(along).add(origin);
+    // 52 unidades de tolerancia: suficiente para cuerpos animados, pero no
+    // permite acertar a alguien claramente fuera de la mira.
+    if (tempVec2.distanceToSquared(tempVec) > 52 * 52) return;
+    bestAlong = along;
+    best = { kind, target };
+    bestPoint.copy(tempVec);
+  };
+
+  for (const entity of entities) {
+    if (!entity.dead) consider(entity.root, 'entity', entity);
+  }
+  for (const npc of game?.npcs || []) {
+    if (npc?.state === 'dead' || npc?.dead) continue;
+    consider(npc?.mesh || npc?.root, 'nativeNpc', npc);
+  }
+  for (const agent of [
+    ...(game?.crimeWorld?.policeAgents || []),
+    ...(game?.crimeWorld?.gangAgents || [])
+  ]) {
+    if (agent?.state === 'dead' || agent?.health <= 0) continue;
+    consider(agent?.root, 'crimeAgent', agent);
+  }
+  return best ? { target:best, point:bestPoint } : null;
+}
+
 function handleRayShot(damage = currentWeaponDamage()) {
-  if (!game?.camera) return;
+  if (!game?.camera) return false;
+  const now = performance.now();
+  // Evita aplicar dos veces el mismo clic si dos capas de inventario llaman al
+  // disparo durante el mismo evento.
+  if (now - lastRayShotAt < 24) return false;
+  lastRayShotAt = now;
   game.camera.getWorldDirection(tempDir);
   raycaster.set(game.camera.position, tempDir);
   raycaster.far = 3200;
   const hit = raycaster.intersectObjects(collectRaycastRoots(), true)[0];
-  if (!hit) return;
-  let entity = findEntityFromObject(hit.object);
-  if (!entity) entity = augmentRootEntity(hit.object);
-  if (entity) damageEntity(entity, damage, 'player');
+  let applied = false;
+  let impactPoint = null;
+  if (hit) {
+    let entity = findEntityFromObject(hit.object);
+    if (!entity) entity = augmentRootEntity(hit.object);
+    const target = entity
+      ? { kind:'entity', target:entity }
+      : findNativeTargetFromObject(hit.object);
+    applied = applyShotDamage(target, damage);
+    if (applied) impactPoint = hit.point;
+  }
+  if (!applied) {
+    const assisted = closestTargetToAimRay();
+    if (assisted) {
+      applied = applyShotDamage(assisted.target, damage);
+      if (applied) impactPoint = assisted.point;
+    }
+  }
+  if (applied) {
+    try { game.createHitSpark?.(impactPoint.clone()); } catch {}
+    window.dispatchEvent(new CustomEvent('vice-combat-hit', {
+      detail: { point:impactPoint, damage }
+    }));
+  }
+  return applied;
 }
 
 function augmentRootEntity(object) {
@@ -1248,12 +1495,19 @@ function augmentRootEntity(object) {
 function patchWeapons() {
   if (patchedWeapons || !game) return;
   patchedWeapons = true;
+  patchGunshotCrimeReporter();
   const originalShoot = typeof game.performShoot === 'function' ? game.performShoot.bind(game) : null;
   if (originalShoot) {
     game.performShoot = function v64CombatShoot(...args) {
-      const result = originalShoot(...args);
-      addWanted(1, 'DISPARO REPORTADO');
-      handleRayShot();
+      let result;
+      try {
+        result = originalShoot(...args);
+      } finally {
+        // Incluso si el disparo visual del juego base se cancela por estar en
+        // una moto, la bala de la mira mantiene su daño real.
+        reportPlayerShot();
+        handleRayShot();
+      }
       return result;
     };
   }
@@ -1933,7 +2187,7 @@ function updateVehicleCollisions() {
     if(speed>70){
       for(const entity of entities){
         if(entity.dead||!['civilian','gang','police'].includes(entity.type)||!entity.root.visible)continue;
-        if(entity.root.position.distanceToSquared(activeCar.root.position)<65*65) damageEntity(entity,Math.min(120,25+speed*.16),'player');
+        if(entity.root.position.distanceToSquared(activeCar.root.position)<65*65) damageEntity(entity,Math.min(120,25+speed*.16),'player-runover');
       }
       for(const other of window.__CUSTOM_CARS__||[]){
         if(other===activeCar||!other.root.visible)continue;
@@ -2278,7 +2532,7 @@ function buildSatelliteSvg() {
 
   const routeLine = svgNode('line',{stroke:'#ffb020','stroke-width':4,'stroke-dasharray':'11 8',opacity:.9});
   const markerGroup = svgNode('g');
-  const makeIconMarker = (key, size = 28) => { const group = svgNode('g'); group.append(svgMapIcon(key, size)); return group; };
+  // makeIconMarker vive ahora en el ámbito del módulo (ver arriba).
   const hospitalMarker = makeIconMarker('hospital',30);
   const stationMarker = makeIconMarker('police',30);
   const waypointMarker = svgNode('g');
@@ -2652,11 +2906,11 @@ function onKeyDown(event){
     const recruit=nearestRecruitableOrange();
     if(recruit){event.preventDefault();event.stopPropagation();recruitNearbyOrange();return;}
   }
-  if((event.code==='KeyF'||event.code==='Numpad0')&&(window.__AIRCRAFT_SYSTEM__?.active||window.__POLICE_RESPONSE__?.activeTank)) { addWanted(1,'DISPARO DESDE VEHÍCULO'); handleRayShot(window.__AIRCRAFT_SYSTEM__?.active ? 58 : 75); }
+  if((event.code==='KeyF'||event.code==='Numpad0')&&(window.__AIRCRAFT_SYSTEM__?.active||window.__POLICE_RESPONSE__?.activeTank)) { reportPlayerShot(); handleRayShot(window.__AIRCRAFT_SYSTEM__?.active ? 58 : 75); }
 }
 
 function onKeyUp(event){keys[event.code]=false;}
-function onMouseDown(event){if(event.button===0&&(window.__AIRCRAFT_SYSTEM__?.active||window.__POLICE_RESPONSE__?.activeTank)){addWanted(1,'DISPARO DESDE VEHÍCULO');handleRayShot(window.__AIRCRAFT_SYSTEM__?.active?58:75);}}
+function onMouseDown(event){if(event.button===0&&(window.__AIRCRAFT_SYSTEM__?.active||window.__POLICE_RESPONSE__?.activeTank)){reportPlayerShot();handleRayShot(window.__AIRCRAFT_SYSTEM__?.active?58:75);}}
 
 function restoreCityAfterCrewMatch() {
   const source=new URL(location.href).searchParams.get('from');
@@ -2720,7 +2974,14 @@ function monitorServiceVehicleTheft() {
 }
 
 function update(dt,elapsed){
-  ensureCivilianEntities();ensureBasePoliceEntities();ensureVehicleEntities();patchWeapons();patchBasePoliceArrest();
+  ensureCivilianEntities();ensureBasePoliceEntities();ensureVehicleEntities();patchWeapons();patchGunshotCrimeReporter();patchCrimeAgentShotReporter();patchBasePoliceArrest();
+  const currentWanted = wantedLevel();
+  if (currentWanted === 0 && lastKnownWantedLevel > 0) {
+    shotWantedGranted = false;
+    civilianKillCount = 0;
+    runoverKillCount = 0;
+  }
+  lastKnownWantedLevel = currentWanted;
   if(lockedPlayerPosition){
     game.playerContainer.position.copy(lockedPlayerPosition);
     game.state.vy=0;game.state.onGround=true;game.state.inWater=false;

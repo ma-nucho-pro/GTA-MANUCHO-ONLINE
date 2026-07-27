@@ -1,0 +1,80 @@
+GTA MANUCHO V112
+================
+
+GRACIAS POR EL LOG. AHÍ ESTABA EL 98 % DEL PROBLEMA
+-----------------------------------------------------
+Tus líneas de diagnóstico decían esto:
+
+    [fluidez-v111] 1 fps · 108408k triángulos
+    [fluidez-v111] 10 fps ·  53982k triángulos
+    [fluidez-v111] 39 fps ·    162k triángulos    <- fotograma bueno
+
+CINCUENTA Y CUATRO MILLONES de triángulos por fotograma, y a ratos CIENTO OCHO.
+Un juego normal usa entre uno y tres millones. Y fíjate en el fotograma bueno:
+162.000. O sea que algo pesaba TRESCIENTAS VECES más que todo el resto junto.
+
+Ese algo son los coches dispersos del motor. El modelo que carga es el Ferrari
+de los ejemplos de three.js: un modelo de escaparate de unos 360.000 triángulos.
+Por 150 instancias:
+
+    150 x 360.000 = 54.000.000 de triángulos
+
+La cuenta cuadra al dígito con lo que sale en tu consola. Y los 108 millones son
+esos mismos 54 dibujados DOS VECES, por el reflejo del agua.
+
+Y MI ARREGLO DE LA V111 NO SERVÍA DE NADA
+------------------------------------------
+Los apagué poniendo su matriz a escala cero. Eso hace que no se VEAN, pero la
+tarjeta gráfica sigue procesando las 150 instancias enteras: el coste no baja ni
+un triángulo. Lo único que de verdad se lo dice a la GPU es mesh.count, y eso no
+lo tocaba. Por eso seguías con los mismos tirones después de "arreglarlo".
+
+LO QUE SE HACE AHORA
+--------------------
+1. SÓLO SE DIBUJAN LOS SEIS MÁS CERCANOS. Están repartidos por 40.000 unidades y
+   la distancia de dibujado son 27.200, así que nunca se veían más que unos
+   pocos a la vez: ahora se reordenan cada 0,9 segundos para que las seis
+   ranuras las ocupen los más próximos, y mesh.count baja a seis. Se conservan
+   los coches sin pagarlos.
+       54.000.000  ->  2.160.000 de triángulos
+2. ADEMÁS SE BLOQUEAN LOS DOS ESPEJOS QUE FALTABAN. En la V107 bloqueé el
+   Ferrari de threejs.org, pero el motor probaba otros dos (raw.githubusercontent
+   y jsdelivr) y se colaba por ahí. Con los tres fuera usa su coche procedural
+   sencillo, y el problema desaparece de raíz.
+3. Los que caen sobre el agua siguen apagándose, como en la V111.
+
+EL REFLEJO DEL AGUA NUNCA SE APAGABA (otro fallo mío)
+------------------------------------------------------
+En tu log salía "reflejo=true" en un equipo donde debía estar apagado desde la
+V110. El motivo: cuando el módulo de fluidez arranca, el mundo marino todavía no
+se ha cargado, así que el océano no existe, la función se salía por la primera
+línea y la variable se quedaba en "encendido" para siempre. Ahora se recuerda la
+intención y se reintenta en cuanto aparece el océano.
+
+Esto importa mucho: el reflejo vuelve a dibujar la ESCENA ENTERA en un segundo
+pase. Es literalmente lo que convertía 54 millones de triángulos en 108.
+
+LA EMERGENCIA SALTABA CUANDO NO DEBÍA
+--------------------------------------
+En tu log, a los pocos segundos: "Emergencia: rocas ocultas para recuperar FPS",
+con 0 fps. Pero 0 fps al arrancar es normal: se está cargando, no es que el
+equipo no pueda. Ahora no se toca nada durante los primeros 35 segundos.
+
+RESUMEN DEL IMPACTO
+-------------------
+    antes:  54,2 millones de triángulos por fotograma (108 con reflejo)
+    ahora:   2,3 millones
+    -> 23 veces menos, o 47 contando el reflejo
+
+Sobre el cuello: tenías razón a medias. El diagnóstico decía "TARJETA GRÁFICA"
+en los fotogramas de 54 millones (con razón) y "PROCESADOR" en otros. Lo que
+pasa es que cuando la GPU va tan ahogada, el procesador se queda esperándola y
+el reparto de tiempos se vuelve confuso. Quitando los 54 millones, la medición
+volverá a ser fiable. Si después de esto sigue diciendo PROCESADOR, entonces sí
+que el siguiente paso son los NPC y la lógica, y ya iré directo a eso.
+
+ARCHIVOS TOCADOS
+----------------
+  juego/trafico-real-v111.js           sólo los 6 más cercanos, mesh.count real
+  juego/controles-prioritarios-v102.js los dos espejos del Ferrari que faltaban
+  juego/optimizacion-fluidez-v102.js   reflejo apagado de verdad, emergencia sensata
