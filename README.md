@@ -1,3 +1,9 @@
+<!-- manucho-readme-banner:start -->
+<p align="center">
+  <img src="assets/readme/banner.svg" alt="GTA-MANUCHO-ONLINE project overview" width="100%">
+</p>
+<!-- manucho-readme-banner:end -->
+
 <div align="center">
 
 <img src="docs/media/Portada.png" alt="Portada de GTA MANUCHO" width="100%">
